@@ -1,12 +1,10 @@
 package com.nhoclahola.socialnetworkv1.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +17,7 @@ public class Post
 {
     @Id
     private String postId;
+    @Column(nullable = false)
     private String caption;
     private String imageUrl;
     private String videoUrl;

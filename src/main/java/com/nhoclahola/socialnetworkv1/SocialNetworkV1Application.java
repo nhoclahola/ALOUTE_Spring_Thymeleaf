@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1;
 
+import com.nhoclahola.socialnetworkv1.security.JwtProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

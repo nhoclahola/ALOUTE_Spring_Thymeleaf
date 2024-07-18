@@ -16,6 +16,7 @@ public class Message
 {
     @Id
     private String messageId;
+    @Column(nullable = false)
     private String content;
     private String imageUrl;
     private LocalDateTime timeStamp;

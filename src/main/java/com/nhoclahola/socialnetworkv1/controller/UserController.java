@@ -3,11 +3,8 @@ package com.nhoclahola.socialnetworkv1.controller;
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
-import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

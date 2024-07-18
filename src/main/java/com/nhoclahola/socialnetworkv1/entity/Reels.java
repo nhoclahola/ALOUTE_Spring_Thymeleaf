@@ -15,6 +15,7 @@ public class Reels
 {
     @Id
     private String reelsId;
+    @Column(nullable = false)
     private String title;
     private String videoUrl;
 

@@ -18,6 +18,7 @@ public class Chat
 {
     @Id
     private String chatId;
+    @Column(nullable = false)
     private String chatName;
     private String chatImageUrl;
     private LocalDateTime timeStamp;

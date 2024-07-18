@@ -10,13 +10,14 @@ import org.springframework.http.HttpStatusCode;
 public enum ErrorCode
 {
     // Auth
+    UNAUTHENTICATED(1100, "Unauthenticated", HttpStatus.UNAUTHORIZED),
 
 
     // User
-    USER_NOT_EXIST(1200, "User does not exist", HttpStatus.BAD_REQUEST),
+    USER_NOT_EXIST(1200, "User does not exist", HttpStatus.NOT_FOUND),
 
     // Post
-    POST_NOT_EXIST(1300, "Post does not exist", HttpStatus.BAD_REQUEST),
+    POST_NOT_EXIST(1300, "Post does not exist", HttpStatus.NOT_FOUND),
 
     // Comment
 

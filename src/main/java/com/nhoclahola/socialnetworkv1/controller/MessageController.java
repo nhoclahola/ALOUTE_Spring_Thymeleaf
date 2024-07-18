@@ -3,6 +3,7 @@ package com.nhoclahola.socialnetworkv1.controller;
 import com.nhoclahola.socialnetworkv1.dto.message.request.MessageCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.message.response.MessageResponse;
 import com.nhoclahola.socialnetworkv1.service.MessageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,8 @@ public class MessageController
     private final MessageService messageService;
 
     @PostMapping("/messages/chats/{chatId}")
-    public MessageResponse createMessage(@PathVariable String chatId, MessageCreateRequest request)
+    public MessageResponse createMessage(@PathVariable String chatId,
+                                         @RequestBody @Valid MessageCreateRequest request)
     {
         return messageService.createMessage(chatId, request);
     }

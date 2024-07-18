@@ -1,10 +1,9 @@
 package com.nhoclahola.socialnetworkv1.service;
 
-import com.nhoclahola.socialnetworkv1.configuration.JwtProvider;
-import com.nhoclahola.socialnetworkv1.dto.auth.response.AuthResponse;
-import com.nhoclahola.socialnetworkv1.dto.user.request.UserCreateRequest;
+import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
+import com.nhoclahola.socialnetworkv1.entity.Role;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.exception.AppException;
 import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
@@ -13,7 +12,6 @@ import com.nhoclahola.socialnetworkv1.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,16 +36,14 @@ public class UserServiceImplementation implements UserService
 
     @Override
     @Transactional
-    public AuthResponse createUser(UserCreateRequest request)
+    public User createUser(UserCreateRequest request)
     {
         User user = userMapper.userLoginRequestToUser(request);
         // userId is already null after mapping
 //        user.setUserId(null);       // To prevent Hibernate from creating a query to check if user is exist or not
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
-        String jwtToken = JwtProvider.generateJwtToken(authentication);
-        return new AuthResponse(jwtToken, "Register success");
+        user.setRole(Role.USER);
+        return userRepository.save(user);
     }
 
     @Override
@@ -84,7 +80,6 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
-    @PreAuthorize("@userServiceImplementation.isAuthorizedToUpdateUser(#userId) || hasRole('ADMIN')")
     @Transactional
     public UserResponse updateUser(String userId, UserUpdateRequest request)
     {
@@ -117,22 +112,5 @@ public class UserServiceImplementation implements UserService
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new AppException(ErrorCode.USER_NOT_EXIST));
         return userMapper.toUserResponse(user);
-    }
-
-    @Override
-    public UserResponse findUserByEmailResponse(String email)
-    {
-        User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new AppException(ErrorCode.USER_NOT_EXIST));
-        return userMapper.toUserResponse(user);
-    }
-
-    public boolean isAuthorizedToUpdateUser(String userId) {
-        User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            throw new RuntimeException("User does not exist");
-        }
-        String authEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return user.getEmail().equals(authEmail);
     }
 }

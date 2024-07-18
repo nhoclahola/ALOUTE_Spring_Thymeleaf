@@ -1,7 +1,6 @@
 package com.nhoclahola.socialnetworkv1.service;
 
-import com.nhoclahola.socialnetworkv1.dto.auth.response.AuthResponse;
-import com.nhoclahola.socialnetworkv1.dto.user.request.UserCreateRequest;
+import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.entity.User;
@@ -12,7 +11,7 @@ public interface UserService
 {
     public abstract List<UserResponse> findAllUsers();
 
-    public abstract AuthResponse createUser(UserCreateRequest request);
+    public abstract User createUser(UserCreateRequest request);
 
     public abstract User findUserById(String userId);
 
@@ -27,6 +26,4 @@ public interface UserService
     public abstract UserResponse getUserFromToken();
 
     public abstract UserResponse findUserByIdResponse(String userId);
-
-    public abstract UserResponse findUserByEmailResponse(String email);
 }

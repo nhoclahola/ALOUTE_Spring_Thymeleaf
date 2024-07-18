@@ -1,7 +1,6 @@
 package com.nhoclahola.socialnetworkv1.exception;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Getter

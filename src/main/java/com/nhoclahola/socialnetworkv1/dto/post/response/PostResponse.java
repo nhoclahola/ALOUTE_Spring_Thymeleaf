@@ -1,7 +1,6 @@
 package com.nhoclahola.socialnetworkv1.dto.post.response;
 
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
-import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;

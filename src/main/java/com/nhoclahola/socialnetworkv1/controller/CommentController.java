@@ -4,8 +4,8 @@ import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.comment.request.CommentCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
 import com.nhoclahola.socialnetworkv1.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,8 +16,8 @@ public class CommentController
     private final CommentService commentService;
 
     @PostMapping("/comments/{postId}")
-    public ApiResponse<CommentResponse> createComment(@RequestBody CommentCreateRequest request,
-                                                     @PathVariable String postId)
+    public ApiResponse<CommentResponse> createComment(@PathVariable String postId,
+                                                      @RequestBody @Valid CommentCreateRequest request)
     {
         CommentResponse commentResponse = commentService.createComment(postId, request);
         ApiResponse<CommentResponse> response = new ApiResponse<>();

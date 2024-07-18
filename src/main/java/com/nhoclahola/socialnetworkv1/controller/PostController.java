@@ -3,11 +3,9 @@ package com.nhoclahola.socialnetworkv1.controller;
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.request.PostCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
-import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +18,7 @@ public class PostController
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ApiResponse<PostResponse> createPost(@RequestBody PostCreateRequest request)
+    public ApiResponse<PostResponse> createPost(@RequestBody @Valid PostCreateRequest request)
     {
         PostResponse postResponse = postService.createNewPost(request);
         ApiResponse<PostResponse> response = new ApiResponse<>();

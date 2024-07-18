@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.dto.post.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @NoArgsConstructor
@@ -9,6 +10,7 @@ import lombok.*;
 @Builder
 public class PostCreateRequest
 {
+    @NotBlank(message = "Caption can not be blank")
     private String caption;
     private String imageUrl;
     private String videoUrl;

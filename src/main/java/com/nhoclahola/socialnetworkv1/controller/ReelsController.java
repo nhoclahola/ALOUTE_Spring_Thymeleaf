@@ -4,6 +4,7 @@ import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.reels.request.ReelsCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.reels.response.ReelsResponse;
 import com.nhoclahola.socialnetworkv1.service.ReelsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,7 @@ public class ReelsController
 {
     private final ReelsService reelsService;
     @PostMapping("/reels")
-    public ApiResponse<ReelsResponse> createReels(@RequestBody ReelsCreateRequest reelsCreateRequest)
+    public ApiResponse<ReelsResponse> createReels(@RequestBody @Valid ReelsCreateRequest reelsCreateRequest)
     {
         ReelsResponse reelsResponse = reelsService.createReels(reelsCreateRequest);
         ApiResponse<ReelsResponse> response = new ApiResponse<>();
