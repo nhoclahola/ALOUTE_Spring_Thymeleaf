@@ -6,6 +6,8 @@ import com.nhoclahola.socialnetworkv1.dto.user.request.UserCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.entity.User;
+import com.nhoclahola.socialnetworkv1.exception.AppException;
+import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.UserMapper;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -39,7 +41,8 @@ public class UserServiceImplementation implements UserService
     public AuthResponse createUser(UserCreateRequest request)
     {
         User user = userMapper.userLoginRequestToUser(request);
-        user.setUserId(null);       // To prevent Hibernate from creating a query to check if user is exist or not
+        // userId is already null after mapping
+//        user.setUserId(null);       // To prevent Hibernate from creating a query to check if user is exist or not
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
@@ -51,14 +54,14 @@ public class UserServiceImplementation implements UserService
     public User findUserById(String userId)
     {
         return userRepository.findById(userId).orElseThrow(() ->
-                new RuntimeException("User is not exist"));
+                new AppException(ErrorCode.USER_NOT_EXIST));
     }
 
     @Override
     public User findUserByEmail(String email)
     {
         return userRepository.findByEmail(email).orElseThrow(() ->
-                new RuntimeException("User is not exist"));
+                new AppException(ErrorCode.USER_NOT_EXIST));
     }
 
     @Override
@@ -86,7 +89,7 @@ public class UserServiceImplementation implements UserService
     public UserResponse updateUser(String userId, UserUpdateRequest request)
     {
         User oldUser = userRepository.findById(userId).orElseThrow(() ->
-                new RuntimeException("User is not exist"));
+                new AppException(ErrorCode.USER_NOT_EXIST));
         userMapper.updateUser(oldUser, request);
         userRepository.save(oldUser);
         return userMapper.toUserResponse(oldUser);
@@ -112,7 +115,7 @@ public class UserServiceImplementation implements UserService
     public UserResponse findUserByIdResponse(String userId)
     {
         User user = userRepository.findById(userId).orElseThrow(() ->
-                new RuntimeException("User is not exist"));
+                new AppException(ErrorCode.USER_NOT_EXIST));
         return userMapper.toUserResponse(user);
     }
 
@@ -120,7 +123,7 @@ public class UserServiceImplementation implements UserService
     public UserResponse findUserByEmailResponse(String email)
     {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new RuntimeException("User is not exist"));
+                new AppException(ErrorCode.USER_NOT_EXIST));
         return userMapper.toUserResponse(user);
     }
 

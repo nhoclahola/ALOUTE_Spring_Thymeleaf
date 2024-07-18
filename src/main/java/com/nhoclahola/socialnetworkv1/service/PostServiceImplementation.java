@@ -4,6 +4,8 @@ import com.nhoclahola.socialnetworkv1.dto.post.request.PostCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.entity.User;
+import com.nhoclahola.socialnetworkv1.exception.AppException;
+import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.PostMapper;
 import com.nhoclahola.socialnetworkv1.repository.PostRepository;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
@@ -47,7 +49,7 @@ public class PostServiceImplementation implements PostService
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
         Post post = postRepository.findById(postId).orElseThrow(() ->
-                new RuntimeException("Post is not exist"));
+                new AppException(ErrorCode.POST_NOT_EXIST));
         if (post.getUser() != currentUser)
             throw new RuntimeException("You can't delete this post");
         postRepository.delete(post);
@@ -65,7 +67,7 @@ public class PostServiceImplementation implements PostService
     public Post findPostById(String postId)
     {
         return postRepository.findById(postId).orElseThrow(() ->
-                new RuntimeException("Post is not exist"));
+                new AppException(ErrorCode.POST_NOT_EXIST));
     }
 
     @Override
@@ -107,7 +109,7 @@ public class PostServiceImplementation implements PostService
     public PostResponse findPostByIdResponse(String postId)
     {
         Post post = postRepository.findById(postId).orElseThrow(() ->
-                new RuntimeException("Post is not exist"));
+                new AppException(ErrorCode.POST_NOT_EXIST));
         return postMapper.toPostResponse(post);
     }
 }

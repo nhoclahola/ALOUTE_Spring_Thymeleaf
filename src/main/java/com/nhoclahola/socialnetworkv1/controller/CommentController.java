@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.controller;
 
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.comment.request.CommentCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
 import com.nhoclahola.socialnetworkv1.service.CommentService;
@@ -15,17 +16,21 @@ public class CommentController
     private final CommentService commentService;
 
     @PostMapping("/comments/{postId}")
-    public CommentResponse createComment(@RequestBody CommentCreateRequest request,
-                                         @PathVariable String postId)
+    public ApiResponse<CommentResponse> createComment(@RequestBody CommentCreateRequest request,
+                                                     @PathVariable String postId)
     {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return commentService.createComment(userEmail, postId, request);
+        CommentResponse commentResponse = commentService.createComment(postId, request);
+        ApiResponse<CommentResponse> response = new ApiResponse<>();
+        response.setResult(commentResponse);
+        return response;
     }
 
     @PutMapping("/comments/like/{commentId}")
-    public CommentResponse likeComment(@PathVariable String commentId)
+    public ApiResponse<CommentResponse> likeComment(@PathVariable String commentId)
     {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return commentService.likeComment(userEmail, commentId);
+        CommentResponse commentResponse = commentService.likeComment(commentId);
+        ApiResponse<CommentResponse> response = new ApiResponse<>();
+        response.setResult(commentResponse);
+        return response;
     }
 }

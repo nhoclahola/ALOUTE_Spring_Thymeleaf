@@ -29,10 +29,10 @@ public class Post
     private User user;
 
     // EAGER to respond quickly in PostResponse
-    @ManyToMany(mappedBy = "likedPost", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "likedPost", fetch = FetchType.LAZY)
     private List<User> liked;
 
-    @ManyToMany(mappedBy = "savedPost", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "savedPost", fetch = FetchType.LAZY)
     private List<User> saved;
 
     @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)

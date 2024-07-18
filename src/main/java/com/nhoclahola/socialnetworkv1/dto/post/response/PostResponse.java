@@ -19,7 +19,5 @@ public class PostResponse
     private String imageUrl;
     private String videoUrl;
     private LocalDateTime createdAt;
-    private List<UserResponse> liked;
-    private List<UserResponse> saved;
     private List<CommentResponse> comments;
 }

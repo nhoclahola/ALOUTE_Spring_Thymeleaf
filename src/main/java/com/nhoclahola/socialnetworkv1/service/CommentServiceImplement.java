@@ -10,6 +10,7 @@ import com.nhoclahola.socialnetworkv1.repository.CommentRepository;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -26,8 +27,9 @@ public class CommentServiceImplement implements CommentService
 
     @Override
     @Transactional
-    public CommentResponse createComment(String userEmail, String postId, CommentCreateRequest commentCreateRequest)
+    public CommentResponse createComment(String postId, CommentCreateRequest commentCreateRequest)
     {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByEmail(userEmail);
         Post post = postService.findPostById(postId);
         Comment comment = commentMapper.commentCreateRequestToComment(commentCreateRequest);
@@ -47,8 +49,9 @@ public class CommentServiceImplement implements CommentService
     }
 
     @Override
-    public CommentResponse likeComment(String userEmail, String commentId)
+    public CommentResponse likeComment(String commentId)
     {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByEmail(userEmail);
         Comment comment = this.findCommentById(commentId);
         if (!user.getLikedComments().contains(comment))

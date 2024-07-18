@@ -1,6 +1,6 @@
 package com.nhoclahola.socialnetworkv1.controller;
 
-import com.nhoclahola.socialnetworkv1.dto.auth.response.ApiResponse;
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.request.PostCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
@@ -20,61 +20,63 @@ public class PostController
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity<PostResponse> createPost(@RequestBody PostCreateRequest request)
+    public ApiResponse<PostResponse> createPost(@RequestBody PostCreateRequest request)
     {
-        PostResponse createdPost = postService.createNewPost(request);
-        return new ResponseEntity<>(createdPost, HttpStatus.ACCEPTED);
+        PostResponse postResponse = postService.createNewPost(request);
+        ApiResponse<PostResponse> response = new ApiResponse<>();
+        response.setResult(postResponse);
+        return response;
     }
 
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<ApiResponse> deletePost(@PathVariable String postId)
+    public String deletePost(@PathVariable String postId)
     {
         String message = postService.deletePost(postId);
-        ApiResponse response = ApiResponse.builder()
-                .message(message)
-                .status(true)
-                .build();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(response);
+        return message;
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostResponse> findPostById(@PathVariable String postId)
+    public ApiResponse<PostResponse> findPostById(@PathVariable String postId)
     {
-        PostResponse post = postService.findPostByIdResponse(postId);
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(post);
+        PostResponse postResponse = postService.findPostByIdResponse(postId);
+        ApiResponse<PostResponse> response = new ApiResponse<>();
+        response.setResult(postResponse);
+        return response;
     }
 
     @GetMapping("/posts/user/{userId}")
-    public ResponseEntity<List<PostResponse>> findUsersPosts(@PathVariable String userId)
+    public ApiResponse<List<PostResponse>> findUsersPosts(@PathVariable String userId)
     {
-        List<PostResponse> posts = postService.findPostByUserId(userId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(posts);
+        List<PostResponse> postResponseList = postService.findPostByUserId(userId);
+        ApiResponse<List<PostResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostResponse>> findAllPosts()
+    public ApiResponse<List<PostResponse>> findAllPosts()
     {
-        List<PostResponse> posts = postService.findAllPosts();
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(posts);
+        List<PostResponse> postResponseList = postService.findAllPosts();
+        ApiResponse<List<PostResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
     }
 
     @PutMapping("/posts/save/{postId}")
-    public ResponseEntity<PostResponse> savePost(@PathVariable String postId)
+    public ApiResponse<PostResponse> savePost(@PathVariable String postId)
     {
-        PostResponse post = postService.savePost(postId);
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(post);
+        PostResponse postResponse = postService.savePost(postId);
+        ApiResponse<PostResponse> response = new ApiResponse<>();
+        response.setResult(postResponse);
+        return response;
     }
 
     @PutMapping("/posts/like/{postId}")
-    public ResponseEntity<PostResponse> likePost(@PathVariable String postId)
+    public ApiResponse<PostResponse> likePost(@PathVariable String postId)
     {
-        PostResponse post = postService.likePost(postId);
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
-                .body(post);
+        PostResponse postResponse = postService.likePost(postId);
+        ApiResponse<PostResponse> response = new ApiResponse<>();
+        response.setResult(postResponse);
+        return response;
     }
 }

@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.controller;
 
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.entity.User;
@@ -19,21 +20,30 @@ public class UserController
     private final UserService userService;
 
     @GetMapping("/users")
-    public List<UserResponse> getUsers()
+    public ApiResponse<List<UserResponse>> getAllUsers()
     {
-        return userService.findAllUsers();
+        List<UserResponse> userResponses = userService.findAllUsers();
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.setResult(userResponses);
+        return response;
     }
 
     @GetMapping("/users/{id}")
-    public UserResponse getUserById(@PathVariable String id)
+    public ApiResponse<UserResponse> getUserById(@PathVariable String id)
     {
-        return userService.findUserByIdResponse(id);
+        UserResponse userResponse = userService.findUserByIdResponse(id);
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(userResponse);
+        return response;
     }
 
     @PutMapping("/users/{id}")
-    public UserResponse updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request)
+    public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request)
     {
-        return userService.updateUser(id, request);
+        UserResponse userResponse = userService.updateUser(id, request);
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(userResponse);
+        return response;
     }
 
     @DeleteMapping("/users/{id}")
@@ -49,14 +59,20 @@ public class UserController
     }
 
     @GetMapping("users/search")
-    public List<UserResponse> searchUser(@RequestParam("query") String query)
+    public ApiResponse<List<UserResponse>> searchUser(@RequestParam("query") String query)
     {
-        return userService.searchUser(query);
+        List<UserResponse> userResponseList = userService.searchUser(query);
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.setResult(userResponseList);
+        return response;
     }
 
     @GetMapping("users/fromToken")
-    public UserResponse getUserFromToken()
+    public ApiResponse<UserResponse> getUserFromToken()
     {
-        return userService.getUserFromToken();
+        UserResponse userResponse = userService.getUserFromToken();
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(userResponse);
+        return response;
     }
 }

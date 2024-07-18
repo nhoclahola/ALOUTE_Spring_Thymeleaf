@@ -6,11 +6,11 @@ import com.nhoclahola.socialnetworkv1.entity.Comment;
 
 public interface CommentService
 {
-    public CommentResponse createComment(String userEmail, String postId, CommentCreateRequest commentCreateRequest);
+    public CommentResponse createComment(String postId, CommentCreateRequest commentCreateRequest);
 
     public Comment findCommentById(String commentId);
 
-    public CommentResponse likeComment(String userEmail, String commentId);
+    public CommentResponse likeComment(String commentId);
 
 
 }

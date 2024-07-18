@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.controller;
 
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.chat.response.ChatResponse;
 import com.nhoclahola.socialnetworkv1.service.ChatService;
 import lombok.RequiredArgsConstructor;
@@ -15,20 +16,29 @@ public class ChatController
     private final ChatService chatService;
 
     @PostMapping("/chats/users/{targetUserId}")
-    public ChatResponse createChat(@PathVariable String targetUserId)
+    public ApiResponse<ChatResponse> createChat(@PathVariable String targetUserId)
     {
-        return chatService.createChat(targetUserId);
+        ChatResponse chatResponse = chatService.createChat(targetUserId);
+        ApiResponse<ChatResponse> response = new ApiResponse<>();
+        response.setResult(chatResponse);
+        return response;
     }
 
     @GetMapping("/chats/users/{userId}")
-    public List<ChatResponse> getUsersChat(@PathVariable String userId)
+    public ApiResponse<List<ChatResponse>> getUsersChat(@PathVariable String userId)
     {
-        return chatService.findUsersChat(userId);
+        List<ChatResponse> chatResponseList = chatService.findUsersChat(userId);
+        ApiResponse<List<ChatResponse>> response = new ApiResponse<>();
+        response.setResult(chatResponseList);
+        return response;
     }
 
     @GetMapping("/chats/{chatId}")
-    public ChatResponse getChatById(@PathVariable String chatId)
+    public ApiResponse<ChatResponse> getChatById(@PathVariable String chatId)
     {
-        return chatService.findChatByIdResponse(chatId);
+        ChatResponse chatResponse = chatService.findChatByIdResponse(chatId);
+        ApiResponse<ChatResponse> response = new ApiResponse<>();
+        response.setResult(chatResponse);
+        return response;
     }
 }

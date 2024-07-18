@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.controller;
 
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.reels.request.ReelsCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.reels.response.ReelsResponse;
 import com.nhoclahola.socialnetworkv1.service.ReelsService;
@@ -15,26 +16,38 @@ public class ReelsController
 {
     private final ReelsService reelsService;
     @PostMapping("/reels")
-    public ReelsResponse createReels(@RequestBody ReelsCreateRequest reelsCreateRequest)
+    public ApiResponse<ReelsResponse> createReels(@RequestBody ReelsCreateRequest reelsCreateRequest)
     {
-        return reelsService.createReels(reelsCreateRequest);
+        ReelsResponse reelsResponse = reelsService.createReels(reelsCreateRequest);
+        ApiResponse<ReelsResponse> response = new ApiResponse<>();
+        response.setResult(reelsResponse);
+        return response;
     }
 
     @GetMapping("/reels")
-    public List<ReelsResponse> getAllReels()
+    public ApiResponse<List<ReelsResponse>> getAllReels()
     {
-        return reelsService.findAllReels();
+        List<ReelsResponse> reelsResponseList = reelsService.findAllReels();
+        ApiResponse<List<ReelsResponse>> response = new ApiResponse<>();
+        response.setResult(reelsResponseList);
+        return response;
     }
 
     @GetMapping("/reels/{reelsId}")
-    public ReelsResponse getReelsById(@PathVariable String reelsId)
+    public ApiResponse<ReelsResponse> getReelsById(@PathVariable String reelsId)
     {
-        return reelsService.findReelsByIdResponse(reelsId);
+        ReelsResponse reelsResponse = reelsService.findReelsByIdResponse(reelsId);
+        ApiResponse<ReelsResponse> response = new ApiResponse<>();
+        response.setResult(reelsResponse);
+        return response;
     }
 
     @GetMapping("/reels/users/{userId}")
-    public List<ReelsResponse> getReelsByUserId(@PathVariable String userId)
+    public ApiResponse<List<ReelsResponse>> getReelsByUserId(@PathVariable String userId)
     {
-        return reelsService.findUsersReels(userId);
+        List<ReelsResponse> reelsResponseList = reelsService.findUsersReels(userId);
+        ApiResponse<List<ReelsResponse>> response = new ApiResponse<>();
+        response.setResult(reelsResponseList);
+        return response;
     }
 }
