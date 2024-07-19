@@ -15,6 +15,7 @@ import java.io.PrintWriter;
 // Because filters execute before the Controller
 // GlobalExceptionHandler can't catch exception thrown in filters
 // Therefore, I need to create a filter to catch exceptions thrown by other filters
+// (Catch invalid token)
 public class FilterExceptionHandler extends OncePerRequestFilter
 {
 

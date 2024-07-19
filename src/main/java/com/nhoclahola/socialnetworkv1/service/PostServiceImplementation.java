@@ -11,6 +11,7 @@ import com.nhoclahola.socialnetworkv1.repository.PostRepository;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +72,7 @@ public class PostServiceImplementation implements PostService
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<PostResponse> findAllPosts()
     {
         List<Post> posts = postRepository.findAll();

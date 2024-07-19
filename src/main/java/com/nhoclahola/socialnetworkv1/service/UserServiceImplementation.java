@@ -28,6 +28,7 @@ public class UserServiceImplementation implements UserService
     private final UserMapper userMapper;
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponse> findAllUsers()
     {
         List<User> users = userRepository.findAll();

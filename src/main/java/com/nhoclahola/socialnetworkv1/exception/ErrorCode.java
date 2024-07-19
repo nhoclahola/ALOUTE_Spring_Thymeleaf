@@ -11,7 +11,7 @@ public enum ErrorCode
 {
     // Auth and validation
     UNAUTHENTICATED(1100, "Unauthenticated", HttpStatus.UNAUTHORIZED),
-    UNAUTHORIZED(1101, "You don not have permission to do this", HttpStatus.FORBIDDEN),
+    UNAUTHORIZED(1101, "You do not have permission to do this", HttpStatus.FORBIDDEN),
     INVALID_TOKEN(1102, "Invalid Token", HttpStatus.BAD_REQUEST),
     INVALID_REQUEST(1103, "Invalid request", HttpStatus.BAD_REQUEST),
     USER_EXIST_REGISTER(1104, "This email has been used", HttpStatus.CONFLICT),

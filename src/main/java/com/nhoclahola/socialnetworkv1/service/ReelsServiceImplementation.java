@@ -10,6 +10,7 @@ import com.nhoclahola.socialnetworkv1.mapper.ReelsMapper;
 import com.nhoclahola.socialnetworkv1.repository.ReelsRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ public class ReelsServiceImplementation implements ReelsService
         return reelsMapper.toReelsResponse(reels);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Override
     public List<ReelsResponse> findAllReels()
     {

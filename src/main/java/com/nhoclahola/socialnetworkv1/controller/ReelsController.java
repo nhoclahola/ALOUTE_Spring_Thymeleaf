@@ -44,7 +44,7 @@ public class ReelsController
     }
 
     @GetMapping("/reels/users/{userId}")
-    public ApiResponse<List<ReelsResponse>> getReelsByUserId(@PathVariable String userId)
+    public ApiResponse<List<ReelsResponse>> getUsersReels(@PathVariable String userId)
     {
         List<ReelsResponse> reelsResponseList = reelsService.findUsersReels(userId);
         ApiResponse<List<ReelsResponse>> response = new ApiResponse<>();

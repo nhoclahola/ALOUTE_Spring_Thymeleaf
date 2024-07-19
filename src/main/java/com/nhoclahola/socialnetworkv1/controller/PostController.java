@@ -34,7 +34,7 @@ public class PostController
     }
 
     @GetMapping("/posts/{postId}")
-    public ApiResponse<PostResponse> findPostById(@PathVariable String postId)
+    public ApiResponse<PostResponse> getPostById(@PathVariable String postId)
     {
         PostResponse postResponse = postService.findPostByIdResponse(postId);
         ApiResponse<PostResponse> response = new ApiResponse<>();
@@ -43,7 +43,7 @@ public class PostController
     }
 
     @GetMapping("/posts/user/{userId}")
-    public ApiResponse<List<PostResponse>> findUsersPosts(@PathVariable String userId)
+    public ApiResponse<List<PostResponse>> getUsersPosts(@PathVariable String userId)
     {
         List<PostResponse> postResponseList = postService.findPostByUserId(userId);
         ApiResponse<List<PostResponse>> response = new ApiResponse<>();
@@ -52,7 +52,7 @@ public class PostController
     }
 
     @GetMapping("/posts")
-    public ApiResponse<List<PostResponse>> findAllPosts()
+    public ApiResponse<List<PostResponse>> getAllPosts()
     {
         List<PostResponse> postResponseList = postService.findAllPosts();
         ApiResponse<List<PostResponse>> response = new ApiResponse<>();
