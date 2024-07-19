@@ -36,29 +36,16 @@ public class User
     @Builder.Default
     private List<String> followings = new ArrayList<>();
 
-    // Use Set to force Hibernate create primary key for join table of @ManyToMany
-
     // Post
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)  // Field user of Post class
     private List<Post> posts;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name ="post_liked",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "post_id") }
-    )
+    @ManyToMany(mappedBy = "liked", fetch = FetchType.LAZY)
     private Set<Post> likedPost;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name ="post_saved",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "post_id") }
-    )
+    @ManyToMany(mappedBy = "saved", fetch = FetchType.LAZY)
     private Set<Post> savedPost;
-
 
     // Comment
 

@@ -23,7 +23,6 @@ import java.util.List;
 public class PostServiceImplementation implements PostService
 {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
     private final PostMapper postMapper;
 
@@ -85,11 +84,11 @@ public class PostServiceImplementation implements PostService
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
         Post post = this.findPostById(postId);
-        if (currentUser.getSavedPost().contains(post))
-            currentUser.getSavedPost().remove(post);
+        if (post.getSaved().contains(currentUser))
+            post.getSaved().remove(currentUser);
         else
-            currentUser.getSavedPost().add(post);
-        userRepository.save(currentUser);
+            post.getSaved().add(currentUser);
+        postRepository.save(post);
         return postMapper.toPostResponse(post);
     }
 
@@ -99,11 +98,11 @@ public class PostServiceImplementation implements PostService
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
         Post post = this.findPostById(postId);
-        if (currentUser.getLikedPost().contains(post))
-            currentUser.getLikedPost().remove(post);
+        if (post.getLiked().contains(currentUser))
+            post.getLiked().remove(currentUser);
         else
-            currentUser.getLikedPost().add(post);
-        userRepository.save(currentUser);
+            post.getLiked().add(currentUser);
+        postRepository.save(post);
         return postMapper.toPostResponse(post);
     }
 
