@@ -10,7 +10,7 @@ public interface CommentService
 
     public Comment findCommentById(String commentId);
 
-    public CommentResponse likeComment(String commentId);
+    public String likeComment(String commentId);
 
     public CommentResponse findCommentByIdResponse(String commentId);
 }

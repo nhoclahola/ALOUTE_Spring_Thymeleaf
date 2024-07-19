@@ -26,11 +26,11 @@ public class CommentController
     }
 
     @PutMapping("/comments/like/{commentId}")
-    public ApiResponse<CommentResponse> likeComment(@PathVariable String commentId)
+    public ApiResponse<String> likeComment(@PathVariable String commentId)
     {
-        CommentResponse commentResponse = commentService.likeComment(commentId);
-        ApiResponse<CommentResponse> response = new ApiResponse<>();
-        response.setResult(commentResponse);
+        String result = commentService.likeComment(commentId);
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(result);
         return response;
     }
 

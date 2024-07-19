@@ -10,10 +10,10 @@ import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.CommentMapper;
 import com.nhoclahola.socialnetworkv1.repository.CommentRepository;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +23,6 @@ public class CommentServiceImplement implements CommentService
 {
     private final PostService postService;
     private final UserService userService;
-    private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
 
@@ -50,17 +49,24 @@ public class CommentServiceImplement implements CommentService
     }
 
     @Override
-    public CommentResponse likeComment(String commentId)
+    @Transactional
+    public String likeComment(String commentId)
     {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByEmail(userEmail);
         Comment comment = this.findCommentById(commentId);
-        if (!user.getLikedComments().contains(comment))
-            user.getLikedComments().add(comment);
+        if (comment.getLiked().contains(user))
+        {
+            comment.getLiked().remove(user);
+            commentRepository.save(comment);
+            return "You just unliked this comment";
+        }
         else
-            user.getLikedComments().remove(comment);
-        userRepository.save(user);
-        return commentMapper.toCommentResponse(comment);
+        {
+            comment.getLiked().add(user);
+            commentRepository.save(comment);
+            return "You just liked this comment";
+        }
     }
 
     @Override

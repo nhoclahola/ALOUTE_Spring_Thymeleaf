@@ -62,12 +62,7 @@ public class User
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name ="comment_liked",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "comment_id") }
-    )
+    @ManyToMany(mappedBy = "liked", fetch = FetchType.LAZY)
     private Set<Comment> likedComments;
 
     // Reels

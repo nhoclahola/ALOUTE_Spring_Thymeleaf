@@ -18,11 +18,11 @@ public class PostController
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ApiResponse<PostResponse> createPost(@RequestBody @Valid PostCreateRequest request)
+    public ApiResponse<String> createPost(@RequestBody @Valid PostCreateRequest request)
     {
-        PostResponse postResponse = postService.createNewPost(request);
-        ApiResponse<PostResponse> response = new ApiResponse<>();
-        response.setResult(postResponse);
+        String result = postService.createNewPost(request);
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(result);
         return response;
     }
 
@@ -61,20 +61,20 @@ public class PostController
     }
 
     @PutMapping("/posts/save/{postId}")
-    public ApiResponse<PostResponse> savePost(@PathVariable String postId)
+    public ApiResponse<String> savePost(@PathVariable String postId)
     {
-        PostResponse postResponse = postService.savePost(postId);
-        ApiResponse<PostResponse> response = new ApiResponse<>();
-        response.setResult(postResponse);
+        String result = postService.savePost(postId);
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(result);
         return response;
     }
 
     @PutMapping("/posts/like/{postId}")
-    public ApiResponse<PostResponse> likePost(@PathVariable String postId)
+    public ApiResponse<String> likePost(@PathVariable String postId)
     {
-        PostResponse postResponse = postService.likePost(postId);
-        ApiResponse<PostResponse> response = new ApiResponse<>();
-        response.setResult(postResponse);
+        String result = postService.likePost(postId);
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(result);
         return response;
     }
 }

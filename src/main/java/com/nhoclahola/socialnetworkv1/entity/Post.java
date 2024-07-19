@@ -28,6 +28,8 @@ public class Post
     @JoinColumn(name = "user_id")
     private User user;
 
+    // Use Set to force Hibernate create primary key for join table of @ManyToMany
+
     // EAGER to respond quickly in PostResponse
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -36,8 +38,6 @@ public class Post
             inverseJoinColumns = { @JoinColumn(name = "user_id") }
     )
     private Set<User> liked;
-
-    // Use Set to force Hibernate create primary key for join table of @ManyToMany
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

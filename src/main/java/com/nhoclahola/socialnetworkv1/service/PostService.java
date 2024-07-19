@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PostService
 {
-    public abstract PostResponse createNewPost(PostCreateRequest post);
+    public abstract String createNewPost(PostCreateRequest post);
 
     public abstract String deletePost(String postId);
 
@@ -18,9 +18,9 @@ public interface PostService
 
     public abstract List<PostResponse> findAllPosts();
 
-    public abstract PostResponse savePost(String postId);
+    public abstract String savePost(String postId);
 
-    public abstract PostResponse likePost(String postId);
+    public abstract String likePost(String postId);
 
     public abstract PostResponse findPostByIdResponse(String postId);
 

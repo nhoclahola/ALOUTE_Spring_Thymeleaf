@@ -28,7 +28,12 @@ public class Comment
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToMany(mappedBy = "likedComments", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name ="comment_liked",
+            joinColumns = { @JoinColumn(name = "comment_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
     private Set<User> liked;
 
     private LocalDateTime createdAt;
