@@ -5,6 +5,8 @@ import com.nhoclahola.socialnetworkv1.dto.message.response.MessageResponse;
 import com.nhoclahola.socialnetworkv1.entity.Chat;
 import com.nhoclahola.socialnetworkv1.entity.Message;
 import com.nhoclahola.socialnetworkv1.entity.User;
+import com.nhoclahola.socialnetworkv1.exception.AppException;
+import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.MessageMapper;
 import com.nhoclahola.socialnetworkv1.repository.MessageRepository;
 import jakarta.transaction.Transactional;
@@ -50,14 +52,14 @@ public class MessageServiceImplementation implements MessageService
     public Message findMessageById(String messageId)
     {
         return messageRepository.findById(messageId)
-                .orElseThrow(() -> new RuntimeException("Message does not exist"));
+                .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_EXIST));
     }
 
     @Override
     public MessageResponse findMessageByIdResponse(String messageId)
     {
         Message message = messageRepository.findById(messageId)
-                .orElseThrow(() -> new RuntimeException("Message does not exist"));
+                .orElseThrow(() -> new AppException(ErrorCode.MESSAGE_NOT_EXIST));
         return messageMapper.toMessageResponse(message);
     }
 }

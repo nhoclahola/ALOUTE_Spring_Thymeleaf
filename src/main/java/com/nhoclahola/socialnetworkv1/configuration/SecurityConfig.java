@@ -1,5 +1,7 @@
 package com.nhoclahola.socialnetworkv1.configuration;
 
+import com.nhoclahola.socialnetworkv1.exception.FilterExceptionHandler;
+import com.nhoclahola.socialnetworkv1.exception.JwtAuthenticationEntryPoint;
 import com.nhoclahola.socialnetworkv1.security.JwtValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -34,7 +36,9 @@ public class SecurityConfig
                 management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         httpSecurity.addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class);
-
+        httpSecurity.addFilterBefore(new FilterExceptionHandler(), JwtValidator.class);
+        httpSecurity.exceptionHandling(exceptionHandling ->
+                exceptionHandling.authenticationEntryPoint(new JwtAuthenticationEntryPoint()));
         httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
         httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return httpSecurity.build();

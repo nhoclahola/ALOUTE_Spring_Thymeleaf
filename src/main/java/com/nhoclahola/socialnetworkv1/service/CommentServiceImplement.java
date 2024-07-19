@@ -5,6 +5,8 @@ import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
 import com.nhoclahola.socialnetworkv1.entity.Comment;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.entity.User;
+import com.nhoclahola.socialnetworkv1.exception.AppException;
+import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.CommentMapper;
 import com.nhoclahola.socialnetworkv1.repository.CommentRepository;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
@@ -43,9 +45,8 @@ public class CommentServiceImplement implements CommentService
     @Override
     public Comment findCommentById(String commentId)
     {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment does not exist"));
-        return comment;
+        return commentRepository.findById(commentId)
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXIST));
     }
 
     @Override
@@ -59,6 +60,14 @@ public class CommentServiceImplement implements CommentService
         else
             user.getLikedComments().remove(comment);
         userRepository.save(user);
+        return commentMapper.toCommentResponse(comment);
+    }
+
+    @Override
+    public CommentResponse findCommentByIdResponse(String commentId)
+    {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXIST));
         return commentMapper.toCommentResponse(comment);
     }
 }

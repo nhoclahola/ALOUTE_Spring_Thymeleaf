@@ -12,5 +12,5 @@ public interface CommentService
 
     public CommentResponse likeComment(String commentId);
 
-
+    public CommentResponse findCommentByIdResponse(String commentId);
 }

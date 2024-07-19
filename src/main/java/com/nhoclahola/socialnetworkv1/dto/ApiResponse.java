@@ -10,7 +10,7 @@ import lombok.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)  //Null field will not be included in json
 public class ApiResponse<T>
 {
-    private int statusCode = 1000;
+    private int responseCode = 1000;
     private String message;
     private T result;
 }

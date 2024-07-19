@@ -3,6 +3,8 @@ package com.nhoclahola.socialnetworkv1.service;
 import com.nhoclahola.socialnetworkv1.dto.chat.response.ChatResponse;
 import com.nhoclahola.socialnetworkv1.entity.Chat;
 import com.nhoclahola.socialnetworkv1.entity.User;
+import com.nhoclahola.socialnetworkv1.exception.AppException;
+import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.ChatMapper;
 import com.nhoclahola.socialnetworkv1.repository.ChatRepository;
 import jakarta.transaction.Transactional;
@@ -52,14 +54,14 @@ public class ChatServiceImplementation implements ChatService
     public Chat findChatById(String chatId)
     {
         return chatRepository.findById(chatId)
-                .orElseThrow(() -> new RuntimeException("Chat does not exist"));
+                .orElseThrow(() -> new AppException(ErrorCode.CHAT_NOT_EXIST));
     }
 
     @Override
     public ChatResponse findChatByIdResponse(String chatId)
     {
         Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new RuntimeException("Chat does not exist"));
+                .orElseThrow(() -> new AppException(ErrorCode.CHAT_NOT_EXIST));
         return chatMapper.toChatResponse(chat);
     }
 

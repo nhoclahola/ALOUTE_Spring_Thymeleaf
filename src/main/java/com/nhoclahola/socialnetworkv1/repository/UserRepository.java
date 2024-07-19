@@ -14,6 +14,7 @@ public interface UserRepository extends JpaRepository<User, String>
 {
     public abstract Optional<User> findByEmail(String email);
 
+    public abstract boolean existsByEmail(String email);
     @Query("SELECT u FROM User u WHERE u.firstName LIKE %:query% " +
             "OR u.lastName LIKE %:query% " +
             "OR u.email LIKE %:query%")

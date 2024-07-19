@@ -15,7 +15,7 @@ public class CommentController
 {
     private final CommentService commentService;
 
-    @PostMapping("/comments/{postId}")
+    @PostMapping("/comments/post/{postId}")
     public ApiResponse<CommentResponse> createComment(@PathVariable String postId,
                                                       @RequestBody @Valid CommentCreateRequest request)
     {
@@ -29,6 +29,14 @@ public class CommentController
     public ApiResponse<CommentResponse> likeComment(@PathVariable String commentId)
     {
         CommentResponse commentResponse = commentService.likeComment(commentId);
+        ApiResponse<CommentResponse> response = new ApiResponse<>();
+        response.setResult(commentResponse);
+        return response;
+    }
+
+    public ApiResponse<CommentResponse> getCommentById(@PathVariable String commentId)
+    {
+        CommentResponse commentResponse = commentService.findCommentByIdResponse(commentId);
         ApiResponse<CommentResponse> response = new ApiResponse<>();
         response.setResult(commentResponse);
         return response;

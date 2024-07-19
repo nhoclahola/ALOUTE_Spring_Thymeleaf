@@ -4,6 +4,8 @@ import com.nhoclahola.socialnetworkv1.dto.reels.request.ReelsCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.reels.response.ReelsResponse;
 import com.nhoclahola.socialnetworkv1.entity.Reels;
 import com.nhoclahola.socialnetworkv1.entity.User;
+import com.nhoclahola.socialnetworkv1.exception.AppException;
+import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.ReelsMapper;
 import com.nhoclahola.socialnetworkv1.repository.ReelsRepository;
 import jakarta.transaction.Transactional;
@@ -51,14 +53,14 @@ public class ReelsServiceImplementation implements ReelsService
     public Reels findReelsById(String reelsId)
     {
         return reelsRepository.findById(reelsId)
-                .orElseThrow(() -> new RuntimeException("Reels does not exist"));
+                .orElseThrow(() -> new AppException(ErrorCode.REELS_NOT_EXIST));
     }
 
     @Override
     public ReelsResponse findReelsByIdResponse(String reelsId)
     {
         Reels reels = reelsRepository.findById(reelsId)
-                .orElseThrow(() -> new RuntimeException("Reels does not exist"));
+                .orElseThrow(() -> new AppException(ErrorCode.REELS_NOT_EXIST));
         return reelsMapper.toReelsResponse(reels);
     }
 }

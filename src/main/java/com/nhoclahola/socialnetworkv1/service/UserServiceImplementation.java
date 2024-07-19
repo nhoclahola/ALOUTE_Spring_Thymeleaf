@@ -38,9 +38,11 @@ public class UserServiceImplementation implements UserService
     @Transactional
     public User createUser(UserCreateRequest request)
     {
+        if (userRepository.existsByEmail(request.getEmail()))
+            throw new AppException(ErrorCode.USER_EXIST_REGISTER);
         User user = userMapper.userLoginRequestToUser(request);
-        // userId is already null after mapping
-//        user.setUserId(null);       // To prevent Hibernate from creating a query to check if user is exist or not
+        // userId is already null after mapping,
+        // Just don't set it, Hibernate won't check it is exist or not again
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         return userRepository.save(user);
