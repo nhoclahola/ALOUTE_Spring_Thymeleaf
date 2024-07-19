@@ -28,7 +28,7 @@ public class UserServiceImplementation implements UserService
     private final UserMapper userMapper;
 
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponse> findAllUsers()
     {
         List<User> users = userRepository.findAll();
@@ -65,32 +65,37 @@ public class UserServiceImplementation implements UserService
 
     @Override
     @Transactional
-    public UserResponse followUser(String userIdToFollow)
+    public String followUser(String userIdToFollow)
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = this.findUserByEmail(currentUserEmail);
+        if (currentUser.getUserId().equals(userIdToFollow))
+            throw new AppException(ErrorCode.FOLLOW_YOURSELF);
         User userToFollow = userRepository.findById(userIdToFollow).orElseThrow(() ->
                 new RuntimeException("User " + userIdToFollow + " is not exist"));
-
-        if (!currentUser.getFollowings().contains(userIdToFollow))
+        if (!currentUser.getFollowings().contains(userToFollow))
         {
-            currentUser.getFollowings().add(userIdToFollow);
-            userToFollow.getFollowers().add(currentUser.getUserId());
+            currentUser.getFollowings().add(userToFollow);
             userRepository.save(currentUser);
-            userRepository.save(userToFollow);
+            return "You just followed " + userToFollow.getEmail();
         }
-        return userMapper.toUserResponse(currentUser);
+        else
+        {
+            currentUser.getFollowings().remove(userToFollow);
+            userRepository.save(currentUser);
+            return "You just unfollowed " + userToFollow.getEmail();
+        }
     }
 
     @Override
     @Transactional
-    public UserResponse updateUser(String userId, UserUpdateRequest request)
+    public String updateUser(String userId, UserUpdateRequest request)
     {
         User oldUser = userRepository.findById(userId).orElseThrow(() ->
                 new AppException(ErrorCode.USER_NOT_EXIST));
         userMapper.updateUser(oldUser, request);
         userRepository.save(oldUser);
-        return userMapper.toUserResponse(oldUser);
+        return "Update successfully";
     }
 
     @Override
@@ -115,5 +120,19 @@ public class UserServiceImplementation implements UserService
         User user = userRepository.findById(userId).orElseThrow(() ->
                 new AppException(ErrorCode.USER_NOT_EXIST));
         return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public List<UserResponse> findUsersFollowing(String userId)
+    {
+        List<User> usersFollowing = userRepository.findUsersFollowings(userId);
+        return userMapper.toListUserResponse(usersFollowing);
+    }
+
+    @Override
+    public List<UserResponse> findUsersFollower(String userId)
+    {
+        List<User> usersFollowers = userRepository.findUsersFollowers(userId);
+        return userMapper.toListUserResponse(usersFollowers);
     }
 }

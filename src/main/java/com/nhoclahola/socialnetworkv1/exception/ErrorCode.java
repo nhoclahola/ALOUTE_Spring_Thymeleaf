@@ -18,6 +18,7 @@ public enum ErrorCode
 
     // User
     USER_NOT_EXIST(1200, "The user does not exist", HttpStatus.NOT_FOUND),
+    FOLLOW_YOURSELF(1201, "You can't follow yourself", HttpStatus.BAD_REQUEST),
 
     // Post
     POST_NOT_EXIST(1300, "The post does not exist", HttpStatus.NOT_FOUND),

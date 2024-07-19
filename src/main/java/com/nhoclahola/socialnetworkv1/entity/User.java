@@ -31,10 +31,20 @@ public class User
     @Column(nullable = false)
     private Role role;
 
-    @Builder.Default
-    private List<String> followers = new ArrayList<>();
-    @Builder.Default
-    private List<String> followings = new ArrayList<>();
+
+    // | follower_id | following_id |
+    // |   (join)    |  (inverse)   |
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_follow",
+            joinColumns = @JoinColumn(name = "follower_id"),        // userId of this entity
+            inverseJoinColumns = @JoinColumn(name = "following_id")
+    )
+    private Set<User> followings;
+
+    @ManyToMany(mappedBy = "followings",fetch = FetchType.LAZY)
+    private Set<User> followers;
 
     // Post
 

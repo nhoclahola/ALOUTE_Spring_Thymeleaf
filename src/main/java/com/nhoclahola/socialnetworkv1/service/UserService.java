@@ -17,13 +17,17 @@ public interface UserService
 
     public abstract User findUserByEmail(String email);
 
-    public abstract UserResponse followUser(String userIdToFollow);
+    public abstract String followUser(String userIdToFollow);
 
-    public abstract UserResponse updateUser(String userId, UserUpdateRequest request);
+    public abstract String updateUser(String userId, UserUpdateRequest request);
 
     public abstract List<UserResponse> searchUser(String query);
 
     public abstract UserResponse getUserFromToken();
 
     public abstract UserResponse findUserByIdResponse(String userId);
+
+    public abstract List<UserResponse> findUsersFollowing(String userId);
+
+    public abstract List<UserResponse> findUsersFollower(String userId);
 }

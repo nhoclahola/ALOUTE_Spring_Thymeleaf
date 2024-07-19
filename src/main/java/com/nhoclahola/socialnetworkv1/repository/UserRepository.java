@@ -19,4 +19,10 @@ public interface UserRepository extends JpaRepository<User, String>
             "OR u.lastName LIKE %:query% " +
             "OR u.email LIKE %:query%")
     public abstract List<User> searchUser(@Param("query") String query);
+
+    @Query("SELECT u FROM User u JOIN u.followers f WHERE f.userId = :userId")
+    public abstract List<User> findUsersFollowings(@Param("userId") String userId);
+
+    @Query("SELECT u.followers FROM User u JOIN u.followings f WHERE f.userId = :userId")
+    public abstract List<User> findUsersFollowers(@Param("userId") String userId);
 }

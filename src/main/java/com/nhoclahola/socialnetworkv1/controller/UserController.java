@@ -35,11 +35,11 @@ public class UserController
     }
 
     @PutMapping("/users/{id}")
-    public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request)
+    public ApiResponse<String> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request)
     {
-        UserResponse userResponse = userService.updateUser(id, request);
-        ApiResponse<UserResponse> response = new ApiResponse<>();
-        response.setResult(userResponse);
+        String result = userService.updateUser(id, request);
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(result);
         return response;
     }
 
@@ -49,13 +49,16 @@ public class UserController
         return "Deleted user successfully";
     }
 
-    @PutMapping("/users/follow/{userIdToFollow}")
-    public UserResponse followUserHandler(@PathVariable String userIdToFollow)
+    @PostMapping("/users/follow/{userIdToFollow}")
+    public ApiResponse<String> followUser(@PathVariable String userIdToFollow)
     {
-        return userService.followUser(userIdToFollow);
+        String result = userService.followUser(userIdToFollow);
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(result);
+        return response;
     }
 
-    @GetMapping("users/search")
+    @GetMapping("/users/search")
     public ApiResponse<List<UserResponse>> searchUser(@RequestParam("query") String query)
     {
         List<UserResponse> userResponseList = userService.searchUser(query);
@@ -64,12 +67,32 @@ public class UserController
         return response;
     }
 
-    @GetMapping("users/fromToken")
+    @GetMapping("/users/fromToken")
     public ApiResponse<UserResponse> getUserFromToken()
     {
         UserResponse userResponse = userService.getUserFromToken();
         ApiResponse<UserResponse> response = new ApiResponse<>();
         response.setResult(userResponse);
+        return response;
+    }
+
+    @GetMapping("/users/followings/{userId}")
+    public ApiResponse<List<UserResponse>> getUsersFollowings(@PathVariable String userId)
+    {
+
+        List<UserResponse> userResponseList = userService.findUsersFollowing(userId);
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.setResult(userResponseList);
+        return response;
+    }
+
+    @GetMapping("/users/followers/{userId}")
+    public ApiResponse<List<UserResponse>> getUsersFollowers(@PathVariable String userId)
+    {
+
+        List<UserResponse> userResponseList = userService.findUsersFollower(userId);
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.setResult(userResponseList);
         return response;
     }
 }
