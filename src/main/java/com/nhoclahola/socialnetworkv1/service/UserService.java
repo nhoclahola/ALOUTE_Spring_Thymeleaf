@@ -19,11 +19,13 @@ public interface UserService
 
     public abstract String followUser(String userIdToFollow);
 
-    public abstract String updateUser(String userId, UserUpdateRequest request);
+    public abstract UserResponse updateUser(String userId, UserUpdateRequest request);
 
     public abstract List<UserResponse> searchUser(String query);
 
     public abstract UserResponse getUserFromToken();
+
+    public abstract UserResponse updateUserFromToken(UserUpdateRequest request);
 
     public abstract UserResponse findUserByIdResponse(String userId);
 

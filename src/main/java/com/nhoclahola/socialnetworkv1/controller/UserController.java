@@ -4,6 +4,7 @@ import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,11 +36,11 @@ public class UserController
     }
 
     @PutMapping("/users/{id}")
-    public ApiResponse<String> updateUser(@PathVariable String id, @RequestBody UserUpdateRequest request)
+    public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody @Valid UserUpdateRequest request)
     {
-        String result = userService.updateUser(id, request);
-        ApiResponse<String> response = new ApiResponse<>();
-        response.setResult(result);
+        UserResponse userResponse = userService.updateUser(id, request);
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(userResponse);
         return response;
     }
 
@@ -71,6 +72,15 @@ public class UserController
     public ApiResponse<UserResponse> getUserFromToken()
     {
         UserResponse userResponse = userService.getUserFromToken();
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(userResponse);
+        return response;
+    }
+
+    @PutMapping("/users/fromToken")
+    public ApiResponse<UserResponse> updateUserFromToken(@RequestBody @Valid UserUpdateRequest request)
+    {
+        UserResponse userResponse = userService.updateUserFromToken(request);
         ApiResponse<UserResponse> response = new ApiResponse<>();
         response.setResult(userResponse);
         return response;

@@ -89,13 +89,13 @@ public class UserServiceImplementation implements UserService
 
     @Override
     @Transactional
-    public String updateUser(String userId, UserUpdateRequest request)
+    public UserResponse updateUser(String userId, UserUpdateRequest request)
     {
         User oldUser = userRepository.findById(userId).orElseThrow(() ->
                 new AppException(ErrorCode.USER_NOT_EXIST));
         userMapper.updateUser(oldUser, request);
         userRepository.save(oldUser);
-        return "Update successfully";
+        return userMapper.toUserResponse(oldUser);
     }
 
     @Override
@@ -111,6 +111,17 @@ public class UserServiceImplementation implements UserService
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         User user = this.findUserByEmail(email);
+        return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public UserResponse updateUserFromToken(UserUpdateRequest request)
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User user = this.findUserByEmail(email);
+        userMapper.updateUser(user, request);
+        userRepository.save(user);
         return userMapper.toUserResponse(user);
     }
 
