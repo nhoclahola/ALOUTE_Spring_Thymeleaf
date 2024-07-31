@@ -1,46 +1,40 @@
 package com.nhoclahola.socialnetworkv1.controller;
 
+import com.nhoclahola.socialnetworkv1.entity.User;
+import com.nhoclahola.socialnetworkv1.repository.UserRepository;
+import com.nhoclahola.socialnetworkv1.service.VideoUploadServiceImplementation;
+import com.nhoclahola.socialnetworkv1.service.ImageUploadServiceImplementation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 
+
+// This is just for test
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class FileUploadController
 {
-    // Đường dẫn tuyệt đối đến thư mục uploads trong thư mục gốc của dự án
+    // Absolute path
     private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
 
+    private static final String UPLOAD_POST_DIR = UPLOAD_DIR + "/posts/";
+
+    private final UserRepository userRepository;
+    private final VideoUploadServiceImplementation videoUploadServiceImplementation;
+    private final ImageUploadServiceImplementation imageUploadServiceImplementation;
     @PostMapping("/upload")
-    public String uploadFile(@RequestParam("file") MultipartFile file) {
-        try {
-            // Xác định đường dẫn đầy đủ đến tệp
-            String filePath = Paths.get(UPLOAD_DIR, file.getOriginalFilename()).toString();
-            File targetFile = new File(filePath);
-
-            // Tạo thư mục nếu chưa tồn tại
-            if (!targetFile.getParentFile().exists()) {
-                targetFile.getParentFile().mkdirs();
-            }
-
-            // Lưu tệp vào đĩa
-            file.transferTo(targetFile);
-
-            // Xây dựng URL đầy đủ để trả về
-            String fileDownloadUri = "http://localhost:8080/uploads/" + file.getOriginalFilename();
-
-            return "File uploaded successfully: " + fileDownloadUri;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "File upload failed: " + e.getMessage();
-        }
+    public String uploadFile(@RequestParam("image") MultipartFile image) throws IOException
+    {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println(userEmail);
+        User user = userRepository.findByEmail(userEmail).get();
+        return imageUploadServiceImplementation.upload(user.getUserId(), UPLOAD_POST_DIR, image);
     }
 }

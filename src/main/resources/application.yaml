@@ -13,6 +13,10 @@ spring:
   mvc:
     servlet:
       load-on-startup: 1
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 jwt:
   privateKey: 8acnkodIBNY6iRCuppO1AUCkOKJFBzjCIZuEqgWPCFq/ags2ANcd9PAO8RoGd9fp

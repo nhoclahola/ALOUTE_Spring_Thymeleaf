@@ -32,8 +32,16 @@ public enum ErrorCode
     // Chat
     CHAT_NOT_EXIST(1600, "The chat does not exist", HttpStatus.BAD_REQUEST),
 
-    // MESSAGE
+    // Message
     MESSAGE_NOT_EXIST(1700, "The message does not exist", HttpStatus.BAD_REQUEST),
+
+    // File upload
+    IMAGE_IS_EMPTY(1800, "The image you uploaded is empty", HttpStatus.BAD_REQUEST),
+    VIDEO_IS_EMPTY(1801, "The video you uploaded is empty", HttpStatus.BAD_REQUEST),
+    IMAGE_NOT_SUPPORTED(1802, "The image you uploaded is either not a valid image or is not supported", HttpStatus.BAD_REQUEST),
+    VIDEO_NOT_SUPPORTED(1803, "The video you uploaded is either not a valid video or is not supported", HttpStatus.BAD_REQUEST),
+
+
     ;
     private final int responseCode;
     private final String message;

@@ -13,7 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,16 +27,29 @@ public class PostServiceImplementation implements PostService
     private final UserService userService;
     private final PostMapper postMapper;
 
+
+    // Absolute path in project
+    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
+    private static final String UPLOAD_POST_DIR = UPLOAD_DIR + "/posts/";
+    private final VideoUploadServiceImplementation videoUploadServiceImplementation;
+    private final ImageUploadServiceImplementation imageUploadServiceImplementation;
+
     @Override
     @Transactional
-    public String createNewPost(PostCreateRequest post)
+    public String createNewPost(String caption, MultipartFile image, MultipartFile video) throws IOException
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
+        String imageUrl = null;
+        String videoUrl = null;
+        if (!image.isEmpty())
+            imageUrl = imageUploadServiceImplementation.upload(currentUser.getUserId(), UPLOAD_POST_DIR, image);
+        if (!video.isEmpty())
+            videoUrl = videoUploadServiceImplementation.upload(currentUser.getUserId(), UPLOAD_POST_DIR, video);
         Post newPost = Post.builder()
-                .caption(post.getCaption())
-                .imageUrl(post.getImageUrl())
-                .videoUrl(post.getVideoUrl())
+                .caption(caption)
+                .imageUrl(imageUrl)
+                .videoUrl(videoUrl)
                 .user(currentUser)
                 .createdAt(LocalDateTime.now())
                 .build();

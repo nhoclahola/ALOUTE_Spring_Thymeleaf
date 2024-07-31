@@ -3,12 +3,14 @@ package com.nhoclahola.socialnetworkv1.service;
 import com.nhoclahola.socialnetworkv1.dto.post.request.PostCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface PostService
 {
-    public abstract String createNewPost(PostCreateRequest post);
+    public abstract String createNewPost(String caption, MultipartFile image, MultipartFile video) throws IOException;
 
     public abstract String deletePost(String postId);
 

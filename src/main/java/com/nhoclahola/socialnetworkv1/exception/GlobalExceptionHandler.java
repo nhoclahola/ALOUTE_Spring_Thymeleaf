@@ -8,6 +8,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.util.stream.Collectors;
 
@@ -49,6 +50,18 @@ public class GlobalExceptionHandler
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         apiResponse.setResponseCode(errorCode.getResponseCode());
         apiResponse.setMessage(errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatusCode())
+                .body(apiResponse);
+    }
+
+    // Multipart exception, such as required part key
+    @ExceptionHandler(value = MissingServletRequestPartException.class)
+    public ResponseEntity<ApiResponse<?>> MissingServletRequestPartExceptionException(MissingServletRequestPartException exception)
+    {
+        ErrorCode errorCode = ErrorCode.INVALID_REQUEST;
+        ApiResponse<Object> apiResponse = new ApiResponse<>();
+        apiResponse.setResponseCode(errorCode.getResponseCode());
+        apiResponse.setMessage(errorCode.getMessage() + ": " + exception.getMessage());
         return ResponseEntity.status(errorCode.getHttpStatusCode())
                 .body(apiResponse);
     }

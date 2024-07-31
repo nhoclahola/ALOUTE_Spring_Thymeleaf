@@ -3,6 +3,9 @@ package com.nhoclahola.socialnetworkv1.dto.post.request;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+/***
+ * Not used
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
