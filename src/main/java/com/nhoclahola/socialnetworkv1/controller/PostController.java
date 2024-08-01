@@ -83,7 +83,7 @@ public class PostController
         return response;
     }
 
-    @GetMapping("/posts/home")
+    @GetMapping("/posts/homepage")
     public ApiResponse<List<PostResponse>> homePagePost(@RequestParam int followedIndex, @RequestParam int randomIndex)
     {
         List<PostResponse> postResponseList = postService.getHomeFeed(followedIndex, randomIndex);
