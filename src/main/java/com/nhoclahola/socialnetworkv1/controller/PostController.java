@@ -65,7 +65,7 @@ public class PostController
         return response;
     }
 
-    @PutMapping("/posts/save/{postId}")
+    @PutMapping("/posts/{postId}/save")
     public ApiResponse<String> savePost(@PathVariable String postId)
     {
         String result = postService.savePost(postId);
@@ -74,7 +74,7 @@ public class PostController
         return response;
     }
 
-    @PutMapping("/posts/like/{postId}")
+    @PutMapping("/posts/{postId}/like")
     public ApiResponse<String> likePost(@PathVariable String postId)
     {
         String result = postService.likePost(postId);
