@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -71,6 +72,18 @@ public class GlobalExceptionHandler
     public ResponseEntity<ApiResponse<?>> handlingAccessDeniedException(AccessDeniedException exception)
     {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
+        ApiResponse<Object> apiResponse = new ApiResponse<>();
+        apiResponse.setResponseCode(errorCode.getResponseCode());
+        apiResponse.setMessage(errorCode.getMessage());
+        return ResponseEntity.status(errorCode.getHttpStatusCode())
+                .body(apiResponse);
+    }
+
+    // Handling IOException when uploading file
+    @ExceptionHandler(value = IOException.class)
+    public ResponseEntity<ApiResponse<?>> handlingIOException(IOException exception)
+    {
+        ErrorCode errorCode = ErrorCode.IO_ERROR;
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         apiResponse.setResponseCode(errorCode.getResponseCode());
         apiResponse.setMessage(errorCode.getMessage());

@@ -40,7 +40,7 @@ public enum ErrorCode
     VIDEO_IS_EMPTY(1801, "The video you uploaded is empty", HttpStatus.BAD_REQUEST),
     IMAGE_NOT_SUPPORTED(1802, "The image you uploaded is either not a valid image or is not supported", HttpStatus.BAD_REQUEST),
     VIDEO_NOT_SUPPORTED(1803, "The video you uploaded is either not a valid video or is not supported", HttpStatus.BAD_REQUEST),
-
+    IO_ERROR(1085, "There is an error during the I/O process", HttpStatus.INTERNAL_SERVER_ERROR),
 
     ;
     private final int responseCode;

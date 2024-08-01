@@ -24,13 +24,13 @@ public class Post
     private String videoUrl;
     private LocalDateTime createdAt;
 
+    // EAGER to avoid many querys in getting posts
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     // Use Set to force Hibernate create primary key for join table of @ManyToMany
 
-    // EAGER to respond quickly in PostResponse
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name ="post_liked",
@@ -47,7 +47,7 @@ public class Post
     )
     private Set<User> saved;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
     @PrePersist

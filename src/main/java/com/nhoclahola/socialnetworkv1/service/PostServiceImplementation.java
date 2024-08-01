@@ -9,6 +9,9 @@ import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.PostMapper;
 import com.nhoclahola.socialnetworkv1.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,7 +20,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -140,5 +146,26 @@ public class PostServiceImplementation implements PostService
         Post post = postRepository.findById(postId).orElseThrow(() ->
                 new AppException(ErrorCode.POST_NOT_EXIST));
         return postMapper.toPostResponse(post);
+    }
+
+    @Override
+    public List<PostResponse> getHomeFeed(int followedPostIndex, int randomPostIndex) {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userService.findUserByEmail(currentUserEmail);
+        String currentUserId = currentUser.getUserId();
+        // page = index / size
+        // By default, get 10 posts from the followed users
+        int followedPageNumber = followedPostIndex / 10;
+        Pageable followedPageable = PageRequest.of(followedPageNumber, 10, Sort.by("createdAt").descending());
+        List<Post> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserId, followedPageable);
+        // By default, get 2 random posts from the other users
+        int randomPostPageNumber = randomPostIndex / 2;
+        Pageable randomPageable = PageRequest.of(randomPostPageNumber, 2, Sort.by("createdAt").descending());
+        List<Post> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserId, randomPageable);
+        // Merge 2 list
+        List<Post> homeFeed = new ArrayList<>();
+        homeFeed.addAll(followedPosts);
+        homeFeed.addAll(randomPosts);
+        return postMapper.toListPostResponse(homeFeed);
     }
 }

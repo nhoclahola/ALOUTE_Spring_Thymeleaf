@@ -3,6 +3,7 @@ package com.nhoclahola.socialnetworkv1.controller;
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.request.PostCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
+import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -79,6 +80,15 @@ public class PostController
         String result = postService.likePost(postId);
         ApiResponse<String> response = new ApiResponse<>();
         response.setResult(result);
+        return response;
+    }
+
+    @GetMapping("/posts/home")
+    public ApiResponse<List<PostResponse>> homePagePost(@RequestParam int followedIndex, @RequestParam int randomIndex)
+    {
+        List<PostResponse> postResponseList = postService.getHomeFeed(followedIndex, randomIndex);
+        ApiResponse<List<PostResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
         return response;
     }
 }

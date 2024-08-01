@@ -5,6 +5,7 @@ import com.nhoclahola.socialnetworkv1.entity.Post;
 import org.mapstruct.Mapper;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface PostMapper
@@ -12,5 +13,7 @@ public interface PostMapper
     public abstract PostResponse toPostResponse(Post post);
 
     public abstract List<PostResponse> toListPostResponse(List<Post> posts);
+
+    public abstract List<PostResponse> toListPostResponse(Set<Post> posts);
 
 }
