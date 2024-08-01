@@ -149,13 +149,13 @@ public class PostServiceImplementation implements PostService
     }
 
     @Override
-    public List<PostResponse> getHomeFeed(int followedPostIndex, int randomPostIndex) {
+    public List<PostResponse> getHomeFeed(int followingPostIndex, int randomPostIndex) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
         String currentUserId = currentUser.getUserId();
         // page = index / size
         // By default, get 10 posts from the followed users
-        int followedPageNumber = followedPostIndex / 10;
+        int followedPageNumber = followingPostIndex / 10;
         Pageable followedPageable = PageRequest.of(followedPageNumber, 10, Sort.by("createdAt").descending());
         List<Post> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserId, followedPageable);
         // By default, get 2 random posts from the other users

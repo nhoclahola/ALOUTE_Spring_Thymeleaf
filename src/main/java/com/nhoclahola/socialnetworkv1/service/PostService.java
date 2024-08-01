@@ -26,6 +26,6 @@ public interface PostService
 
     public abstract PostResponse findPostByIdResponse(String postId);
 
-    public abstract List<PostResponse> getHomeFeed(int followedPostIndex, int randomPostIndex);
+    public abstract List<PostResponse> getHomeFeed(int followingPostIndex, int randomPostIndex);
 
 }
