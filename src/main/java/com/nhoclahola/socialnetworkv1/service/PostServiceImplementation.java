@@ -163,7 +163,7 @@ public class PostServiceImplementation implements PostService
         Pageable randomPageable = PageRequest.of(randomPostPageNumber, 2, Sort.by("createdAt").descending());
         List<Post> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserId, randomPageable);
         // Merge 2 list
-        List<Post> homeFeed = new ArrayList<>();
+        Set<Post> homeFeed = new HashSet<>();
         homeFeed.addAll(followedPosts);
         homeFeed.addAll(randomPosts);
         return postMapper.toListPostResponse(homeFeed);
