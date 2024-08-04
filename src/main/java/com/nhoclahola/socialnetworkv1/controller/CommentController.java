@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -15,7 +17,7 @@ public class CommentController
 {
     private final CommentService commentService;
 
-    @PostMapping("/comments/post/{postId}")
+    @PostMapping("/comments/posts/{postId}")
     public ApiResponse<CommentResponse> createComment(@PathVariable String postId,
                                                       @RequestBody @Valid CommentCreateRequest request)
     {
@@ -39,6 +41,15 @@ public class CommentController
         CommentResponse commentResponse = commentService.findCommentByIdResponse(commentId);
         ApiResponse<CommentResponse> response = new ApiResponse<>();
         response.setResult(commentResponse);
+        return response;
+    }
+
+    @GetMapping("/comments/posts/{postId}")
+    public ApiResponse<List<CommentResponse>> getPostsComments(@PathVariable String postId, @RequestParam int index)
+    {
+        List<CommentResponse> commentResponseList = commentService.findCommentsByPostId(postId, index);
+        ApiResponse<List<CommentResponse>> response = new ApiResponse<>();
+        response.setResult(commentResponseList);
         return response;
     }
 }

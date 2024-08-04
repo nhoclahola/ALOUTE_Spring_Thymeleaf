@@ -1,6 +1,8 @@
 package com.nhoclahola.socialnetworkv1.mapper;
 
+import com.nhoclahola.socialnetworkv1.dto.post.PostWithLikes;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
+import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithLikesResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import org.mapstruct.Mapper;
 
@@ -15,5 +17,9 @@ public interface PostMapper
     public abstract List<PostResponse> toListPostResponse(List<Post> posts);
 
     public abstract List<PostResponse> toListPostResponse(Set<Post> posts);
+
+    public abstract List<PostWithLikesResponse> toListPostWithLikesResponse(List<PostWithLikes> postWithLikesList);
+
+    public abstract List<PostWithLikesResponse> toListPostWithLikesResponse(Set<PostWithLikes> postWithLikesSet);
 
 }

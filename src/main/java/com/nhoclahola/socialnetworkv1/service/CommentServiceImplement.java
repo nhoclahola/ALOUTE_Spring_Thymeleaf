@@ -11,11 +11,16 @@ import com.nhoclahola.socialnetworkv1.mapper.CommentMapper;
 import com.nhoclahola.socialnetworkv1.repository.CommentRepository;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -75,5 +80,16 @@ public class CommentServiceImplement implements CommentService
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXIST));
         return commentMapper.toCommentResponse(comment);
+    }
+
+    @Override
+    public List<CommentResponse> findCommentsByPostId(String postId, int index)
+    {
+        // 1 page has 5 comments
+        int pageNumber = index / 5;
+        Pageable pageable = PageRequest.of(pageNumber, 5, Sort.by("createdAt").descending());
+        List<Comment> comments = commentRepository.findCommentsByPostId(postId, pageable);
+        comments.sort(Comparator.comparing((comment) -> comment.getCreatedAt()));
+        return commentMapper.toListCommentResponse(comments);
     }
 }

@@ -1,7 +1,8 @@
 package com.nhoclahola.socialnetworkv1.service;
 
-import com.nhoclahola.socialnetworkv1.dto.post.request.PostCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
+import com.nhoclahola.socialnetworkv1.dto.post.PostWithLikes;
+import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithLikesResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.exception.AppException;
@@ -12,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -42,7 +41,7 @@ public class PostServiceImplementation implements PostService
 
     @Override
     @Transactional
-    public String createNewPost(String caption, MultipartFile image, MultipartFile video) throws IOException
+    public PostResponse createNewPost(String caption, MultipartFile image, MultipartFile video) throws IOException
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
@@ -60,7 +59,7 @@ public class PostServiceImplementation implements PostService
                 .createdAt(LocalDateTime.now())
                 .build();
         postRepository.save(newPost);
-        return "Created post successfully";
+        return postMapper.toPostResponse(newPost);
     }
 
     @Override
@@ -149,7 +148,7 @@ public class PostServiceImplementation implements PostService
     }
 
     @Override
-    public List<PostResponse> getHomeFeed(int followingPostIndex, int randomPostIndex) {
+    public List<PostWithLikesResponse> getHomeFeed(int followingPostIndex, int randomPostIndex) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
         String currentUserId = currentUser.getUserId();
@@ -157,15 +156,15 @@ public class PostServiceImplementation implements PostService
         // By default, get 10 posts from the followed users
         int followedPageNumber = followingPostIndex / 10;
         Pageable followedPageable = PageRequest.of(followedPageNumber, 10, Sort.by("createdAt").descending());
-        List<Post> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserId, followedPageable);
+        List<PostWithLikes> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserId, followedPageable);
         // By default, get 2 random posts from the other users
         int randomPostPageNumber = randomPostIndex / 2;
-        Pageable randomPageable = PageRequest.of(randomPostPageNumber, 2, Sort.by("createdAt").descending());
-        List<Post> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserId, randomPageable);
+        Pageable randomPageable = PageRequest.of(randomPostPageNumber, 2);
+        List<PostWithLikes> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserId, randomPageable);
         // Merge 2 list
-        Set<Post> homeFeed = new HashSet<>();
+        Set<PostWithLikes> homeFeed = new HashSet<>();
         homeFeed.addAll(followedPosts);
         homeFeed.addAll(randomPosts);
-        return postMapper.toListPostResponse(homeFeed);
+        return postMapper.toListPostWithLikesResponse(homeFeed);
     }
 }

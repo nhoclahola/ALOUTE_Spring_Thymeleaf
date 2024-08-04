@@ -4,6 +4,8 @@ import com.nhoclahola.socialnetworkv1.dto.comment.request.CommentCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
 import com.nhoclahola.socialnetworkv1.entity.Comment;
 
+import java.util.List;
+
 public interface CommentService
 {
     public CommentResponse createComment(String postId, CommentCreateRequest commentCreateRequest);
@@ -13,4 +15,6 @@ public interface CommentService
     public String likeComment(String commentId);
 
     public CommentResponse findCommentByIdResponse(String commentId);
+
+    public List<CommentResponse> findCommentsByPostId(String postId, int index);
 }
