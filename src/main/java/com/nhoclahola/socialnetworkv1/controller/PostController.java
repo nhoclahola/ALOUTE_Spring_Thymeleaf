@@ -2,8 +2,7 @@ package com.nhoclahola.socialnetworkv1.controller;
 
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
-import com.nhoclahola.socialnetworkv1.dto.post.PostWithLikes;
-import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithLikesResponse;
+import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
 import com.nhoclahola.socialnetworkv1.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -83,10 +82,10 @@ public class PostController
     }
 
     @GetMapping("/posts/homepage")
-    public ApiResponse<List<PostWithLikesResponse>> homePagePost(@RequestParam int followingIndex, @RequestParam int randomIndex)
+    public ApiResponse<List<PostWithDataResponse>> homePagePost(@RequestParam int followingIndex, @RequestParam int randomIndex)
     {
-        List<PostWithLikesResponse> postResponseList = postService.getHomeFeed(followingIndex, randomIndex);
-        ApiResponse<List<PostWithLikesResponse>> response = new ApiResponse<>();
+        List<PostWithDataResponse> postResponseList = postService.getHomeFeed(followingIndex, randomIndex);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
         response.setResult(postResponseList);
         return response;
     }

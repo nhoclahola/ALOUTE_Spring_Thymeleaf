@@ -1,10 +1,11 @@
 package com.nhoclahola.socialnetworkv1.mapper;
 
-import com.nhoclahola.socialnetworkv1.dto.post.PostWithLikes;
+import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
-import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithLikesResponse;
+import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 import java.util.Set;
@@ -18,8 +19,14 @@ public interface PostMapper
 
     public abstract List<PostResponse> toListPostResponse(Set<Post> posts);
 
-    public abstract List<PostWithLikesResponse> toListPostWithLikesResponse(List<PostWithLikes> postWithLikesList);
+    // Because Lombok will build to getter "isLiked", not "getIsLiked" so Mapstruct will get it wrong
 
-    public abstract List<PostWithLikesResponse> toListPostWithLikesResponse(Set<PostWithLikes> postWithLikesSet);
+    @Mapping(source = "liked", target = "isLiked")
+
+    public abstract PostWithDataResponse toPostWithDataResponse (PostWithData postWithData);
+
+    public abstract List<PostWithDataResponse> toListPostWithDataResponse(List<PostWithData> postWithDataList);
+
+    public abstract List<PostWithDataResponse> toListPostWithLikesResponse(Set<PostWithData> postWithDataSet);
 
 }

@@ -1,8 +1,8 @@
 package com.nhoclahola.socialnetworkv1.service;
 
+import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
-import com.nhoclahola.socialnetworkv1.dto.post.PostWithLikes;
-import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithLikesResponse;
+import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.exception.AppException;
@@ -124,18 +124,16 @@ public class PostServiceImplementation implements PostService
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
-        Post post = this.findPostById(postId);
-        if (post.getLiked().contains(currentUser))
+        int isLiked = postRepository.isLikedByUserId(postId, currentUser.getUserId());
+        if (isLiked == 0)
         {
-            post.getLiked().remove(currentUser);
-            postRepository.save(post);
-            return "You just unliked this post";
+            postRepository.addLikeToPost(postId, currentUser.getUserId());
+            return "You just liked this post";
         }
         else
         {
-            post.getLiked().add(currentUser);
-            postRepository.save(post);
-            return "You just liked this post";
+            postRepository.removeLikeFromPost(postId, currentUser.getUserId());
+            return "You just unliked this post";
         }
     }
 
@@ -148,7 +146,7 @@ public class PostServiceImplementation implements PostService
     }
 
     @Override
-    public List<PostWithLikesResponse> getHomeFeed(int followingPostIndex, int randomPostIndex) {
+    public List<PostWithDataResponse> getHomeFeed(int followingPostIndex, int randomPostIndex) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
         String currentUserId = currentUser.getUserId();
@@ -156,13 +154,13 @@ public class PostServiceImplementation implements PostService
         // By default, get 10 posts from the followed users
         int followedPageNumber = followingPostIndex / 10;
         Pageable followedPageable = PageRequest.of(followedPageNumber, 10, Sort.by("createdAt").descending());
-        List<PostWithLikes> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserId, followedPageable);
+        List<PostWithData> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserId, followedPageable);
         // By default, get 2 random posts from the other users
         int randomPostPageNumber = randomPostIndex / 2;
         Pageable randomPageable = PageRequest.of(randomPostPageNumber, 2);
-        List<PostWithLikes> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserId, randomPageable);
+        List<PostWithData> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserId, randomPageable);
         // Merge 2 list
-        Set<PostWithLikes> homeFeed = new HashSet<>();
+        Set<PostWithData> homeFeed = new HashSet<>();
         homeFeed.addAll(followedPosts);
         homeFeed.addAll(randomPosts);
         return postMapper.toListPostWithLikesResponse(homeFeed);
