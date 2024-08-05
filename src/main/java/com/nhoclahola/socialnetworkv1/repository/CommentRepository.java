@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, String>
 {
+    // JOIN FETCH to make it fetch eagerly, even I set lazy fetch in entity
     @Query("SELECT c FROM Comment c JOIN FETCH c.user WHERE c.post.postId = :postId")
     public abstract List<Comment> findCommentsByPostId(String postId, Pageable pageable);
 }

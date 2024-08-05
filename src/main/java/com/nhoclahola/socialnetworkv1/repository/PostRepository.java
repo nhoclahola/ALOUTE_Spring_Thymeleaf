@@ -15,10 +15,14 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, String>
 {
-    @Query("SELECT p FROM Post p WHERE p.user.userId = :userId")
-    public abstract List<Post> findPostByUserId(String userId);
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
+            "(SELECT COUNT(l) FROM p.liked l), " +
+            "(SELECT COUNT(c) FROM p.comments c), " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.userId = :requestUserId)) " +
+            "FROM Post p WHERE p.user.id = :userId")
+    public abstract List<PostWithData> findPostByUserId(@Param("requestUserId") String requestUserId,
+                                                        @Param("userId") String userId, Pageable pageable);
 
-    // JOIN FETCH to make it fetch eagerly, even I set lazy fetch in entity
     // Get a list of posts from the users who the current user is following
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +

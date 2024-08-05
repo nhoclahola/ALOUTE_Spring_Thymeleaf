@@ -76,10 +76,16 @@ public class PostServiceImplementation implements PostService
     }
 
     @Override
-    public List<PostResponse> findPostByUserId(String userId)
+    public List<PostWithDataResponse> findPostsByUserId(String userId, int index)
     {
-        List<Post> posts = postRepository.findPostByUserId(userId);
-        return postMapper.toListPostResponse(posts);
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userService.findUserByEmail(currentUserEmail);
+        // page = index / size
+        // By default, get 10 posts from the user
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("createdAt").descending());
+        List<PostWithData> posts = postRepository.findPostByUserId(currentUser.getUserId(), userId, pageable);
+        return postMapper.toListPostWithDataResponse(posts);
     }
 
     @Override
@@ -163,6 +169,6 @@ public class PostServiceImplementation implements PostService
         Set<PostWithData> homeFeed = new HashSet<>();
         homeFeed.addAll(followedPosts);
         homeFeed.addAll(randomPosts);
-        return postMapper.toListPostWithLikesResponse(homeFeed);
+        return postMapper.toListPostWithDataResponse(homeFeed);
     }
 }

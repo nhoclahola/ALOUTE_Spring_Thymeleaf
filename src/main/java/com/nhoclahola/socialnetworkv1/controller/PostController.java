@@ -45,11 +45,11 @@ public class PostController
         return response;
     }
 
-    @GetMapping("/posts/user/{userId}")
-    public ApiResponse<List<PostResponse>> getUsersPosts(@PathVariable String userId)
+    @GetMapping("/posts/users/{userId}")
+    public ApiResponse<List<PostWithDataResponse>> getUsersPosts(@PathVariable String userId, @RequestParam int index)
     {
-        List<PostResponse> postResponseList = postService.findPostByUserId(userId);
-        ApiResponse<List<PostResponse>> response = new ApiResponse<>();
+        List<PostWithDataResponse> postResponseList = postService.findPostsByUserId(userId, index);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
         response.setResult(postResponseList);
         return response;
     }

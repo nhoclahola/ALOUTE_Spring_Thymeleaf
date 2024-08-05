@@ -27,6 +27,6 @@ public interface PostMapper
 
     public abstract List<PostWithDataResponse> toListPostWithDataResponse(List<PostWithData> postWithDataList);
 
-    public abstract List<PostWithDataResponse> toListPostWithLikesResponse(Set<PostWithData> postWithDataSet);
+    public abstract List<PostWithDataResponse> toListPostWithDataResponse(Set<PostWithData> postWithDataSet);
 
 }

@@ -14,7 +14,7 @@ public interface PostService
 
     public abstract String deletePost(String postId);
 
-    public abstract List<PostResponse> findPostByUserId(String userId);
+    public abstract List<PostWithDataResponse> findPostsByUserId(String userId, int index);
 
     public abstract Post findPostById(String postId);
 
