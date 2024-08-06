@@ -29,12 +29,22 @@ public class FileUploadController
     private final UserRepository userRepository;
     private final VideoUploadServiceImplementation videoUploadServiceImplementation;
     private final ImageUploadServiceImplementation imageUploadServiceImplementation;
-    @PostMapping("/upload")
-    public String uploadFile(@RequestParam("image") MultipartFile image) throws IOException
-    {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(userEmail);
-        User user = userRepository.findByEmail(userEmail).get();
-        return imageUploadServiceImplementation.upload(user.getUserId(), UPLOAD_POST_DIR, image);
-    }
+//    @PostMapping("/upload")
+//    public String uploadFile(@RequestParam("image") MultipartFile image) throws IOException
+//    {
+//        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+//        System.out.println(userEmail);
+//        User user = userRepository.findByEmail(userEmail).get();
+//        return imageUploadServiceImplementation.upload(user.getUserId(), UPLOAD_POST_DIR, image);
+//    }
+//
+//    @PostMapping("/upload/avatar")
+//    public String uploadAvatar(@RequestParam("avatar") MultipartFile avatar) throws IOException
+//    {
+//        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+//        System.out.println(userEmail);
+//        User user = userRepository.findByEmail(userEmail).get();
+//        return imageUploadServiceImplementation.uploadAvatar(user.getUserId(), UPLOAD_DIR, avatar);
+//    }
+
 }

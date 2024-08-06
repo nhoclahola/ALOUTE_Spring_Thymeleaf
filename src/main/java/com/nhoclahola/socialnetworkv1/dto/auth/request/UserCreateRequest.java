@@ -16,6 +16,8 @@ public class UserCreateRequest
     private String lastName;
     @NotBlank(message = "You must enter the email")
     private String email;
+    @NotBlank(message = "You must enter the username")
+    private String username;
     @NotBlank(message = "You must enter the password")
     private String password;
     private String gender;

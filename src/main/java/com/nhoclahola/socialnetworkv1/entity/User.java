@@ -24,10 +24,15 @@ public class User
     @Column(nullable = false)
     private String lastName;
     @Column(unique = true, nullable = false)
+    private String username;
+    @Column(unique = true, nullable = false)
     private String email;
     @Column(nullable = false)
     private String password;
-    private String gender;
+    private String description;
+    private Boolean gender;
+    private String avatarUrl;
+    private String coverPhotoUrl;
     @Column(nullable = false)
     private Role role;
 

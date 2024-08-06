@@ -20,10 +20,9 @@ public class PostController
 
     @PostMapping("/posts")
     public ApiResponse<PostResponse> createPost(@RequestPart String caption,
-                                          @RequestPart("image") MultipartFile image,
-                                          @RequestPart("video") MultipartFile video) throws IOException
+                                          @RequestPart("image") MultipartFile image) throws IOException
     {
-        PostResponse result = postService.createNewPost(caption, image, video);
+        PostResponse result = postService.createNewPost(caption, image);
         ApiResponse<PostResponse> response = new ApiResponse<>();
         response.setResult(result);
         return response;

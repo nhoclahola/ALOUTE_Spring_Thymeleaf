@@ -15,5 +15,5 @@ public class UserUpdateRequest
     @NotBlank(message = "You must enter the last name")
     private String lastName;
     private String password;
-    private String gender;
+    private Boolean gender;
 }

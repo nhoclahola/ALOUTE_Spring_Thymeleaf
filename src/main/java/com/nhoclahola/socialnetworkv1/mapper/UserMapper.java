@@ -13,6 +13,7 @@ public interface UserMapper
 {
     public abstract User userLoginRequestToUser(UserCreateRequest request);
 
+    @Mapping(target = "avatarUrl", expression = "java(user.getAvatarUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + user.getAvatarUrl() : null)")
     public abstract UserResponse toUserResponse(User user);
 
     public abstract List<UserResponse> toListUserResponse(List<User> users);

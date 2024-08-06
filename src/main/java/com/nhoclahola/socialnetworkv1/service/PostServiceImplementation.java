@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.service;
 
+import com.nhoclahola.socialnetworkv1.configuration.WebConfig;
 import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
@@ -32,29 +33,24 @@ public class PostServiceImplementation implements PostService
     private final UserService userService;
     private final PostMapper postMapper;
 
-
-    // Absolute path in project
-    private static final String UPLOAD_DIR = System.getProperty("user.dir") + "/uploads/";
-    private static final String UPLOAD_POST_DIR = UPLOAD_DIR + "/posts/";
+    // Relative path in project
+    private static final String POST_DIR = "/posts/";
     private final VideoUploadServiceImplementation videoUploadServiceImplementation;
     private final ImageUploadServiceImplementation imageUploadServiceImplementation;
 
     @Override
     @Transactional
-    public PostResponse createNewPost(String caption, MultipartFile image, MultipartFile video) throws IOException
+    public PostResponse createNewPost(String caption, MultipartFile image) throws IOException
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
+        String uploadPostDir = POST_DIR + currentUser.getUserId() + "/images/";
         String imageUrl = null;
-        String videoUrl = null;
         if (!image.isEmpty())
-            imageUrl = imageUploadServiceImplementation.upload(currentUser.getUserId(), UPLOAD_POST_DIR, image);
-        if (!video.isEmpty())
-            videoUrl = videoUploadServiceImplementation.upload(currentUser.getUserId(), UPLOAD_POST_DIR, video);
+            imageUrl = imageUploadServiceImplementation.upload(uploadPostDir, image);
         Post newPost = Post.builder()
                 .caption(caption)
                 .imageUrl(imageUrl)
-                .videoUrl(videoUrl)
                 .user(currentUser)
                 .createdAt(LocalDateTime.now())
                 .build();

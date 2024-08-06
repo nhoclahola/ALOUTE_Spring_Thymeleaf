@@ -16,5 +16,4 @@ public class PostCreateRequest
     @NotBlank(message = "Caption can not be blank")
     private String caption;
     private String imageUrl;
-    private String videoUrl;
 }

@@ -1,6 +1,7 @@
 package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
+import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.entity.Role;
@@ -16,7 +17,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -26,7 +29,9 @@ public class UserServiceImplementation implements UserService
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final ImageUploadServiceImplementation imageUploadServiceImplementation;
 
+    private final String AVATAR_DIR = "/avatar/";
     @Override
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponse> findAllUsers()
@@ -60,6 +65,21 @@ public class UserServiceImplementation implements UserService
     public User findUserByEmail(String email)
     {
         return userRepository.findByEmail(email).orElseThrow(() ->
+                new AppException(ErrorCode.USER_NOT_EXIST));
+    }
+
+    @Override
+    public UserResponse findUserByIdResponse(String userId)
+    {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new AppException(ErrorCode.USER_NOT_EXIST));
+        return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public UserWithData findUserDataByUserId(String userId)
+    {
+        return userRepository.findUserWithDataByUserId(userId).orElseThrow(() ->
                 new AppException(ErrorCode.USER_NOT_EXIST));
     }
 
@@ -106,7 +126,7 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
-    public UserResponse getUserFromToken()
+    public UserResponse findUserFromToken()
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -126,14 +146,6 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
-    public UserResponse findUserByIdResponse(String userId)
-    {
-        User user = userRepository.findById(userId).orElseThrow(() ->
-                new AppException(ErrorCode.USER_NOT_EXIST));
-        return userMapper.toUserResponse(user);
-    }
-
-    @Override
     public List<UserResponse> findUsersFollowing(String userId)
     {
         List<User> usersFollowing = userRepository.findUsersFollowings(userId);
@@ -146,4 +158,18 @@ public class UserServiceImplementation implements UserService
         List<User> usersFollowers = userRepository.findUsersFollowers(userId);
         return userMapper.toListUserResponse(usersFollowers);
     }
+
+    @Override
+    public UserResponse uploadAvatar(MultipartFile image) throws IOException
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = this.findUserByEmail(currentUserEmail);
+        String uploadAvatarDir = AVATAR_DIR + currentUser.getUserId() + "/";
+        String avatarUrl = imageUploadServiceImplementation.upload(uploadAvatarDir, image);
+        currentUser.setAvatarUrl(avatarUrl);
+        userRepository.save(currentUser);
+        return userMapper.toUserResponse(currentUser);
+    }
+
+
 }

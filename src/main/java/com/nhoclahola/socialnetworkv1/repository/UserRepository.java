@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.repository;
 
+import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,6 +14,13 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, String>
 {
     public abstract Optional<User> findByEmail(String email);
+
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.user.UserWithData (u.userId, u.firstName, u.lastName, u.username, u.email, u.description, u.gender, u.avatarUrl, u.coverPhotoUrl, " +
+            "(SELECT COUNT(p) FROM u.posts p), " +
+            "(SELECT COUNT(fr) FROM u.followers fr), " +
+            "(SELECT COUNT(fg) FROM u.followings fg)) " +
+            "FROM User u WHERE u.userId = :userId")
+    public abstract Optional<UserWithData> findUserWithDataByUserId(@Param("userId") String userId);
 
     public abstract boolean existsByEmail(String email);
     @Query("SELECT u FROM User u WHERE u.firstName LIKE %:query% " +

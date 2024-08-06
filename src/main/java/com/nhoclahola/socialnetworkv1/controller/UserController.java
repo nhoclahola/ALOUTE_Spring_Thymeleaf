@@ -1,13 +1,16 @@
 package com.nhoclahola.socialnetworkv1.controller;
 
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
+import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,11 +30,11 @@ public class UserController
     }
 
     @GetMapping("/users/{id}")
-    public ApiResponse<UserResponse> getUserById(@PathVariable String id)
+    public ApiResponse<UserWithData> getUserById(@PathVariable String id)
     {
-        UserResponse userResponse = userService.findUserByIdResponse(id);
-        ApiResponse<UserResponse> response = new ApiResponse<>();
-        response.setResult(userResponse);
+        UserWithData user = userService.findUserDataByUserId(id);
+        ApiResponse<UserWithData> response = new ApiResponse<>();
+        response.setResult(user);
         return response;
     }
 
@@ -71,7 +74,7 @@ public class UserController
     @GetMapping("/users/fromToken")
     public ApiResponse<UserResponse> getUserFromToken()
     {
-        UserResponse userResponse = userService.getUserFromToken();
+        UserResponse userResponse = userService.findUserFromToken();
         ApiResponse<UserResponse> response = new ApiResponse<>();
         response.setResult(userResponse);
         return response;
@@ -103,6 +106,15 @@ public class UserController
         List<UserResponse> userResponseList = userService.findUsersFollower(userId);
         ApiResponse<List<UserResponse>> response = new ApiResponse<>();
         response.setResult(userResponseList);
+        return response;
+    }
+
+    @PostMapping("users/avatar")
+    public ApiResponse<UserResponse> uploadAvatar(@RequestPart MultipartFile image) throws IOException
+    {
+        UserResponse userResponse = userService.uploadAvatar(image);
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(userResponse);
         return response;
     }
 }

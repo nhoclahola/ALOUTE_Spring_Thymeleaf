@@ -2,6 +2,7 @@ package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.exception.AppException;
 import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
+import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,24 +15,27 @@ import java.util.UUID;
 @Service
 public class ImageUploadServiceImplementation implements FileUploadService
 {
+    private final Tika tika = new Tika();
+
+    private static final String UPLOAD_DIR = "/uploads/";
+    private static final String ABSOLUTE_PATH = System.getProperty("user.dir") + UPLOAD_DIR;
 
     @Override
-    public String upload(String userId, String path, MultipartFile file) throws IOException
+    public String upload(String path, MultipartFile file) throws IOException
     {
+        String absolutePath = ABSOLUTE_PATH + path;
         if (file.isEmpty())
             throw new AppException(ErrorCode.IMAGE_IS_EMPTY);
-        String fileType = file.getContentType();
-        String fileFolderPath;
-        if (fileType != null && fileType.startsWith("image"))
-            fileFolderPath = path + userId + "/images/";
-        else
+        String fileType = tika.detect(file.getInputStream());
+
+        if (fileType == null || !fileType.startsWith("image"))
             throw new AppException(ErrorCode.IMAGE_NOT_SUPPORTED);
 
         // Create new unique image name
         String fileHexName = UUID.randomUUID().toString().replace("-", "");
         String extension = Objects.requireNonNull(file.getOriginalFilename())
                 .substring(file.getOriginalFilename().lastIndexOf("."));
-        String filePath = Paths.get(fileFolderPath, fileHexName + extension).toString();
+        String filePath = Paths.get(absolutePath, fileHexName + extension).toString();
         File targetFile = new File(filePath);
 
         // Create folder if it not exist
@@ -39,6 +43,6 @@ public class ImageUploadServiceImplementation implements FileUploadService
             targetFile.getParentFile().mkdirs();
         file.transferTo(targetFile);
 
-        return "http://localhost:8080/uploads/posts/" + userId + "/images/" + fileHexName + extension;
+        return (UPLOAD_DIR + path + fileHexName + extension).replaceAll("/+", "/");
     }
 }
