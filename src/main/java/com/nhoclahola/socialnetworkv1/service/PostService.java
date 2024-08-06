@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PostService
 {
-    public abstract PostResponse createNewPost(String caption, MultipartFile image, MultipartFile video) throws IOException;
+    public abstract PostResponse createNewPost(String caption, MultipartFile image) throws IOException;
 
     public abstract String deletePost(String postId);
 

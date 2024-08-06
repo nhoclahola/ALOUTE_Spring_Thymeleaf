@@ -10,9 +10,10 @@ import org.mapstruct.Mapping;
 import java.util.List;
 import java.util.Set;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = UserMapper.class) // To change avatarUrl with method in UserMapper
 public interface PostMapper
 {
+    @Mapping(target = "imageUrl", expression = "java(post.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + post.getImageUrl() : null)")
     public abstract PostResponse toPostResponse(Post post);
 
     public abstract List<PostResponse> toListPostResponse(List<Post> posts);
@@ -22,7 +23,7 @@ public interface PostMapper
     // Because Lombok will build to getter "isLiked", not "getIsLiked" so Mapstruct will get it wrong
 
     @Mapping(source = "liked", target = "isLiked")
-
+    @Mapping(target = "imageUrl", expression = "java(postWithData.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + postWithData.getImageUrl() : null)")
     public abstract PostWithDataResponse toPostWithDataResponse (PostWithData postWithData);
 
     public abstract List<PostWithDataResponse> toListPostWithDataResponse(List<PostWithData> postWithDataList);

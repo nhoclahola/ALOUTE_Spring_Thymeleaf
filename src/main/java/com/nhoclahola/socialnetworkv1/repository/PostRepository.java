@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, String>
 {
-    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
             "EXISTS (SELECT l FROM p.liked l WHERE l.userId = :requestUserId)) " +
@@ -24,7 +24,7 @@ public interface PostRepository extends JpaRepository<Post, String>
                                                         @Param("userId") String userId, Pageable pageable);
 
     // Get a list of posts from the users who the current user is following
-    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
             "EXISTS (SELECT l FROM p.liked l WHERE l.userId = :currentUserId)) " +
@@ -32,7 +32,7 @@ public interface PostRepository extends JpaRepository<Post, String>
     public abstract List<PostWithData> findPostsFromFollowedUsers(@Param("currentUserId") String currentUserId, Pageable pageable);
 
     // Get a list of random posts from the other users whom the currentUser is not following
-    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
             "EXISTS (SELECT l FROM p.liked l WHERE l.userId = :currentUserId)) " +
