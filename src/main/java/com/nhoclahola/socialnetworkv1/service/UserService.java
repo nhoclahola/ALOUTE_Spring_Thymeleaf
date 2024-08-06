@@ -4,6 +4,7 @@ import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
+import com.nhoclahola.socialnetworkv1.dto.user.response.UserWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,7 @@ public interface UserService
 
     public abstract UserResponse findUserByIdResponse(String userId);
 
-    public abstract UserWithData findUserDataByUserId(String userId);
+    public abstract UserWithDataResponse findUserDataByUserId(String userId);
 
     public abstract User findUserByEmail(String email);
 

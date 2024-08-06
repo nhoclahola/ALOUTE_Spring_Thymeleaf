@@ -4,6 +4,7 @@ import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
+import com.nhoclahola.socialnetworkv1.dto.user.response.UserWithDataResponse;
 import com.nhoclahola.socialnetworkv1.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +31,10 @@ public class UserController
     }
 
     @GetMapping("/users/{id}")
-    public ApiResponse<UserWithData> getUserById(@PathVariable String id)
+    public ApiResponse<UserWithDataResponse> getUserById(@PathVariable String id)
     {
-        UserWithData user = userService.findUserDataByUserId(id);
-        ApiResponse<UserWithData> response = new ApiResponse<>();
+        UserWithDataResponse user = userService.findUserDataByUserId(id);
+        ApiResponse<UserWithDataResponse> response = new ApiResponse<>();
         response.setResult(user);
         return response;
     }

@@ -4,6 +4,7 @@ import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
+import com.nhoclahola.socialnetworkv1.dto.user.response.UserWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Role;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.exception.AppException;
@@ -77,10 +78,11 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
-    public UserWithData findUserDataByUserId(String userId)
+    public UserWithDataResponse findUserDataByUserId(String userId)
     {
-        return userRepository.findUserWithDataByUserId(userId).orElseThrow(() ->
+        UserWithData user = userRepository.findUserWithDataByUserId(userId).orElseThrow(() ->
                 new AppException(ErrorCode.USER_NOT_EXIST));
+        return userMapper.toUserWithDataResponse(user);
     }
 
     @Override
