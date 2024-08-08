@@ -110,12 +110,39 @@ public class UserController
         return response;
     }
 
-    @PostMapping("users/avatar")
+    @PostMapping("/users/avatar")
     public ApiResponse<UserResponse> uploadAvatar(@RequestPart MultipartFile image) throws IOException
     {
         UserResponse userResponse = userService.uploadAvatar(image);
         ApiResponse<UserResponse> response = new ApiResponse<>();
         response.setResult(userResponse);
+        return response;
+    }
+
+    @PostMapping("/users/cover")
+    public ApiResponse<UserResponse> uploadCover(@RequestPart MultipartFile image) throws IOException
+    {
+        UserResponse userResponse = userService.uploadCover(image);
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(userResponse);
+        return response;
+    }
+
+    @GetMapping("/users/popular")
+    public ApiResponse<List<UserResponse>> getSuggestedUsers()
+    {
+        List<UserResponse> userResponseList = userService.findSuggestedUsers();
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.setResult(userResponseList);
+        return response;
+    }
+
+    @GetMapping("/users/latest-activity-followings")
+    public ApiResponse<List<UserResponse>> getLatestActivityUsersFollowings()
+    {
+        List<UserResponse> userResponseList = userService.findLatestActivityUsersFollowings();
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.setResult(userResponseList);
         return response;
     }
 }

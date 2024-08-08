@@ -13,7 +13,8 @@ import com.nhoclahola.socialnetworkv1.mapper.UserMapper;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +33,8 @@ public class UserServiceImplementation implements UserService
     private final UserMapper userMapper;
     private final ImageUploadServiceImplementation imageUploadServiceImplementation;
 
-    private final String AVATAR_DIR = "/avatar/";
+    private final String AVATAR_DIR = "/avatars/";
+    private final String COVER_DIR = "/covers/";
     @Override
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserResponse> findAllUsers()
@@ -46,7 +48,9 @@ public class UserServiceImplementation implements UserService
     public User createUser(UserCreateRequest request)
     {
         if (userRepository.existsByEmail(request.getEmail()))
-            throw new AppException(ErrorCode.USER_EXIST_REGISTER);
+            throw new AppException(ErrorCode.EMAIL_EXIST_REGISTER);
+        if (userRepository.existsByUsername(request.getUsername()))
+            throw new AppException(ErrorCode.USERNAME_EXIST_REGISTER);
         User user = userMapper.userLoginRequestToUser(request);
         // userId is already null after mapping,
         // Just don't set it, Hibernate won't check it is exist or not again
@@ -80,7 +84,8 @@ public class UserServiceImplementation implements UserService
     @Override
     public UserWithDataResponse findUserDataByUserId(String userId)
     {
-        UserWithData user = userRepository.findUserWithDataByUserId(userId).orElseThrow(() ->
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserWithData user = userRepository.findUserWithDataByUserId(currentUserEmail, userId).orElseThrow(() ->
                 new AppException(ErrorCode.USER_NOT_EXIST));
         return userMapper.toUserWithDataResponse(user);
     }
@@ -95,17 +100,15 @@ public class UserServiceImplementation implements UserService
             throw new AppException(ErrorCode.FOLLOW_YOURSELF);
         User userToFollow = userRepository.findById(userIdToFollow).orElseThrow(() ->
                 new RuntimeException("User " + userIdToFollow + " is not exist"));
-        if (!currentUser.getFollowings().contains(userToFollow))
+        if (!userRepository.isFollow(currentUser.getUserId(), userToFollow.getUserId()))
         {
-            currentUser.getFollowings().add(userToFollow);
-            userRepository.save(currentUser);
-            return "You just followed " + userToFollow.getEmail();
+            userRepository.follow(currentUser.getUserId(), userToFollow.getUserId());
+            return "followed";
         }
         else
         {
-            currentUser.getFollowings().remove(userToFollow);
-            userRepository.save(currentUser);
-            return "You just unfollowed " + userToFollow.getEmail();
+            userRepository.unfollow(currentUser.getUserId(), userToFollow.getUserId());
+            return "unfollowed";
         }
     }
 
@@ -123,7 +126,8 @@ public class UserServiceImplementation implements UserService
     @Override
     public List<UserResponse> searchUser(String query)
     {
-        List<User> users = userRepository.searchUser(query);
+        Pageable pageable = PageRequest.of(0, 5);
+        List<User> users = userRepository.searchUser(query, pageable);
         return userMapper.toListUserResponse(users);
     }
 
@@ -162,6 +166,7 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
+    @Transactional
     public UserResponse uploadAvatar(MultipartFile image) throws IOException
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -171,6 +176,37 @@ public class UserServiceImplementation implements UserService
         currentUser.setAvatarUrl(avatarUrl);
         userRepository.save(currentUser);
         return userMapper.toUserResponse(currentUser);
+    }
+
+    @Override
+    @Transactional
+    public UserResponse uploadCover(MultipartFile image) throws IOException
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = this.findUserByEmail(currentUserEmail);
+        String uploadAvatarDir = COVER_DIR + currentUser.getUserId() + "/";
+        String coverUrl = imageUploadServiceImplementation.upload(uploadAvatarDir, image);
+        currentUser.setCoverPhotoUrl(coverUrl);
+        userRepository.save(currentUser);
+        return userMapper.toUserResponse(currentUser);
+    }
+
+    @Override
+    public List<UserResponse> findSuggestedUsers()
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Pageable pageable = PageRequest.of(0, 5);
+        List<User> userList = userRepository.findSuggestedUsers(currentUserEmail, pageable);
+        return userMapper.toListUserResponse(userList);
+    }
+
+    @Override
+    public List<UserResponse> findLatestActivityUsersFollowings()
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Pageable pageable = PageRequest.of(0, 5);
+        List<User> userList = userRepository.findLatestActivityUsersFollowings(currentUserEmail, pageable);
+        return userMapper.toListUserResponse(userList);
     }
 
 

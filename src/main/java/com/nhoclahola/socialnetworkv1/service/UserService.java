@@ -1,7 +1,6 @@
 package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
-import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserWithDataResponse;
@@ -40,4 +39,10 @@ public interface UserService
     public abstract List<UserResponse> findUsersFollower(String userId);
 
     public abstract UserResponse uploadAvatar(MultipartFile image) throws IOException;
+
+    public abstract UserResponse uploadCover(MultipartFile image) throws IOException;
+
+    public abstract List<UserResponse> findSuggestedUsers();
+
+    public abstract List<UserResponse> findLatestActivityUsersFollowings();
 }

@@ -25,5 +25,6 @@ public interface UserMapper
 
     @Mapping(target = "avatarUrl", expression = "java(user.getAvatarUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + user.getAvatarUrl() : null)")
     @Mapping(target = "coverPhotoUrl", expression = "java(user.getCoverPhotoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + user.getCoverPhotoUrl() : null)")
+    @Mapping(source = "follow", target = "isFollow")
     public abstract UserWithDataResponse toUserWithDataResponse(UserWithData user);
 }

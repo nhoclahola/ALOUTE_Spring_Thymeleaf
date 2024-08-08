@@ -2,7 +2,9 @@ package com.nhoclahola.socialnetworkv1.repository;
 
 import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.entity.User;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,19 +20,45 @@ public interface UserRepository extends JpaRepository<User, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.user.UserWithData (u.userId, u.firstName, u.lastName, u.username, u.email, u.description, u.gender, u.avatarUrl, u.coverPhotoUrl, " +
             "(SELECT COUNT(p) FROM u.posts p), " +
             "(SELECT COUNT(fr) FROM u.followers fr), " +
-            "(SELECT COUNT(fg) FROM u.followings fg)) " +
+            "(SELECT COUNT(fg) FROM u.followings fg), " +
+            "EXISTS (SELECT fr FROM u.followers fr WHERE fr.email = :userRequestEmail)) " +
             "FROM User u WHERE u.userId = :userId")
-    public abstract Optional<UserWithData> findUserWithDataByUserId(@Param("userId") String userId);
+    public abstract Optional<UserWithData> findUserWithDataByUserId(@Param("userRequestEmail") String userRequestEmail, @Param("userId") String userId);
 
     public abstract boolean existsByEmail(String email);
+
+    public abstract boolean existsByUsername(String username);
     @Query("SELECT u FROM User u WHERE u.firstName LIKE %:query% " +
             "OR u.lastName LIKE %:query% " +
-            "OR u.email LIKE %:query%")
-    public abstract List<User> searchUser(@Param("query") String query);
+            "OR u.username LIKE %:query%")
+    public abstract List<User> searchUser(@Param("query") String query, Pageable pageable);
 
+    @Query("SELECT EXISTS (SELECT 1 FROM u.followers fr WHERE fr.userId = :userRequestId) " +
+            "FROM User u WHERE u.userId = :userId")
+    public abstract boolean isFollow(@Param("userRequestId") String userRequestId, @Param("userId") String userId);
+
+    @Modifying
+    @Query(value = "INSERT INTO user_follow(follower_id, following_id) " +
+            "VALUES (:userRequestId, :userId)", nativeQuery = true)
+    public abstract void follow(@Param("userRequestId") String userRequestId, @Param("userId") String userId);
+
+    @Modifying
+    @Query(value = "DELETE FROM user_follow " +
+            "WHERE follower_id = :userRequestId AND following_id = :userId", nativeQuery = true)
+    public abstract void unfollow(@Param("userRequestId") String userRequestId, @Param("userId") String userId);
     @Query("SELECT u FROM User u JOIN u.followers f WHERE f.userId = :userId")
     public abstract List<User> findUsersFollowings(@Param("userId") String userId);
 
     @Query("SELECT u.followers FROM User u JOIN u.followings f WHERE f.userId = :userId")
     public abstract List<User> findUsersFollowers(@Param("userId") String userId);
+
+    @Query("SELECT u FROM User u " +
+            "JOIN u.posts p " +
+            "WHERE u IN (SELECT f FROM User u JOIN u.followings f WHERE u.email = :userRequestEmail) " +
+            "GROUP BY u.userId " +
+            "ORDER BY MAX(p.createdAt) DESC")
+    public abstract List<User> findLatestActivityUsersFollowings(@Param("userRequestEmail") String userRequestEmail, Pageable pageable);
+
+    @Query("SELECT u FROM User u LEFT JOIN u.followers f WHERE u.email != :userEmailRequest GROUP BY u ORDER BY COUNT(f) DESC")
+    public abstract List<User> findSuggestedUsers(@Param("userEmailRequest") String userEmailRequest, Pageable pageable);
 }

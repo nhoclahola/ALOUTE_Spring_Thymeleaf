@@ -21,4 +21,5 @@ public class UserWithData
     private long posts;
     private long followers;
     private long followings;
+    private boolean isFollow;
 }
