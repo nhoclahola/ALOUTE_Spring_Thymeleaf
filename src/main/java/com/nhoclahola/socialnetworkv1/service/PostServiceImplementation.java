@@ -1,6 +1,5 @@
 package com.nhoclahola.socialnetworkv1.service;
 
-import com.nhoclahola.socialnetworkv1.configuration.WebConfig;
 import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
@@ -40,17 +39,30 @@ public class PostServiceImplementation implements PostService
 
     @Override
     @Transactional
-    public PostResponse createNewPost(String caption, MultipartFile image) throws IOException
+    public PostResponse createNewPost(String caption, MultipartFile file) throws IOException
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
-        String uploadPostDir = POST_DIR + currentUser.getUserId() + "/images/";
+        String uploadPostDir;
         String imageUrl = null;
-        if (!image.isEmpty())
-            imageUrl = imageUploadServiceImplementation.upload(uploadPostDir, image);
+        String videoUrl = null;
+        // Quick check, it will be check binary type in Upload Service
+        if (file.getContentType() == null)
+            throw new AppException(ErrorCode.FILE_IS_EMPTY);
+        if (file.getContentType().startsWith("image"))
+        {
+            uploadPostDir = POST_DIR + currentUser.getUserId() + "/images/";
+            imageUrl = imageUploadServiceImplementation.upload(uploadPostDir, file);
+        }
+        else if (file.getContentType().startsWith("video"))
+        {
+            uploadPostDir = POST_DIR + currentUser.getUserId() + "/videos/";
+            videoUrl = videoUploadServiceImplementation.upload(uploadPostDir, file);
+        }
         Post newPost = Post.builder()
                 .caption(caption)
                 .imageUrl(imageUrl)
+                .videoUrl(videoUrl)
                 .user(currentUser)
                 .createdAt(LocalDateTime.now())
                 .build();
@@ -150,21 +162,30 @@ public class PostServiceImplementation implements PostService
     @Override
     public List<PostWithDataResponse> getHomeFeed(int followingPostIndex, int randomPostIndex) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userService.findUserByEmail(currentUserEmail);
-        String currentUserId = currentUser.getUserId();
         // page = index / size
         // By default, get 10 posts from the followed users
         int followedPageNumber = followingPostIndex / 10;
         Pageable followedPageable = PageRequest.of(followedPageNumber, 10, Sort.by("createdAt").descending());
-        List<PostWithData> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserId, followedPageable);
+        List<PostWithData> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserEmail, followedPageable);
         // By default, get 2 random posts from the other users
         int randomPostPageNumber = randomPostIndex / 2;
         Pageable randomPageable = PageRequest.of(randomPostPageNumber, 2);
-        List<PostWithData> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserId, randomPageable);
+        List<PostWithData> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserEmail, randomPageable);
         // Merge 2 list
         Set<PostWithData> homeFeed = new HashSet<>();
         homeFeed.addAll(followedPosts);
         homeFeed.addAll(randomPosts);
         return postMapper.toListPostWithDataResponse(homeFeed);
+    }
+
+    @Override
+    public List<PostWithDataResponse> findPopularVideoPosts(int index)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        LocalDateTime twoDaysAgo = LocalDateTime.now().minusDays(2);
+        List<PostWithData> popularVideoPosts = postRepository.findPopularVideoPosts(currentUserEmail, twoDaysAgo, pageable );
+        return postMapper.toListPostWithDataResponse(popularVideoPosts);
     }
 }

@@ -2,6 +2,7 @@ package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.exception.AppException;
 import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
+import lombok.RequiredArgsConstructor;
 import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,12 +14,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ImageUploadServiceImplementation implements FileUploadService
 {
-    private final Tika tika = new Tika();
-
-    private static final String UPLOAD_DIR = "/uploads/";
-    private static final String ABSOLUTE_PATH = System.getProperty("user.dir") + UPLOAD_DIR;
+    private final Tika tika;
 
     @Override
     public String upload(String path, MultipartFile file) throws IOException
@@ -31,18 +30,6 @@ public class ImageUploadServiceImplementation implements FileUploadService
         if (fileType == null || !fileType.startsWith("image"))
             throw new AppException(ErrorCode.IMAGE_NOT_SUPPORTED);
 
-        // Create new unique image name
-        String fileHexName = UUID.randomUUID().toString().replace("-", "");
-        String extension = Objects.requireNonNull(file.getOriginalFilename())
-                .substring(file.getOriginalFilename().lastIndexOf("."));
-        String filePath = Paths.get(absolutePath, fileHexName + extension).toString();
-        File targetFile = new File(filePath);
-
-        // Create folder if it not exist
-        if (!targetFile.getParentFile().exists())
-            targetFile.getParentFile().mkdirs();
-        file.transferTo(targetFile);
-
-        return (UPLOAD_DIR + path + fileHexName + extension).replaceAll("/+", "/");
+        return this.createFile(path, file);
     }
 }

@@ -21,6 +21,7 @@ public class Post
     @Column(nullable = false)
     private String caption;
     private String imageUrl;
+    private String videoUrl;
     private LocalDateTime createdAt;
 
     // EAGER to avoid many querys in getting posts

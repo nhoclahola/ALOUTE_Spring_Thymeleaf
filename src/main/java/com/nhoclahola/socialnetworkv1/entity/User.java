@@ -4,7 +4,6 @@ package com.nhoclahola.socialnetworkv1.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -69,11 +68,6 @@ public class User
 
     @ManyToMany(mappedBy = "liked", fetch = FetchType.LAZY)
     private Set<Comment> likedComments;
-
-    // Reels
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<Reels> reels;
 
     // Chat
 

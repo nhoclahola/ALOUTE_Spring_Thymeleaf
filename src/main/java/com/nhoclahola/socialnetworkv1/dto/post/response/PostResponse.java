@@ -18,6 +18,7 @@ public class PostResponse
     private String postId;
     private String caption;
     private String imageUrl;
+    private String videoUrl;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
     private UserResponse user;

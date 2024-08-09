@@ -80,14 +80,14 @@ public class GlobalExceptionHandler
     }
 
     // Handling IOException when uploading file
-    @ExceptionHandler(value = IOException.class)
-    public ResponseEntity<ApiResponse<?>> handlingIOException(IOException exception)
-    {
-        ErrorCode errorCode = ErrorCode.IO_ERROR;
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        apiResponse.setResponseCode(errorCode.getResponseCode());
-        apiResponse.setMessage(errorCode.getMessage());
-        return ResponseEntity.status(errorCode.getHttpStatusCode())
-                .body(apiResponse);
-    }
+//    @ExceptionHandler(value = IOException.class)
+//    public ResponseEntity<ApiResponse<?>> handlingIOException(IOException exception)
+//    {
+//        ErrorCode errorCode = ErrorCode.IO_ERROR;
+//        ApiResponse<Object> apiResponse = new ApiResponse<>();
+//        apiResponse.setResponseCode(errorCode.getResponseCode());
+//        apiResponse.setMessage(errorCode.getMessage());
+//        return ResponseEntity.status(errorCode.getHttpStatusCode())
+//                .body(apiResponse);
+//    }
 }

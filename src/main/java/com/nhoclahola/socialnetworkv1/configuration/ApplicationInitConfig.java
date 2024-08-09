@@ -5,6 +5,7 @@ import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tika.Tika;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,5 +37,11 @@ public class ApplicationInitConfig
                 log.warn("Admin user has been created with default password");
             }
         };
+    }
+
+    @Bean
+    public Tika createTika()
+    {
+        return new Tika();
     }
 }

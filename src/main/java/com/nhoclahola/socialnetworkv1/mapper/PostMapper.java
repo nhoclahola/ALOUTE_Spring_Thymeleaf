@@ -14,6 +14,7 @@ import java.util.Set;
 public interface PostMapper
 {
     @Mapping(target = "imageUrl", expression = "java(post.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + post.getImageUrl() : null)")
+    @Mapping(target = "videoUrl", expression = "java(post.getVideoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + post.getVideoUrl() : null)")
     public abstract PostResponse toPostResponse(Post post);
 
     public abstract List<PostResponse> toListPostResponse(List<Post> posts);
@@ -24,6 +25,7 @@ public interface PostMapper
 
     @Mapping(source = "liked", target = "isLiked")
     @Mapping(target = "imageUrl", expression = "java(postWithData.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + postWithData.getImageUrl() : null)")
+    @Mapping(target = "videoUrl", expression = "java(postWithData.getVideoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + postWithData.getVideoUrl() : null)")
     public abstract PostWithDataResponse toPostWithDataResponse (PostWithData postWithData);
 
     public abstract List<PostWithDataResponse> toListPostWithDataResponse(List<PostWithData> postWithDataList);

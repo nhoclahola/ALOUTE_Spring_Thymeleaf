@@ -17,7 +17,7 @@ public class JwtProvider
 
     public static String generateJwtToken(User user)
     {
-        var key = Keys.hmacShaKeyFor(PRIVATE_KEY.getBytes());
+        SecretKey key = Keys.hmacShaKeyFor(PRIVATE_KEY.getBytes());
         return Jwts.builder()
                 .issuer("nhoclahola")
                 .issuedAt(new Date())

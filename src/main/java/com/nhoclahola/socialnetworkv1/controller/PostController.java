@@ -20,9 +20,9 @@ public class PostController
 
     @PostMapping("/posts")
     public ApiResponse<PostResponse> createPost(@RequestPart String caption,
-                                          @RequestPart("image") MultipartFile image) throws IOException
+                                          @RequestPart("file") MultipartFile file) throws IOException
     {
-        PostResponse result = postService.createNewPost(caption, image);
+        PostResponse result = postService.createNewPost(caption, file);
         ApiResponse<PostResponse> response = new ApiResponse<>();
         response.setResult(result);
         return response;
@@ -84,6 +84,15 @@ public class PostController
     public ApiResponse<List<PostWithDataResponse>> homePagePost(@RequestParam int followingIndex, @RequestParam int randomIndex)
     {
         List<PostWithDataResponse> postResponseList = postService.getHomeFeed(followingIndex, randomIndex);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
+    }
+
+    @GetMapping("/posts/popular_videos")
+    public ApiResponse<List<PostWithDataResponse>> getPopularVideo(@RequestParam int index)
+    {
+        List<PostWithDataResponse> postResponseList = postService.findPopularVideoPosts(index);
         ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
         response.setResult(postResponseList);
         return response;
