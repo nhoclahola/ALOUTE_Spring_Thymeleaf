@@ -19,9 +19,9 @@ public class Message
     @Column(nullable = false)
     private String content;
     private String imageUrl;
-    private LocalDateTime timeStamp;
+    private LocalDateTime timestamp;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

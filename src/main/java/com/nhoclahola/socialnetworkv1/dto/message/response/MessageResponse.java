@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.dto.message.response;
 
+import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,4 +16,5 @@ public class MessageResponse
     private String content;
     private String imageUrl;
     private LocalDateTime timeStamp;
+    private UserResponse user;
 }

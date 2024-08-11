@@ -44,7 +44,7 @@ public class ChatServiceImplementation implements ChatService
         users.add(targetUser);
         Chat chat = Chat.builder()
                 .users(users)
-                .timeStamp(LocalDateTime.now())
+                .timestamp(LocalDateTime.now())
                 .build();
         chatRepository.save(chat);
         return chatMapper.toChatResponse(chat);
@@ -66,9 +66,11 @@ public class ChatServiceImplementation implements ChatService
     }
 
     @Override
-    public List<ChatResponse> findUsersChat(String userId)
+    public List<ChatResponse> findUsersChat()
     {
-        List<Chat> chats = chatRepository.findByUsersId(userId);
+        String requestUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User requestUser = userService.findUserByEmail(requestUserEmail);
+        List<Chat> chats = chatRepository.findByUsersId(requestUser.getUserId());
         return chatMapper.toListChatResponse(chats);
     }
 }

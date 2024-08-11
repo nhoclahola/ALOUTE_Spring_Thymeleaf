@@ -18,13 +18,12 @@ public class Chat
 {
     @Id
     private String chatId;
-    @Column(nullable = false)
     private String chatName;
     private String chatImageUrl;
-    private LocalDateTime timeStamp;
+    private LocalDateTime timestamp;
 
     // Use Set to force Hibernate create primary key for join table
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_chat",
             joinColumns = @JoinColumn(name = "chat_id"),

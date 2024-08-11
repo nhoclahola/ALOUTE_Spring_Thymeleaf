@@ -32,6 +32,7 @@ public enum ErrorCode
 
     // Chat
     CHAT_NOT_EXIST(1600, "The chat does not exist", HttpStatus.BAD_REQUEST),
+    USER_NOT_EXIST_IN_CHAT(1601, "User does not exist in the chat", HttpStatus.BAD_REQUEST),
 
     // Message
     MESSAGE_NOT_EXIST(1700, "The message does not exist", HttpStatus.BAD_REQUEST),

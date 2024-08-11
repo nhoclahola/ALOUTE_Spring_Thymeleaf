@@ -24,10 +24,10 @@ public class ChatController
         return response;
     }
 
-    @GetMapping("/chats/users/{userId}")
-    public ApiResponse<List<ChatResponse>> getUsersChat(@PathVariable String userId)
+    @GetMapping("/chats/user-chat")
+    public ApiResponse<List<ChatResponse>> getUsersChat()
     {
-        List<ChatResponse> chatResponseList = chatService.findUsersChat(userId);
+        List<ChatResponse> chatResponseList = chatService.findUsersChat();
         ApiResponse<List<ChatResponse>> response = new ApiResponse<>();
         response.setResult(chatResponseList);
         return response;

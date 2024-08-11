@@ -13,5 +13,5 @@ public interface ChatService
 
     public ChatResponse findChatByIdResponse(String chatId);
 
-    public List<ChatResponse> findUsersChat(String userId);
+    public List<ChatResponse> findUsersChat();
 }

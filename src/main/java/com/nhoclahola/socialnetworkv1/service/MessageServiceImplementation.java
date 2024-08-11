@@ -10,11 +10,15 @@ import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
 import com.nhoclahola.socialnetworkv1.mapper.MessageMapper;
 import com.nhoclahola.socialnetworkv1.repository.MessageRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -33,10 +37,12 @@ public class MessageServiceImplementation implements MessageService
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByEmail(userEmail);
         Chat chat = chatService.findChatById(chatId);
+        if (!chat.getUsers().contains(user))
+            throw new AppException(ErrorCode.USER_NOT_EXIST_IN_CHAT);
         Message message = messageMapper.messageCreateRequestToMessage(request);
         message.setUser(user);
         message.setChat(chat);
-        message.setTimeStamp(LocalDateTime.now());
+        message.setTimestamp(LocalDateTime.now());
         messageRepository.save(message);
         return messageMapper.toMessageResponse(message);
     }
@@ -44,7 +50,9 @@ public class MessageServiceImplementation implements MessageService
     @Override
     public List<MessageResponse> findMessagesByChatId(String chatId)
     {
-        List<Message> messages = messageRepository.findByChatId(chatId);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("timestamp").descending());
+        List<Message> messages = messageRepository.findMessagesByChatId(chatId, pageable);
+        messages.sort(Comparator.comparing((message) -> message.getTimestamp()));
         return messageMapper.toListMessageResponse(messages);
     }
 
