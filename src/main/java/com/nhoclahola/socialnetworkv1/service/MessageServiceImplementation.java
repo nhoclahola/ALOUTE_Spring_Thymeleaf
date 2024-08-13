@@ -32,10 +32,9 @@ public class MessageServiceImplementation implements MessageService
 
     @Override
     @Transactional
-    public MessageResponse createMessage(String chatId, MessageCreateRequest request)
+    public MessageResponse createMessage(String requestUserEmail, String chatId, MessageCreateRequest request)
     {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.findUserByEmail(userEmail);
+        User user = userService.findUserByEmail(requestUserEmail);
         Chat chat = chatService.findChatById(chatId);
         if (!chat.getUsers().contains(user))
             throw new AppException(ErrorCode.USER_NOT_EXIST_IN_CHAT);
@@ -48,9 +47,14 @@ public class MessageServiceImplementation implements MessageService
     }
 
     @Override
-    public List<MessageResponse> findMessagesByChatId(String chatId)
-    {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("timestamp").descending());
+    public List<MessageResponse> findMessagesByChatId(String chatId, int index)
+    {   String userRequestEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User requestUser = userService.findUserByEmail(userRequestEmail);
+        Chat chat = chatService.findChatById(chatId);
+        if (!chat.getUsers().contains(requestUser))
+            throw new AppException(ErrorCode.USER_NOT_EXIST_IN_CHAT);
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("timestamp").descending());
         List<Message> messages = messageRepository.findMessagesByChatId(chatId, pageable);
         messages.sort(Comparator.comparing((message) -> message.getTimestamp()));
         return messageMapper.toListMessageResponse(messages);

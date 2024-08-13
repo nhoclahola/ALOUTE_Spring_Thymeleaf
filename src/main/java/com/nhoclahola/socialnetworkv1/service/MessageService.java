@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface MessageService
 {
-    public abstract MessageResponse createMessage(String chatId, MessageCreateRequest request);
+    public abstract MessageResponse createMessage(String requestUserEmail, String chatId, MessageCreateRequest request);
 
-    public abstract List<MessageResponse> findMessagesByChatId(String chatId);
+    public abstract List<MessageResponse> findMessagesByChatId(String chatId, int index);
 
     public abstract Message findMessageById(String messageId);
 

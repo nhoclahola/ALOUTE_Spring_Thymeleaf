@@ -17,21 +17,21 @@ public class MessageController
 {
     private final MessageService messageService;
 
-    @PostMapping("/messages/chats/{chatId}")
-    public ApiResponse<MessageResponse> createMessage(@PathVariable String chatId,
-                                         @RequestBody @Valid MessageCreateRequest request)
-    {
-        MessageResponse messageResponse = messageService.createMessage(chatId, request);
-        ApiResponse<MessageResponse> apiResponse = new ApiResponse<>();
-        apiResponse.setResult(messageResponse);
-        return apiResponse;
-    }
+//    @PostMapping("/messages/chats/{chatId}")
+//    public ApiResponse<MessageResponse> createMessage(@PathVariable String chatId,
+//                                         @RequestBody @Valid MessageCreateRequest request)
+//    {
+//        MessageResponse messageResponse = messageService.createMessage(chatId, request);
+//        ApiResponse<MessageResponse> apiResponse = new ApiResponse<>();
+//        apiResponse.setResult(messageResponse);
+//        return apiResponse;
+//    }
 
     @GetMapping("messages/chats/{chatId}")
-    public ApiResponse<List<MessageResponse>> getChatsMessages(@PathVariable String chatId)
+    public ApiResponse<List<MessageResponse>> getChatsMessages(@PathVariable String chatId, @RequestParam int index)
     {
-        List<MessageResponse> messageResponseList = messageService.findMessagesByChatId(chatId);
-        ApiResponse<List<MessageResponse>> apiResponse = new ApiResponse();
+        List<MessageResponse> messageResponseList = messageService.findMessagesByChatId(chatId, index);
+        ApiResponse<List<MessageResponse>> apiResponse = new ApiResponse<>();
         apiResponse.setResult(messageResponseList);
         return apiResponse;
     }

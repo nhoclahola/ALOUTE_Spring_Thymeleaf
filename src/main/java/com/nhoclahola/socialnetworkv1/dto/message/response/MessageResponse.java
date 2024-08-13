@@ -15,6 +15,6 @@ public class MessageResponse
     private String messageId;
     private String content;
     private String imageUrl;
-    private LocalDateTime timeStamp;
+    private LocalDateTime timestamp;
     private UserResponse user;
 }
