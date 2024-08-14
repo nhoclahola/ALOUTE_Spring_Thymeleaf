@@ -2,6 +2,9 @@ package com.nhoclahola.socialnetworkv1.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,12 +26,14 @@ public class Chat
     private LocalDateTime timestamp;
 
     // Use Set to force Hibernate create primary key for join table
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_chat",
             joinColumns = @JoinColumn(name = "chat_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @BatchSize(size = 10)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<User> users;
 
     @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY)

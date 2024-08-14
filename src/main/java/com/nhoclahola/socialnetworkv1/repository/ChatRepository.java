@@ -12,7 +12,11 @@ import java.util.List;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, String>
 {
-    @Query("SELECT c FROM Chat c JOIN c.users u WHERE u.userId = :userId")
+    @Query("SELECT c FROM Chat c JOIN c.users u " +
+            "LEFT JOIN c.messages m " +
+            "WHERE u.userId = :userId " +
+            "GROUP BY c.chatId " +
+            "ORDER BY MAX(m.timestamp) DESC")
     public abstract List<Chat> findByUsersId(@Param("userId") String userId);
 
     @Query("SELECT c FROM Chat c " +

@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.dto.chat.response;
 
+import com.nhoclahola.socialnetworkv1.dto.message.response.MessageResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import lombok.*;
 
@@ -11,11 +12,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatResponse
+public class ChatWithLatestMessageResponse
 {
     private String chatId;
     private String chatName;
     private String chatImageUrl;
     private LocalDateTime timestamp;
     private List<UserResponse> users;
+    private MessageResponse latestMessage;
 }
