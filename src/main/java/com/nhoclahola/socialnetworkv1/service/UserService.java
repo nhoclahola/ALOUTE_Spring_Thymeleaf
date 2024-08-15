@@ -28,7 +28,7 @@ public interface UserService
 
     public abstract UserResponse updateUser(String userId, UserUpdateRequest request);
 
-    public abstract List<UserResponse> searchUser(String query);
+    public abstract List<UserResponse> searchUser(String query, int index);
 
     public abstract UserResponse findUserFromToken();
 

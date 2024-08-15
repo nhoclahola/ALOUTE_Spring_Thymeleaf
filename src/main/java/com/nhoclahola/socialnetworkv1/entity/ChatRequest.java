@@ -25,5 +25,5 @@ public class ChatRequest
     @JoinColumn(name = "receiver_id")
     private User receiver;
 
-    private boolean accepted;
+    private Boolean accepted;
 }

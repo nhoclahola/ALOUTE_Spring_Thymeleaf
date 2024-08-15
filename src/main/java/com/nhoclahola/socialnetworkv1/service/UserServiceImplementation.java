@@ -124,9 +124,10 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
-    public List<UserResponse> searchUser(String query)
+    public List<UserResponse> searchUser(String query, int index)
     {
-        Pageable pageable = PageRequest.of(0, 5);
+        int pageNumber = index/ 5;
+        Pageable pageable = PageRequest.of(pageNumber, 5);
         List<User> users = userRepository.searchUser(query, pageable);
         return userMapper.toListUserResponse(users);
     }

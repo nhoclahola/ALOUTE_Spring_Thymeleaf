@@ -97,4 +97,13 @@ public class PostController
         response.setResult(postResponseList);
         return response;
     }
+
+    @GetMapping("/posts/search")
+    public ApiResponse<List<PostWithDataResponse>> searchPost(@RequestParam("query") String query, @RequestParam("index") int index)
+    {
+        List<PostWithDataResponse> postResponseList = postService.searchPost(query, index);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
+    }
 }

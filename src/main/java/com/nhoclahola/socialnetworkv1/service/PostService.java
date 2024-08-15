@@ -29,4 +29,6 @@ public interface PostService
     public abstract List<PostWithDataResponse> getHomeFeed(int followingPostIndex, int randomPostIndex);
 
     public abstract List<PostWithDataResponse> findPopularVideoPosts(int index);
+
+    public abstract List<PostWithDataResponse> searchPost(String query, int index);
 }

@@ -188,4 +188,14 @@ public class PostServiceImplementation implements PostService
         List<PostWithData> popularVideoPosts = postRepository.findPopularVideoPosts(currentUserEmail, twoDaysAgo, pageable );
         return postMapper.toListPostWithDataResponse(popularVideoPosts);
     }
+
+    @Override
+    public List<PostWithDataResponse> searchPost(String query, int index)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        List<PostWithData> posts = postRepository.searchPost(currentUserEmail, query, pageable);
+        return postMapper.toListPostWithDataResponse(posts);
+    }
 }

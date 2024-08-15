@@ -28,9 +28,12 @@ public interface UserRepository extends JpaRepository<User, String>
     public abstract boolean existsByEmail(String email);
 
     public abstract boolean existsByUsername(String username);
-    @Query("SELECT u FROM User u WHERE u.firstName LIKE %:query% " +
+    @Query("SELECT u " +
+            "FROM User u " +
+            "WHERE u.firstName LIKE %:query% " +
             "OR u.lastName LIKE %:query% " +
-            "OR u.username LIKE %:query%")
+            "OR u.username LIKE %:query% " +
+            "OR CONCAT(u.firstName, ' ', u.lastName) LIKE %:query%")
     public abstract List<User> searchUser(@Param("query") String query, Pageable pageable);
 
     @Query("SELECT EXISTS (SELECT 1 FROM u.followers fr WHERE fr.userId = :userRequestId) " +

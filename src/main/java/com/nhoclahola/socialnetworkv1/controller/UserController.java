@@ -64,9 +64,9 @@ public class UserController
     }
 
     @GetMapping("/users/search")
-    public ApiResponse<List<UserResponse>> searchUser(@RequestParam("query") String query)
+    public ApiResponse<List<UserResponse>> searchUser(@RequestParam("query") String query, @RequestParam("index") int index)
     {
-        List<UserResponse> userResponseList = userService.searchUser(query);
+        List<UserResponse> userResponseList = userService.searchUser(query, index);
         ApiResponse<List<UserResponse>> response = new ApiResponse<>();
         response.setResult(userResponseList);
         return response;
