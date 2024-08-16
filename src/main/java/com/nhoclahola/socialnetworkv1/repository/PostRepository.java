@@ -20,9 +20,9 @@ public interface PostRepository extends JpaRepository<Post, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
-            "EXISTS (SELECT l FROM p.liked l WHERE l.userId = :requestUserId)) " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :requestUserEmail)) " +
             "FROM Post p WHERE p.user.id = :userId")
-    public abstract List<PostWithData> findPostByUserId(@Param("requestUserId") String requestUserId,
+    public abstract List<PostWithData> findPostByUserId(@Param("requestUserEmail") String requestUserEmail,
                                                         @Param("userId") String userId, Pageable pageable);
 
     // Get a list of posts from the users who the current user is following

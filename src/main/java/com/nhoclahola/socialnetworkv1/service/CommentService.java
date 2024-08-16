@@ -2,6 +2,7 @@ package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.dto.comment.request.CommentCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
+import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Comment;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface CommentService
 
     public CommentResponse findCommentByIdResponse(String commentId);
 
-    public List<CommentResponse> findCommentsByPostId(String postId, int index);
+    public List<CommentWithDataResponse> findCommentsByPostId(String postId, int index);
 }

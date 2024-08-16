@@ -3,6 +3,7 @@ package com.nhoclahola.socialnetworkv1.controller;
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.comment.request.CommentCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
+import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentWithDataResponse;
 import com.nhoclahola.socialnetworkv1.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,10 +46,10 @@ public class CommentController
     }
 
     @GetMapping("/comments/posts/{postId}")
-    public ApiResponse<List<CommentResponse>> getPostsComments(@PathVariable String postId, @RequestParam int index)
+    public ApiResponse<List<CommentWithDataResponse>> getPostsComments(@PathVariable String postId, @RequestParam int index)
     {
-        List<CommentResponse> commentResponseList = commentService.findCommentsByPostId(postId, index);
-        ApiResponse<List<CommentResponse>> response = new ApiResponse<>();
+        List<CommentWithDataResponse> commentResponseList = commentService.findCommentsByPostId(postId, index);
+        ApiResponse<List<CommentWithDataResponse>> response = new ApiResponse<>();
         response.setResult(commentResponseList);
         return response;
     }

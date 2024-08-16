@@ -1,7 +1,9 @@
 package com.nhoclahola.socialnetworkv1.service;
 
+import com.nhoclahola.socialnetworkv1.dto.comment.CommentWithData;
 import com.nhoclahola.socialnetworkv1.dto.comment.request.CommentCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
+import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Comment;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.entity.User;
@@ -59,18 +61,18 @@ public class CommentServiceImplement implements CommentService
     {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findUserByEmail(userEmail);
+        // To check valid of comment
         Comment comment = this.findCommentById(commentId);
-        if (comment.getLiked().contains(user))
+        int isLiked = commentRepository.isLikedByUserId(commentId, user.getUserId());
+        if (isLiked == 1)
         {
-            comment.getLiked().remove(user);
-            commentRepository.save(comment);
-            return "You just unliked this comment";
+            commentRepository.removeLikeFromComment(commentId, user.getUserId());
+            return "unliked";
         }
         else
         {
-            comment.getLiked().add(user);
-            commentRepository.save(comment);
-            return "You just liked this comment";
+            commentRepository.addLikeToComment(commentId, user.getUserId());
+            return "liked";
         }
     }
 
@@ -83,13 +85,14 @@ public class CommentServiceImplement implements CommentService
     }
 
     @Override
-    public List<CommentResponse> findCommentsByPostId(String postId, int index)
+    public List<CommentWithDataResponse> findCommentsByPostId(String postId, int index)
     {
+        String userRequestEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         // 1 page has 5 comments
         int pageNumber = index / 5;
         Pageable pageable = PageRequest.of(pageNumber, 5, Sort.by("createdAt").descending());
-        List<Comment> comments = commentRepository.findCommentsByPostId(postId, pageable);
+        List<CommentWithData> comments = commentRepository.findCommentsByPostId(userRequestEmail, postId, pageable);
         comments.sort(Comparator.comparing((comment) -> comment.getCreatedAt()));
-        return commentMapper.toListCommentResponse(comments);
+        return commentMapper.toListCommentWithDataResponse(comments);
     }
 }

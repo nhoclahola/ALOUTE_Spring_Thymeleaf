@@ -87,12 +87,11 @@ public class PostServiceImplementation implements PostService
     public List<PostWithDataResponse> findPostsByUserId(String userId, int index)
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userService.findUserByEmail(currentUserEmail);
         // page = index / size
         // By default, get 10 posts from the user
         int pageNumber = index / 10;
         Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("createdAt").descending());
-        List<PostWithData> posts = postRepository.findPostByUserId(currentUser.getUserId(), userId, pageable);
+        List<PostWithData> posts = postRepository.findPostByUserId(currentUserEmail, userId, pageable);
         return postMapper.toListPostWithDataResponse(posts);
     }
 
@@ -138,16 +137,18 @@ public class PostServiceImplementation implements PostService
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userService.findUserByEmail(currentUserEmail);
+        // To check valid of post
+        Post post = this.findPostById(postId);
         int isLiked = postRepository.isLikedByUserId(postId, currentUser.getUserId());
         if (isLiked == 0)
         {
             postRepository.addLikeToPost(postId, currentUser.getUserId());
-            return "You just liked this post";
+            return "liked";
         }
         else
         {
             postRepository.removeLikeFromPost(postId, currentUser.getUserId());
-            return "You just unliked this post";
+            return "unliked";
         }
     }
 
