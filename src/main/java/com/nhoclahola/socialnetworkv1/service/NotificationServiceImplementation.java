@@ -12,6 +12,7 @@ import com.nhoclahola.socialnetworkv1.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class NotificationServiceImplementation implements NotificationService
     public List<NotificationResponse> findNotificationByUserId(String userId, int index)
     {
         int pageNumber = index / 10;
-        Pageable pageable = PageRequest.of(pageNumber, 10);
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("createdAt").descending());
         List<Notification> notifications = notificationRepository.findNotificationByUserId(userId, pageable);
         return notificationMapper.toNotificationResponseList(notifications);
     }
