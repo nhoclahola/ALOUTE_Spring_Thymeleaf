@@ -1,8 +1,10 @@
 package com.nhoclahola.socialnetworkv1.service;
 
+import com.nhoclahola.socialnetworkv1.dto.notification.response.NotificationResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
+import com.nhoclahola.socialnetworkv1.entity.NotificationType;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.exception.AppException;
@@ -29,8 +31,9 @@ import java.util.Set;
 public class PostServiceImplementation implements PostService
 {
     private final PostRepository postRepository;
-    private final UserService userService;
     private final PostMapper postMapper;
+    private final UserService userService;
+    private final NotificationService notificationService;
 
     // Relative path in project
     private static final String POST_DIR = "/posts/";
@@ -143,6 +146,8 @@ public class PostServiceImplementation implements PostService
         if (isLiked == 0)
         {
             postRepository.addLikeToPost(postId, currentUser.getUserId());
+            // Asynchronous
+            notificationService.createNotification(NotificationType.LIKE, post.getUser(), currentUser, post);
             return "liked";
         }
         else

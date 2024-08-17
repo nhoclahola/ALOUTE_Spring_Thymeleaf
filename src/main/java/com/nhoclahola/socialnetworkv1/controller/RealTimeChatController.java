@@ -27,7 +27,14 @@ public class RealTimeChatController
     {
         String userEmail = Objects.requireNonNull(headerAccessor.getUser()).getName();
         MessageResponse messageResponse = messageService.createMessage(userEmail, groupId, message);
-        simpMessagingTemplate.convertAndSendToUser(groupId, "/private", messageResponse);
+        simpMessagingTemplate.convertAndSendToUser(groupId, "/chat/private", messageResponse);
         return messageResponse;
+    }
+
+    @MessageMapping("/notification/{userId}")
+    public void sendNotificationToUser(@Payload String message, @DestinationVariable String userId)
+    {
+        System.out.println(message);
+        simpMessagingTemplate.convertAndSendToUser(userId, "/notification/private", message);
     }
 }

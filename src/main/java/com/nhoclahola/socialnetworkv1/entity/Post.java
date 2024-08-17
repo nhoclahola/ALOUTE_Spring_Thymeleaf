@@ -24,8 +24,8 @@ public class Post
     private String videoUrl;
     private LocalDateTime createdAt;
 
-    // EAGER to avoid many querys in getting posts
-    @ManyToOne(fetch = FetchType.LAZY)
+    // EAGER to avoid many query in getting posts
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 

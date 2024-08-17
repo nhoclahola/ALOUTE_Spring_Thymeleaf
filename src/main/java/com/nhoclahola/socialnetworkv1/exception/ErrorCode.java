@@ -27,8 +27,8 @@ public enum ErrorCode
     // Comment
     COMMENT_NOT_EXIST(1400, "The comment does not exist", HttpStatus.BAD_REQUEST),
 
-    // Reels
-    REELS_NOT_EXIST(1500, "The reels does not exist", HttpStatus.BAD_REQUEST),
+    // Video
+    VIDEO_NOT_EXIST(1500, "The video does not exist", HttpStatus.BAD_REQUEST),
 
     // Chat
     CHAT_NOT_EXIST(1600, "The chat does not exist", HttpStatus.BAD_REQUEST),
@@ -43,7 +43,11 @@ public enum ErrorCode
     VIDEO_IS_EMPTY(1802, "The video you uploaded is empty", HttpStatus.BAD_REQUEST),
     IMAGE_NOT_SUPPORTED(1803, "The image you uploaded is either not a valid image or is not supported", HttpStatus.BAD_REQUEST),
     VIDEO_NOT_SUPPORTED(1804, "The video you uploaded is either not a valid video or is not supported", HttpStatus.BAD_REQUEST),
-    IO_ERROR(1085, "There is an error during the I/O process", HttpStatus.INTERNAL_SERVER_ERROR),
+    IO_ERROR(1805, "There is an error during the I/O process", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    // Notification
+    NOTIFICATION_NOT_EXIST(1901, "The notification does not exist", HttpStatus.BAD_REQUEST),
+    NOT_YOUR_NOTIFICATION(1902, "That not your notification", HttpStatus.BAD_REQUEST),
 
     ;
     private final int responseCode;
