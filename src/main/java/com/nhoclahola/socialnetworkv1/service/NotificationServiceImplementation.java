@@ -71,11 +71,19 @@ public class NotificationServiceImplementation implements NotificationService
     }
 
     @Override
-    public List<NotificationResponse> findNotificationByUserId(String userId, int index)
+    public List<NotificationResponse> findNotificationsByAuth(int index)
     {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         int pageNumber = index / 10;
         Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("createdAt").descending());
-        List<Notification> notifications = notificationRepository.findNotificationByUserId(userId, pageable);
+        List<Notification> notifications = notificationRepository.findNotificationsByEmail(currentUserEmail, pageable);
         return notificationMapper.toNotificationResponseList(notifications);
+    }
+
+    @Override
+    public int countNotReadNotificationsByAuth()
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return notificationRepository.countNotReadNotificationsByEmail(currentUserEmail);
     }
 }

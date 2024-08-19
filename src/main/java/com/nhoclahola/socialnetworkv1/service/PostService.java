@@ -31,4 +31,6 @@ public interface PostService
     public abstract List<PostWithDataResponse> findPopularVideoPosts(int index);
 
     public abstract List<PostWithDataResponse> searchPost(String query, int index);
+
+    public abstract List<PostWithDataResponse> findUsersVideoPosts(String userId, int index);
 }

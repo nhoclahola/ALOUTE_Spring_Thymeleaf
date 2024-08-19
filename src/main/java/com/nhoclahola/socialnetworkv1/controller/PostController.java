@@ -106,4 +106,13 @@ public class PostController
         response.setResult(postResponseList);
         return response;
     }
+
+    @GetMapping("/posts/users/videos/{userId}")
+    public ApiResponse<List<PostWithDataResponse>> getUsersVideoPosts(@PathVariable String userId, @RequestParam("index") int index)
+    {
+        List<PostWithDataResponse> postResponseList = postService.findUsersVideoPosts(userId, index);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
+    }
 }

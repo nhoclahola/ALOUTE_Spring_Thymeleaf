@@ -17,7 +17,12 @@ public interface NotificationRepository extends JpaRepository<Notification, Stri
             "JOIN FETCH n.user " +
             "JOIN FETCH n.triggerUser " +
             "JOIN FETCH n.post " +
-            "WHERE n.post.user.userId = :userId")
-    public abstract List<Notification> findNotificationByUserId(@Param("userId") String userId,
+            "WHERE n.post.user.email = :email")
+    public abstract List<Notification> findNotificationsByEmail(@Param("email") String email,
                                                                 Pageable pageable);
+
+    @Query("SELECT COUNT(n) " +
+            "FROM Notification n " +
+            "WHERE n.post.user.email = :email AND n.isRead = FALSE")
+    public abstract int countNotReadNotificationsByEmail(@Param("email") String email);
 }

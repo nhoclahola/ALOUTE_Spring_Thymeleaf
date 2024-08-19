@@ -204,4 +204,13 @@ public class PostServiceImplementation implements PostService
         List<PostWithData> posts = postRepository.searchPost(currentUserEmail, query, pageable);
         return postMapper.toListPostWithDataResponse(posts);
     }
+
+    @Override
+    public List<PostWithDataResponse> findUsersVideoPosts(String userId, int index)
+    {
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        List<PostWithData> posts = postRepository.findVideoPostsByUserId(userId, pageable);
+        return postMapper.toListPostWithDataResponse(posts);
+    }
 }

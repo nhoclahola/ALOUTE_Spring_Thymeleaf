@@ -78,4 +78,13 @@ public interface PostRepository extends JpaRepository<Post, String>
     public abstract List<PostWithData> searchPost(@Param("currentUserEmail") String currentUserEmail,
                                                   @Param("query") String query,
                                                   Pageable pageable);
+
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
+            "(SELECT COUNT(l) FROM p.liked l), " +
+            "(SELECT COUNT(c) FROM p.comments c), " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.userId = :userId)) " +
+            "FROM Post p " +
+            "WHERE p.videoUrl IS NOT NULL AND p.user.userId = :userId " +
+            "ORDER BY p.createdAt DESC")
+    public abstract List<PostWithData> findVideoPostsByUserId(@Param("userId") String userId, Pageable pageable);
 }

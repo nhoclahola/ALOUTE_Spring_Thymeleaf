@@ -24,12 +24,21 @@ public class NotificationController
         return response;
     }
 
-    @GetMapping("/notifications/users/{userId}")
-    public ApiResponse<List<NotificationResponse>> getUsersNotifications(@PathVariable String userId, @RequestParam int index)
+    @GetMapping("/notifications/users")
+    public ApiResponse<List<NotificationResponse>> getUsersNotifications(@RequestParam int index)
     {
-        List<NotificationResponse> notificationResponseList = notificationService.findNotificationByUserId(userId, index);
+        List<NotificationResponse> notificationResponseList = notificationService.findNotificationsByAuth(index);
         ApiResponse<List<NotificationResponse>> response = new ApiResponse<>();
         response.setResult(notificationResponseList);
+        return response;
+    }
+
+    @GetMapping("/notifications/count_not_read")
+    public ApiResponse<Integer> getUsersNotReadNotificationsCount()
+    {
+        Integer count = notificationService.countNotReadNotificationsByAuth();
+        ApiResponse<Integer> response = new ApiResponse<>();
+        response.setResult(count);
         return response;
     }
 }

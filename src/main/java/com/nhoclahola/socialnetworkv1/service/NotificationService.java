@@ -17,5 +17,7 @@ public interface NotificationService
 
     public abstract String markAsRead(String notificationId);
 
-    public abstract List<NotificationResponse> findNotificationByUserId(String userId, int index);
+    public abstract List<NotificationResponse> findNotificationsByAuth(int index);
+
+    public abstract int countNotReadNotificationsByAuth();
 }
