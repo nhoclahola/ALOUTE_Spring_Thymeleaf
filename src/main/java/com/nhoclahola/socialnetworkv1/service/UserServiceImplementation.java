@@ -153,16 +153,20 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
-    public List<UserResponse> findUsersFollowing(String userId)
+    public List<UserResponse> findUsersFollowing(String userId, int index)
     {
-        List<User> usersFollowing = userRepository.findUsersFollowings(userId);
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        List<User> usersFollowing = userRepository.findUsersFollowings(userId, pageable);
         return userMapper.toListUserResponse(usersFollowing);
     }
 
     @Override
-    public List<UserResponse> findUsersFollower(String userId)
+    public List<UserResponse> findUsersFollower(String userId, int index)
     {
-        List<User> usersFollowers = userRepository.findUsersFollowers(userId);
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        List<User> usersFollowers = userRepository.findUsersFollowers(userId, pageable);
         return userMapper.toListUserResponse(usersFollowers);
     }
 

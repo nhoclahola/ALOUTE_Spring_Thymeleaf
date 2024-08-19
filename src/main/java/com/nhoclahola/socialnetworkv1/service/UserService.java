@@ -34,9 +34,9 @@ public interface UserService
 
     public abstract UserResponse updateUserFromToken(UserUpdateRequest request);
 
-    public abstract List<UserResponse> findUsersFollowing(String userId);
+    public abstract List<UserResponse> findUsersFollowing(String userId, int index);
 
-    public abstract List<UserResponse> findUsersFollower(String userId);
+    public abstract List<UserResponse> findUsersFollower(String userId, int index);
 
     public abstract UserResponse uploadAvatar(MultipartFile image) throws IOException;
 

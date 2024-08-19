@@ -91,20 +91,20 @@ public class UserController
     }
 
     @GetMapping("/users/followings/{userId}")
-    public ApiResponse<List<UserResponse>> getUsersFollowings(@PathVariable String userId)
+    public ApiResponse<List<UserResponse>> getUsersFollowings(@PathVariable String userId, @RequestParam("index") int index)
     {
 
-        List<UserResponse> userResponseList = userService.findUsersFollowing(userId);
+        List<UserResponse> userResponseList = userService.findUsersFollowing(userId, index);
         ApiResponse<List<UserResponse>> response = new ApiResponse<>();
         response.setResult(userResponseList);
         return response;
     }
 
     @GetMapping("/users/followers/{userId}")
-    public ApiResponse<List<UserResponse>> getUsersFollowers(@PathVariable String userId)
+    public ApiResponse<List<UserResponse>> getUsersFollowers(@PathVariable String userId, @RequestParam("index") int index)
     {
 
-        List<UserResponse> userResponseList = userService.findUsersFollower(userId);
+        List<UserResponse> userResponseList = userService.findUsersFollower(userId, index);
         ApiResponse<List<UserResponse>> response = new ApiResponse<>();
         response.setResult(userResponseList);
         return response;

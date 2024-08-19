@@ -50,10 +50,10 @@ public interface UserRepository extends JpaRepository<User, String>
             "WHERE follower_id = :userRequestId AND following_id = :userId", nativeQuery = true)
     public abstract void unfollow(@Param("userRequestId") String userRequestId, @Param("userId") String userId);
     @Query("SELECT u FROM User u JOIN u.followers f WHERE f.userId = :userId")
-    public abstract List<User> findUsersFollowings(@Param("userId") String userId);
+    public abstract List<User> findUsersFollowings(@Param("userId") String userId, Pageable pageable);
 
     @Query("SELECT u.followers FROM User u JOIN u.followings f WHERE f.userId = :userId")
-    public abstract List<User> findUsersFollowers(@Param("userId") String userId);
+    public abstract List<User> findUsersFollowers(@Param("userId") String userId, Pageable pageable);
 
     @Query("SELECT u FROM User u " +
             "JOIN u.posts p " +
