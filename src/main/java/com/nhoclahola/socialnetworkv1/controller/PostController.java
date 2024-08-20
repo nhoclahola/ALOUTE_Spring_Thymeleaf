@@ -36,10 +36,10 @@ public class PostController
     }
 
     @GetMapping("/posts/{postId}")
-    public ApiResponse<PostResponse> getPostById(@PathVariable String postId)
+    public ApiResponse<PostWithDataResponse> getPostById(@PathVariable String postId)
     {
-        PostResponse postResponse = postService.findPostByIdResponse(postId);
-        ApiResponse<PostResponse> response = new ApiResponse<>();
+        PostWithDataResponse postResponse = postService.findPostWithDataByPostId(postId);
+        ApiResponse<PostWithDataResponse> response = new ApiResponse<>();
         response.setResult(postResponse);
         return response;
     }

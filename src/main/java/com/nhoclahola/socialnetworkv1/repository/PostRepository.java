@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, String>
@@ -24,6 +25,15 @@ public interface PostRepository extends JpaRepository<Post, String>
             "FROM Post p WHERE p.user.id = :userId")
     public abstract List<PostWithData> findPostByUserId(@Param("requestUserEmail") String requestUserEmail,
                                                         @Param("userId") String userId, Pageable pageable);
+
+    // Used for API
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
+            "(SELECT COUNT(l) FROM p.liked l), " +
+            "(SELECT COUNT(c) FROM p.comments c), " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :requestUserEmail)) " +
+            "FROM Post p WHERE p.postId = :postId")
+    public abstract Optional<PostWithData> findPostWithDataById(@Param("requestUserEmail") String requestUserEmail,
+                                                               @Param("postId") String postId);
 
     // Get a list of posts from the users who the current user is following
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +

@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.service;
 
+import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
@@ -33,4 +34,6 @@ public interface PostService
     public abstract List<PostWithDataResponse> searchPost(String query, int index);
 
     public abstract List<PostWithDataResponse> findUsersVideoPosts(String userId, int index);
+
+    public abstract PostWithDataResponse findPostWithDataByPostId(String postId);
 }

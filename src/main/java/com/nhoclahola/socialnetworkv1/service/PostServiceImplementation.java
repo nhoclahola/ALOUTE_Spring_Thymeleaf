@@ -213,4 +213,15 @@ public class PostServiceImplementation implements PostService
         List<PostWithData> posts = postRepository.findVideoPostsByUserId(userId, pageable);
         return postMapper.toListPostWithDataResponse(posts);
     }
+
+    @Override
+    public PostWithDataResponse findPostWithDataByPostId(String postId)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        PostWithData post = postRepository.findPostWithDataById(currentUserEmail, postId)
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXIST));
+        return postMapper.toPostWithDataResponse(post);
+    }
+
+
 }
