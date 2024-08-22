@@ -45,4 +45,6 @@ public interface UserService
     public abstract List<UserResponse> findSuggestedUsers();
 
     public abstract List<UserResponse> findLatestActivityUsersFollowings();
+
+    public abstract List<UserResponse> findUsersLikedPostByPostId(String postId, int index);
 }

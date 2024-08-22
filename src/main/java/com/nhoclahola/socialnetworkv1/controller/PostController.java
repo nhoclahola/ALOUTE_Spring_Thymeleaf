@@ -3,7 +3,9 @@ package com.nhoclahola.socialnetworkv1.controller;
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
+import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.service.PostService;
+import com.nhoclahola.socialnetworkv1.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import java.util.List;
 public class PostController
 {
     private final PostService postService;
+    private final UserService userService;
 
     @PostMapping("/posts")
     public ApiResponse<PostResponse> createPost(@RequestPart String caption,
@@ -113,6 +116,15 @@ public class PostController
         List<PostWithDataResponse> postResponseList = postService.findUsersVideoPosts(userId, index);
         ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
         response.setResult(postResponseList);
+        return response;
+    }
+
+    @GetMapping("/posts/{postId}/users/liked")
+    public ApiResponse<List<UserResponse>> getUsersLikedPost(@PathVariable String postId, @RequestParam("index") int index)
+    {
+        List<UserResponse> users = userService.findUsersLikedPostByPostId(postId, index);
+        ApiResponse<List<UserResponse>> response = new ApiResponse<>();
+        response.setResult(users);
         return response;
     }
 }

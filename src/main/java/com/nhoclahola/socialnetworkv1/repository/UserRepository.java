@@ -64,4 +64,10 @@ public interface UserRepository extends JpaRepository<User, String>
 
     @Query("SELECT u FROM User u LEFT JOIN u.followers f WHERE u.email != :userEmailRequest GROUP BY u ORDER BY COUNT(f) DESC")
     public abstract List<User> findSuggestedUsers(@Param("userEmailRequest") String userEmailRequest, Pageable pageable);
+
+    @Query("SELECT p.liked " +
+            "FROM Post p " +
+            "JOIN p.liked " +
+            "WHERE p.postId = :postId")
+    public abstract List<User> findUsersLikedPost(@Param("postId") String postId, Pageable pageable);
 }
