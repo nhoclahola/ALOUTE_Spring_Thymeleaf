@@ -7,6 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @Configuration
 @AllArgsConstructor
 public class WebConfig implements WebMvcConfigurer
@@ -16,8 +19,11 @@ public class WebConfig implements WebMvcConfigurer
     private static int port;
     public static String serverAdress;
     @PostConstruct
-    private void init() {
-        address = serverProperties.getAddress() != null ? serverProperties.getAddress().getHostAddress() : "0.0.0.0";
+    private void init() throws UnknownHostException
+    {
+        address = serverProperties.getAddress() != null && !"0.0.0.0".equals(serverProperties.getAddress().getHostAddress())
+                ? serverProperties.getAddress().getHostAddress()
+                : InetAddress.getLocalHost().getHostAddress();
         port = serverProperties.getPort() != null ? serverProperties.getPort() : 8080;
         serverAdress = "http://" + address + ":" + port;
     }

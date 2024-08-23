@@ -4,6 +4,8 @@ import com.nhoclahola.socialnetworkv1.exception.FilterExceptionHandler;
 import com.nhoclahola.socialnetworkv1.exception.JwtAuthenticationEntryPoint;
 import com.nhoclahola.socialnetworkv1.security.JwtValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.NonFinal;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -24,6 +26,10 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig
 {
+    @NonFinal
+    @Value("${cors.allowed.origins}")
+    private String[] allowedOrigins;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception
     {
@@ -50,7 +56,7 @@ public class SecurityConfig
         return request ->
         {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+            configuration.setAllowedOrigins(List.of(allowedOrigins));
             configuration.setAllowedMethods(List.of("*"));
             configuration.setAllowCredentials(true);
             configuration.setAllowedHeaders(List.of("*"));

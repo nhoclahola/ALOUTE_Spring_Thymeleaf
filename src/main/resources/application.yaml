@@ -2,7 +2,7 @@ spring:
   application:
     name: social-network-v1
   datasource:
-    url: jdbc:mariadb://localhost:3306/social_network_v1
+    url: ${DBMS_CONNECTION:jdbc:mariadb://localhost:3306/social_network_v1}
     username: root
     password:
 #    driver-class-name: com.mysql.cj.jdbc.Driver
@@ -23,5 +23,9 @@ jwt:
   privateKey: 8acnkodIBNY6iRCuppO1AUCkOKJFBzjCIZuEqgWPCFq/ags2ANcd9PAO8RoGd9fp
 
 server:
-  address: localhost
+  address: 0.0.0.0
   port: 8080
+
+cors:
+  allowed:
+    origins: https://social-network-react-js-mosxy6ru7-nhoclaholas-projects.vercel.app, http://localhost:3000, https://social-network-react-js-ui.vercel.app
