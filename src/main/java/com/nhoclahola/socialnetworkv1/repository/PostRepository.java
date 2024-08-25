@@ -1,9 +1,7 @@
 package com.nhoclahola.socialnetworkv1.repository;
 
 import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
-import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
-import com.nhoclahola.socialnetworkv1.entity.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,7 +19,8 @@ public interface PostRepository extends JpaRepository<Post, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
-            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :requestUserEmail)) " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :requestUserEmail), " +
+            "EXISTS (SELECT l FROM p.saved l WHERE l.email = :requestUserEmail)) " +
             "FROM Post p WHERE p.user.id = :userId")
     public abstract List<PostWithData> findPostByUserId(@Param("requestUserEmail") String requestUserEmail,
                                                         @Param("userId") String userId, Pageable pageable);
@@ -30,7 +29,8 @@ public interface PostRepository extends JpaRepository<Post, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
-            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :requestUserEmail)) " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :requestUserEmail), " +
+            "EXISTS (SELECT l FROM p.saved l WHERE l.email = :requestUserEmail)) " +
             "FROM Post p WHERE p.postId = :postId")
     public abstract Optional<PostWithData> findPostWithDataById(@Param("requestUserEmail") String requestUserEmail,
                                                                @Param("postId") String postId);
@@ -39,7 +39,8 @@ public interface PostRepository extends JpaRepository<Post, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
-            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail)) " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail), " +
+            "EXISTS (SELECT l FROM p.saved l WHERE l.email = :currentUserEmail)) " +
             "FROM Post p WHERE p.user IN (SELECT f FROM User u JOIN u.followings f WHERE u.email = :currentUserEmail)")
     public abstract List<PostWithData> findPostsFromFollowedUsers(@Param("currentUserEmail") String currentUserEmail, Pageable pageable);
 
@@ -47,7 +48,8 @@ public interface PostRepository extends JpaRepository<Post, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
-            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail)) " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail), " +
+            "EXISTS (SELECT l FROM p.saved l WHERE l.email = :currentUserEmail)) " +
             "FROM Post p WHERE p.user NOT IN (SELECT f FROM User u JOIN u.followings f WHERE u.email = :currentUserEmail) ORDER BY function('RAND')")
     public abstract List<PostWithData> findRandomPostsFromOtherUsers(@Param("currentUserEmail") String currentUserEmail, Pageable pageable);
 
@@ -88,7 +90,8 @@ public interface PostRepository extends JpaRepository<Post, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l) AS likedCount, " +
             "(SELECT COUNT(c) FROM p.comments c), " +
-            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail)) " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail), " +
+            "EXISTS (SELECT l FROM p.saved l WHERE l.email = :currentUserEmail)) " +
             "FROM Post p WHERE p.videoUrl IS NOT NULL AND p.createdAt >= :twoDaysAgo " +
             "ORDER BY likedCount DESC, p.createdAt DESC")
     public abstract List<PostWithData> findPopularVideoPosts(@Param("currentUserEmail") String currentUserEmail,
@@ -98,7 +101,8 @@ public interface PostRepository extends JpaRepository<Post, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
-            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail)) " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail), " +
+            "EXISTS (SELECT l FROM p.saved l WHERE l.email = :currentUserEmail)) " +
             "FROM Post p " +
             "WHERE p.caption LIKE %:query%")
     public abstract List<PostWithData> searchPost(@Param("currentUserEmail") String currentUserEmail,
@@ -108,9 +112,25 @@ public interface PostRepository extends JpaRepository<Post, String>
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l), " +
             "(SELECT COUNT(c) FROM p.comments c), " +
-            "EXISTS (SELECT l FROM p.liked l WHERE l.userId = :userId)) " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail), " +
+            "EXISTS (SELECT l FROM p.saved l WHERE l.email = :currentUserEmail)) " +
             "FROM Post p " +
             "WHERE p.videoUrl IS NOT NULL AND p.user.userId = :userId " +
             "ORDER BY p.createdAt DESC")
-    public abstract List<PostWithData> findVideoPostsByUserId(@Param("userId") String userId, Pageable pageable);
+    public abstract List<PostWithData> findVideoPostsByUserId(@Param("userId") String userId,
+                                                              @Param("currentUserEmail") String currentUserEmail,
+                                                              Pageable pageable);
+
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
+            "(SELECT COUNT(l) FROM p.liked l), " +
+            "(SELECT COUNT(c) FROM p.comments c), " +
+            "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail), " +
+            "EXISTS (SELECT l FROM p.saved l WHERE l.email = :currentUserEmail)) " +
+            "FROM Post p " +
+            "JOIN p.saved s " +
+            "WHERE s.userId = :userId " +
+            "ORDER BY p.createdAt DESC")
+    public abstract List<PostWithData> findSavedPostsByUserId(@Param("userId") String userId,
+                                                              @Param("currentUserEmail") String currentUserEmail,
+                                                              Pageable pageable);
 }

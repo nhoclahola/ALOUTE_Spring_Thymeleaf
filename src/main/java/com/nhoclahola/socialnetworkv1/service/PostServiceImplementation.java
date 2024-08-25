@@ -1,6 +1,5 @@
 package com.nhoclahola.socialnetworkv1.service;
 
-import com.nhoclahola.socialnetworkv1.dto.notification.response.NotificationResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
@@ -208,9 +207,20 @@ public class PostServiceImplementation implements PostService
     @Override
     public List<PostWithDataResponse> findUsersVideoPosts(String userId, int index)
     {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         int pageNumber = index / 10;
         Pageable pageable = PageRequest.of(pageNumber, 10);
-        List<PostWithData> posts = postRepository.findVideoPostsByUserId(userId, pageable);
+        List<PostWithData> posts = postRepository.findVideoPostsByUserId(userId, currentUserEmail, pageable);
+        return postMapper.toListPostWithDataResponse(posts);
+    }
+
+    @Override
+    public List<PostWithDataResponse> findUsersSavedPosts(String userId, int index)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        List<PostWithData> posts = postRepository.findSavedPostsByUserId(userId, currentUserEmail, pageable);
         return postMapper.toListPostWithDataResponse(posts);
     }
 
@@ -222,6 +232,4 @@ public class PostServiceImplementation implements PostService
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXIST));
         return postMapper.toPostWithDataResponse(post);
     }
-
-
 }

@@ -119,6 +119,15 @@ public class PostController
         return response;
     }
 
+    @GetMapping("/posts/users/saved/{userId}")
+    public ApiResponse<List<PostWithDataResponse>> getUsersSavedPosts(@PathVariable String userId, @RequestParam("index") int index)
+    {
+        List<PostWithDataResponse> postResponseList = postService.findUsersSavedPosts(userId, index);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
+    }
+
     @GetMapping("/posts/{postId}/users/liked")
     public ApiResponse<List<UserResponse>> getUsersLikedPost(@PathVariable String postId, @RequestParam("index") int index)
     {

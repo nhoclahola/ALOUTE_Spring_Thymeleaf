@@ -24,6 +24,7 @@ public interface PostMapper
     // Because Lombok will build to getter "isLiked", not "getIsLiked" so Mapstruct will get it wrong
 
     @Mapping(source = "liked", target = "isLiked")
+    @Mapping(source = "saved", target = "isSaved")
     @Mapping(target = "imageUrl", expression = "java(postWithData.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + postWithData.getImageUrl() : null)")
     @Mapping(target = "videoUrl", expression = "java(postWithData.getVideoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + postWithData.getVideoUrl() : null)")
     public abstract PostWithDataResponse toPostWithDataResponse (PostWithData postWithData);

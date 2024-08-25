@@ -23,4 +23,5 @@ public class PostWithDataResponse
     private long likedCount;
     private long commentCount;
     private boolean isLiked;
+    private boolean isSaved;
 }
