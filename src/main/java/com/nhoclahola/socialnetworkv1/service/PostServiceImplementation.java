@@ -115,27 +115,6 @@ public class PostServiceImplementation implements PostService
 
     @Override
     @Transactional
-    public String savePost(String postId)
-    {
-        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        User currentUser = userService.findUserByEmail(currentUserEmail);
-        Post post = this.findPostById(postId);
-        if (post.getSaved().contains(currentUser))
-        {
-            post.getSaved().remove(currentUser);
-            postRepository.save(post);
-            return "You just removed this post to your saved posts list";
-        }
-        else
-        {
-            post.getSaved().add(currentUser);
-            postRepository.save(post);
-            return "You just added this post to your saved posts list";
-        }
-    }
-
-    @Override
-    @Transactional
     public String likePost(String postId)
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -146,7 +125,7 @@ public class PostServiceImplementation implements PostService
         if (isLiked == 0)
         {
             postRepository.addLikeToPost(postId, currentUser.getUserId());
-            // Asynchronous
+            // Intend to be Asynchronous
             notificationService.createNotification(NotificationType.LIKE, post.getUser(), currentUser, post);
             return "liked";
         }
@@ -154,6 +133,27 @@ public class PostServiceImplementation implements PostService
         {
             postRepository.removeLikeFromPost(postId, currentUser.getUserId());
             return "unliked";
+        }
+    }
+
+    @Override
+    @Transactional
+    public String savePost(String postId)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        User currentUser = userService.findUserByEmail(currentUserEmail);
+        // To check valid of post
+        Post post = this.findPostById(postId);
+        int isSaved = postRepository.isSavedByUserId(postId, currentUser.getUserId());
+        if (isSaved == 0)
+        {
+            postRepository.savePost(postId, currentUser.getUserId());
+            return "saved";
+        }
+        else
+        {
+            postRepository.unsavePost(postId, currentUser.getUserId());
+            return "unsaved";
         }
     }
 

@@ -51,12 +51,16 @@ public interface PostRepository extends JpaRepository<Post, String>
             "FROM Post p WHERE p.user NOT IN (SELECT f FROM User u JOIN u.followings f WHERE u.email = :currentUserEmail) ORDER BY function('RAND')")
     public abstract List<PostWithData> findRandomPostsFromOtherUsers(@Param("currentUserEmail") String currentUserEmail, Pageable pageable);
 
-    // Check if a user liked a post or not
-    // ***Note: Change email to username later
+    // Check if a user liked a post or not (Use native query to prevent JOIN)
     @Query(value = "SELECT EXISTS (SELECT 1 " +
             "FROM post_liked p " +
             "WHERE p.post_id = :postId AND p.user_id = :userId)", nativeQuery = true)
     public abstract int isLikedByUserId(@Param("postId") String postId, @Param("userId") String userId);
+
+    @Modifying
+    @Query(value = "INSERT INTO post_liked (post_id, user_id) " +
+            "VALUES (:postId, :userId)", nativeQuery = true)
+    public abstract void addLikeToPost(@Param("postId") String postId, @Param("userId") String userId);
 
     @Modifying
     @Query(value = "DELETE FROM post_liked " +
@@ -64,10 +68,22 @@ public interface PostRepository extends JpaRepository<Post, String>
             "AND user_id = :userId", nativeQuery = true)
     public abstract void removeLikeFromPost(@Param("postId") String postId, @Param("userId") String userId);
 
+    // Check if a user saved a post or not (Use native query to prevent JOIN)
+    @Query(value = "SELECT EXISTS (SELECT 1 " +
+            "FROM post_saved p " +
+            "WHERE p.post_id = :postId AND p.user_id = :userId)", nativeQuery = true)
+    public abstract int isSavedByUserId(@Param("postId") String postId, @Param("userId") String userId);
+
     @Modifying
-    @Query(value = "INSERT INTO post_liked (post_id, user_id) " +
+    @Query(value = "INSERT INTO post_saved (post_id, user_id) " +
             "VALUES (:postId, :userId)", nativeQuery = true)
-    public abstract void addLikeToPost(@Param("postId") String postId, @Param("userId") String userId);
+    public abstract void savePost(@Param("postId") String postId, @Param("userId") String userId);
+
+    @Modifying
+    @Query(value = "DELETE FROM post_saved " +
+            "WHERE post_id = :postId " +
+            "AND user_id = :userId", nativeQuery = true)
+    public abstract void unsavePost(@Param("postId") String postId, @Param("userId") String userId);
 
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +
             "(SELECT COUNT(l) FROM p.liked l) AS likedCount, " +
