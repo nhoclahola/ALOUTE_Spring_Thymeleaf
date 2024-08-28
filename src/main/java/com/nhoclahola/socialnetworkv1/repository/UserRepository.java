@@ -70,4 +70,10 @@ public interface UserRepository extends JpaRepository<User, String>
             "JOIN p.liked " +
             "WHERE p.postId = :postId")
     public abstract List<User> findUsersLikedPost(@Param("postId") String postId, Pageable pageable);
+
+    @Query("SELECT c.liked " +
+            "FROM Comment c " +
+            "JOIN c.liked " +
+            "WHERE c.commentId = :commentId")
+    public abstract List<User> findUsersLikedComment(@Param("commentId") String commentId, Pageable pageable);
 }

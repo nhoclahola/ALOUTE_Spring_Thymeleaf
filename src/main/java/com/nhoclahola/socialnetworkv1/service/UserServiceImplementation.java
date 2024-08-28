@@ -222,4 +222,14 @@ public class UserServiceImplementation implements UserService
         List<User> users = userRepository.findUsersLikedPost(postId, pageable);
         return userMapper.toListUserResponse(users);
     }
+
+    @Override
+    public List<UserResponse> findUsersLikedCommentByCommentId(String commentId, int index)
+    {
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        List<User> users = userRepository.findUsersLikedComment(commentId, pageable);
+        return userMapper.toListUserResponse(users);
+    }
+
 }
