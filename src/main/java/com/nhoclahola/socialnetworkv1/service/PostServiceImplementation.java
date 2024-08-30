@@ -73,6 +73,7 @@ public class PostServiceImplementation implements PostService
     }
 
     @Override
+    @Transactional
     public String deletePost(String postId)
     {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();

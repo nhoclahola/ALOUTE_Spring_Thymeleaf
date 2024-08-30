@@ -32,10 +32,12 @@ public class PostController
     }
 
     @DeleteMapping("/posts/{postId}")
-    public String deletePost(@PathVariable String postId)
+    public ApiResponse<String> deletePost(@PathVariable String postId)
     {
         String message = postService.deletePost(postId);
-        return message;
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(message);
+        return response;
     }
 
     @GetMapping("/posts/{postId}")
