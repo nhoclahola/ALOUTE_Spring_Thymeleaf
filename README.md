@@ -57,7 +57,7 @@ Example:
 
 Authorization: Bearer your_token_here
 
-## HTTP Status Codes
+### HTTP Status Codes
 
 - **200 OK:** The request was successful.
 - **201 Created:** A new resource was successfully created.
@@ -67,43 +67,52 @@ Authorization: Bearer your_token_here
 - **404 Not Found:** The requested resource could not be found.
 - **500 Internal Server Error:** An error occurred on the server.
 
-## Endpoints
-### 1. User Registration
+### Endpoints
+#### 1. User Registration
 
 - **URL:** `/auth/register`
 - **Method:** `POST`
 - **Description:** Register a new user.
 
-#### Request Body:
+##### Request Body:
 ```json
 {
   "username": "youusername",
   "email": "youremail@example.com",
-  "password": "yourpassword"
+  "password": "yourpassword",
   "firstName": "yourfirstname",
   "lastName": "yourlastname",
 }
 ````
-### 2. Login
 
-- **URL:** `/auth/login`
-- **Method:** `POST`
-- **Description:** Authenticate a user and return a JWT token.
-
-#### Request Body:
-```json
-{
-  "email": "youremail@example.com",
-  "password": "yourpassword"
-}
-````
-
-#### Response:
+##### Response:
 ```json
 {
   "token": "your_jwt_token_here"
 }
 ````
+
+#### 2. Login
+
+- **URL:** `/auth/login`
+- **Method:** `POST`
+- **Description:** Authenticate a user and return a JWT token.
+
+##### Request Body:
+```json
+{
+  "email": "youremail@example.com",
+  "password": "yourpassword"
+}
+````
+
+##### Response:
+```json
+{
+  "token": "your_jwt_token_here"
+}
+````
+
 
 # API Error Codes Documentation
 
