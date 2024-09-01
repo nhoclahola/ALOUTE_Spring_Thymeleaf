@@ -15,16 +15,16 @@ public interface UserMapper
 {
     public abstract User userLoginRequestToUser(UserCreateRequest request);
 
-    @Mapping(target = "avatarUrl", expression = "java(user.getAvatarUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + user.getAvatarUrl() : null)")
-    @Mapping(target = "coverPhotoUrl", expression = "java(user.getCoverPhotoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + user.getCoverPhotoUrl() : null)")
+    @Mapping(target = "avatarUrl", expression = "java(user.getAvatarUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(user.getAvatarUrl()) : null)")
+    @Mapping(target = "coverPhotoUrl", expression = "java(user.getCoverPhotoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(user.getCoverPhotoUrl()) : null)")
     public abstract UserResponse toUserResponse(User user);
 
     public abstract List<UserResponse> toListUserResponse(List<User> users);
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 
-    @Mapping(target = "avatarUrl", expression = "java(user.getAvatarUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + user.getAvatarUrl() : null)")
-    @Mapping(target = "coverPhotoUrl", expression = "java(user.getCoverPhotoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + user.getCoverPhotoUrl() : null)")
+    @Mapping(target = "avatarUrl", expression = "java(user.getAvatarUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(user.getAvatarUrl()) : null)")
+    @Mapping(target = "coverPhotoUrl", expression = "java(user.getCoverPhotoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(user.getCoverPhotoUrl()) : null)")
     @Mapping(source = "follow", target = "isFollow")
     public abstract UserWithDataResponse toUserWithDataResponse(UserWithData user);
 }

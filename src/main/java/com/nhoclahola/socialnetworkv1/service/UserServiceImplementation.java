@@ -31,7 +31,7 @@ public class UserServiceImplementation implements UserService
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
-    private final ImageUploadServiceImplementation imageUploadServiceImplementation;
+    private final ImageAwsS3UploadServiceImplementation imageAwsS3UploadServiceImplementation;
 
     private final String AVATAR_DIR = "/avatars/";
     private final String COVER_DIR = "/covers/";
@@ -177,7 +177,8 @@ public class UserServiceImplementation implements UserService
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = this.findUserByEmail(currentUserEmail);
         String uploadAvatarDir = AVATAR_DIR + currentUser.getUserId() + "/";
-        String avatarUrl = imageUploadServiceImplementation.upload(uploadAvatarDir, image);
+        imageAwsS3UploadServiceImplementation.upload(uploadAvatarDir, image);
+        String avatarUrl = imageAwsS3UploadServiceImplementation.upload(uploadAvatarDir, image);
         currentUser.setAvatarUrl(avatarUrl);
         userRepository.save(currentUser);
         return userMapper.toUserResponse(currentUser);
@@ -190,7 +191,7 @@ public class UserServiceImplementation implements UserService
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = this.findUserByEmail(currentUserEmail);
         String uploadAvatarDir = COVER_DIR + currentUser.getUserId() + "/";
-        String coverUrl = imageUploadServiceImplementation.upload(uploadAvatarDir, image);
+        String coverUrl = imageAwsS3UploadServiceImplementation.upload(uploadAvatarDir, image);
         currentUser.setCoverPhotoUrl(coverUrl);
         userRepository.save(currentUser);
         return userMapper.toUserResponse(currentUser);

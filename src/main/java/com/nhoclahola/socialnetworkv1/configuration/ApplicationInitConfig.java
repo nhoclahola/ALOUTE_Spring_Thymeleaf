@@ -28,7 +28,7 @@ public class ApplicationInitConfig
                 User user = User.builder()
                         .email("admin@gmail.com")
                         .username("admin")
-                        .password(passwordEncoder.encode("123"))
+                        .password(passwordEncoder.encode("Super_Secret_Password!!!"))
                         .firstName("Admin")
                         .lastName("Admin")
                         .role(Role.ADMIN)

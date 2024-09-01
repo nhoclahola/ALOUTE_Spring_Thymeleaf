@@ -13,8 +13,8 @@ import java.util.Set;
 @Mapper(componentModel = "spring", uses = UserMapper.class) // To change avatarUrl with method in UserMapper
 public interface PostMapper
 {
-    @Mapping(target = "imageUrl", expression = "java(post.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + post.getImageUrl() : null)")
-    @Mapping(target = "videoUrl", expression = "java(post.getVideoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + post.getVideoUrl() : null)")
+    @Mapping(target = "imageUrl", expression = "java(post.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(post.getImageUrl()) : null)")
+    @Mapping(target = "videoUrl", expression = "java(post.getVideoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(post.getVideoUrl()) : null)")
     public abstract PostResponse toPostResponse(Post post);
 
     public abstract List<PostResponse> toListPostResponse(List<Post> posts);
@@ -25,8 +25,8 @@ public interface PostMapper
 
     @Mapping(source = "liked", target = "isLiked")
     @Mapping(source = "saved", target = "isSaved")
-    @Mapping(target = "imageUrl", expression = "java(postWithData.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + postWithData.getImageUrl() : null)")
-    @Mapping(target = "videoUrl", expression = "java(postWithData.getVideoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.serverAdress + postWithData.getVideoUrl() : null)")
+    @Mapping(target = "imageUrl", expression = "java(postWithData.getImageUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(postWithData.getImageUrl())  : null)")
+    @Mapping(target = "videoUrl", expression = "java(postWithData.getVideoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(postWithData.getVideoUrl()) : null)")
     public abstract PostWithDataResponse toPostWithDataResponse (PostWithData postWithData);
 
     public abstract List<PostWithDataResponse> toListPostWithDataResponse(List<PostWithData> postWithDataList);

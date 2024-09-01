@@ -36,8 +36,8 @@ public class PostServiceImplementation implements PostService
 
     // Relative path in project
     private static final String POST_DIR = "/posts/";
-    private final VideoUploadServiceImplementation videoUploadServiceImplementation;
-    private final ImageUploadServiceImplementation imageUploadServiceImplementation;
+    private final VideoAwsS3UploadServiceImplementation videoAwsS3UploadServiceImplementation;
+    private final ImageAwsS3UploadServiceImplementation imageAwsS3UploadServiceImplementation;
 
     @Override
     @Transactional
@@ -54,12 +54,12 @@ public class PostServiceImplementation implements PostService
         if (file.getContentType().startsWith("image"))
         {
             uploadPostDir = POST_DIR + currentUser.getUserId() + "/images/";
-            imageUrl = imageUploadServiceImplementation.upload(uploadPostDir, file);
+            imageUrl = imageAwsS3UploadServiceImplementation.upload(uploadPostDir, file);
         }
         else if (file.getContentType().startsWith("video"))
         {
             uploadPostDir = POST_DIR + currentUser.getUserId() + "/videos/";
-            videoUrl = videoUploadServiceImplementation.upload(uploadPostDir, file);
+            videoUrl = videoAwsS3UploadServiceImplementation.upload(uploadPostDir, file);
         }
         Post newPost = Post.builder()
                 .caption(caption)

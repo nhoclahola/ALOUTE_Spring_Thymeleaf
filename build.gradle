@@ -58,6 +58,13 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.springframework.security/spring-security-messaging
     implementation 'org.springframework.security:spring-security-messaging:6.3.1'
+
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/aws-core
+    implementation 'software.amazon.awssdk:aws-core:2.27.17'
+
+    // https://mvnrepository.com/artifact/software.amazon.awssdk/s3
+    implementation 'software.amazon.awssdk:s3:2.27.17'
+    testImplementation 'software.amazon.awssdk:s3:2.27.17'
 }
 
 tasks.named('test') {

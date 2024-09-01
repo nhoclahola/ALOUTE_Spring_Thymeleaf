@@ -10,8 +10,8 @@ import java.util.UUID;
 
 public interface FileUploadService
 {
-    public static final String UPLOAD_DIR = "/uploads/";
-    public static final String ABSOLUTE_PATH = System.getProperty("user.dir") + UPLOAD_DIR;
+    public static final String UPLOAD_DIR = "uploads/";
+    public static final String ABSOLUTE_PATH = System.getProperty("user.dir") + "/" + UPLOAD_DIR;
     public abstract String upload(String path, MultipartFile file) throws IOException;
 
     // Utility methods
