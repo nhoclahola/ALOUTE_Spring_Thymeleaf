@@ -28,12 +28,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer
     }
 
     @Bean
-    public WebSocketChannelInterceptor webSocketChannelInterceptor() {
+    public WebSocketChannelInterceptor webSocketChannelInterceptor()
+    {
         return new WebSocketChannelInterceptor();
     }
 
     @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
+    public void configureClientInboundChannel(ChannelRegistration registration)
+    {
         registration.interceptors(webSocketChannelInterceptor());
     }
 }

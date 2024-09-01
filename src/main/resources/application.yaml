@@ -23,10 +23,22 @@ spring:
 jwt:
   privateKey: 8acnkodIBNY6iRCuppO1AUCkOKJFBzjCIZuEqgWPCFq/ags2ANcd9PAO8RoGd9fp
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+    region:
+      static: ${S3_REGION}
+    stack:
+      auto: false
+    buket:
+      name: ${S3_BUCKET_NAME}
+
 server:
   address: 0.0.0.0
   port: 8080
 
 cors:
   allowed:
-    origins: https://social-network-react-js-mosxy6ru7-nhoclaholas-projects.vercel.app, http://localhost:3000, https://social-network-react-js-ui.vercel.app
+    origins: https://social-network-react-js-mosxy6ru7-nhoclaholas-projects.vercel.app, http://localhost:3000, https://social-network-react-js-ui.vercel.app, http://social-network-v1.kesug.com

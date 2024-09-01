@@ -52,6 +52,7 @@ public class WebConfig implements WebMvcConfigurer
                 .key(objectKey).build();
         return s3Client.utilities().getUrl(getUrlRequest).toString();
     }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/uploads/**")
