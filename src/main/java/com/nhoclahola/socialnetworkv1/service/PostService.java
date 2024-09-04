@@ -27,7 +27,9 @@ public interface PostService
 
     public abstract PostResponse findPostByIdResponse(String postId);
 
-    public abstract List<PostWithDataResponse> getHomeFeed(int followingPostIndex, int randomPostIndex);
+    public abstract List<PostWithDataResponse> getHomeFeeds(int index);
+
+    public abstract List<PostWithDataResponse> getCommunitiesFeeds(int index);
 
     public abstract List<PostWithDataResponse> findPopularVideoPosts(int index);
 

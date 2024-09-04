@@ -86,9 +86,18 @@ public class PostController
     }
 
     @GetMapping("/posts/homepage")
-    public ApiResponse<List<PostWithDataResponse>> homePagePost(@RequestParam int followingIndex, @RequestParam int randomIndex)
+    public ApiResponse<List<PostWithDataResponse>> homePagePost(@RequestParam int index)
     {
-        List<PostWithDataResponse> postResponseList = postService.getHomeFeed(followingIndex, randomIndex);
+        List<PostWithDataResponse> postResponseList = postService.getHomeFeeds(index);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
+    }
+
+    @GetMapping("/posts/communities")
+    public ApiResponse<List<PostWithDataResponse>> communitiesPost(@RequestParam int index)
+    {
+        List<PostWithDataResponse> postResponseList = postService.getCommunitiesFeeds(index);
         ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
         response.setResult(postResponseList);
         return response;

@@ -166,22 +166,28 @@ public class PostServiceImplementation implements PostService
     }
 
     @Override
-    public List<PostWithDataResponse> getHomeFeed(int followingPostIndex, int randomPostIndex) {
+    public List<PostWithDataResponse> getHomeFeeds(int index) {
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         // page = index / size
-        // By default, get 10 posts from the followed users
-        int followedPageNumber = followingPostIndex / 10;
+        // By default, get 10 posts
+        int followedPageNumber = index / 10;
         Pageable followedPageable = PageRequest.of(followedPageNumber, 10, Sort.by("createdAt").descending());
         List<PostWithData> followedPosts = postRepository.findPostsFromFollowedUsers(currentUserEmail, followedPageable);
-        // By default, get 2 random posts from the other users
-        int randomPostPageNumber = randomPostIndex / 2;
-        Pageable randomPageable = PageRequest.of(randomPostPageNumber, 2);
+        Set<PostWithData> homeFeeds = new HashSet<>(followedPosts);
+        return postMapper.toListPostWithDataResponse(homeFeeds);
+    }
+
+    @Override
+    public List<PostWithDataResponse> getCommunitiesFeeds(int index)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        // page = index / size
+        // By default, get 10 posts
+        int randomPostPageNumber = index / 10;
+        Pageable randomPageable = PageRequest.of(randomPostPageNumber, 10);
         List<PostWithData> randomPosts = postRepository.findRandomPostsFromOtherUsers(currentUserEmail, randomPageable);
-        // Merge 2 list
-        Set<PostWithData> homeFeed = new HashSet<>();
-        homeFeed.addAll(followedPosts);
-        homeFeed.addAll(randomPosts);
-        return postMapper.toListPostWithDataResponse(homeFeed);
+        Set<PostWithData> communitiesFeeds = new HashSet<>(randomPosts);
+        return postMapper.toListPostWithDataResponse(communitiesFeeds);
     }
 
     @Override
