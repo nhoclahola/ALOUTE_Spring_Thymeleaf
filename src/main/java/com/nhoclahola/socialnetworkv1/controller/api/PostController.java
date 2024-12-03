@@ -1,4 +1,4 @@
-package com.nhoclahola.socialnetworkv1.controller;
+package com.nhoclahola.socialnetworkv1.controller.api;
 
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;

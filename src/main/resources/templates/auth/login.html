@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"></head>
+<body>
+<div class="container vh-100 d-flex justify-content-center align-items-center">
+    <div class="card p-4" style="width: 400px;">
+        <h1 class="text-center">ALOUTE</h1>
+        <p class="text-center">This is the new social network</p>
+
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+                <div class="text-danger" th:if="${loginError}" th:text="${loginError}"></div>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>If you don't have an account? <a href="/register">Register</a></p>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/js/auth.js"></script>
+</body>
+</html>

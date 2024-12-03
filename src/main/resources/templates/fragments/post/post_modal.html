@@ -1,0 +1,29 @@
+<!-- post_modal.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="postModal">
+<body>
+<div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="postModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postModalLabel">Create a Post</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung của modal ở đây -->
+                <form id="postForm">
+                    <textarea class="form-control" placeholder="What are you thinking?" rows="4"></textarea>
+                    <input type="file" class="form-control mt-2" accept="image/*,video/*"> <!-- Input file mới -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="submitPost()">Post</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
