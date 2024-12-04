@@ -1,27 +1,73 @@
+// Khai báo biến tham chiếu bên ngoài
+let scrollHandler;
+
 function loadPosts(url, token) {
     fetch(url, {
         method: 'GET',
         headers: {
-            'Authorization': `Bearer ${token}`, // Thêm token vào header
-            'Content-Type': 'application/json'  // Nếu cần gửi dữ liệu dưới dạng JSON
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
     })
         .then(response => response.json())
         .then(data => {
-            const postContainer = document.getElementById('postContainer');
-            postContainer.innerHTML = ''; // Xóa các post cũ trước khi thêm post mới
             // Kiểm tra nếu có bài đăng
-            if (data.responseCode === 1000 && Array.isArray(data.result)) {
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length > 0) {
                 data.result.forEach(post => {
-                    // Gọi hàm tạo HTML cho mỗi bài đăng
                     const postElement = createPostHtml(post);
                     postContainer.insertAdjacentHTML('beforeend', postElement);
                 });
             } else {
-                console.error('Không có bài đăng hoặc lỗi API.');
+                // console.error('Không có bài đăng hoặc lỗi API.');
+                // Nếu không có dữ liệu, loại bỏ event listener
+                showEndMessage(); // Hiển thị thông báo "This is the end..."
+                window.removeEventListener('scroll', scrollHandler);
             }
         })
         .catch(error => console.error('Error fetching posts:', error));
+}
+
+// Hàm xử lý sự kiện cuộn
+function handleScroll(url, token) {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        currentIndex += 10;
+        const newUrl = `${url}?index=${currentIndex}`;
+        loadPosts(newUrl, token);
+    }
+}
+
+// Thêm event listener khi trang được load
+function startLoad(url) {
+    const token = localStorage.getItem('jwt');
+    document.addEventListener('DOMContentLoaded', () => {
+        currentIndex = 0; // Bắt đầu từ index 0
+        const initialUrl = `${url}?index=${currentIndex}`;
+        loadPosts(initialUrl, token);
+        // Gán hàm handleScroll vào biến tham chiếu
+        scrollHandler = () => handleScroll(url, token);
+        window.addEventListener('scroll', scrollHandler);
+    });
+}
+
+function showEndMessage() {
+    const postContainer = document.getElementById('postContainer');
+    const endMessage = document.createElement('div');
+    endMessage.id = 'endMessage';
+    endMessage.style.textAlign = 'center';
+    endMessage.style.padding = '20px';
+    endMessage.style.fontSize = '18px';
+    endMessage.style.color = '#888';
+    endMessage.style.fontWeight = 'bold';
+    endMessage.style.borderTop = '1px solid #ccc';
+    endMessage.style.marginTop = '20px';
+
+    endMessage.innerHTML = `
+        <div>
+            <p>This is the end...</p>
+            <p>Check another page to see more!</p>
+        </div>
+    `;
+    postContainer.appendChild(endMessage);
 }
 
 function createPostHtml(post) {

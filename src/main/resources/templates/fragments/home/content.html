@@ -50,7 +50,7 @@
     }
 
     // Load posts khi trang được load
-    document.addEventListener('DOMContentLoaded', loadPosts('/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=0', token));
+    // document.addEventListener('DOMContentLoaded', loadPosts('/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=0', token));
 
     function submitPost() {
         const caption = document.querySelector('#postForm textarea').value;
@@ -167,6 +167,30 @@
             </div>`;
         postContainer.insertAdjacentHTML('afterbegin', newPostHtml);
     }
+</script>
+<script>
+    // let currentIndex = 0; // Biến lưu trữ index hiện tại của các bài viết đã tải
+    //
+    // document.addEventListener('DOMContentLoaded', () => {
+    //     loadPosts(`/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=${currentIndex}`, token);
+    //
+    //     // Lắng nghe sự kiện cuộn
+    //     window.addEventListener('scroll', () => {
+    //         const scrollableHeight = document.documentElement.scrollHeight; // Chiều cao toàn bộ trang
+    //         const currentScroll = window.scrollY + window.innerHeight; // Vị trí cuộn hiện tại
+    //
+    //         if (currentScroll >= scrollableHeight - 200) { // Khi cuộn đến gần cuối trang
+    //             console.log(currentIndex)
+    //             loadMorePosts(); // Tải thêm bài viết
+    //         }
+    //     });
+    // });
+    //
+    // function loadMorePosts() {
+    //     currentIndex = currentIndex + 10; // Tăng index khi tải thêm bài viết
+    //     loadPosts(`/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=${currentIndex}`, token);
+    // }
+    startLoad("api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8");
 </script>
 </body>
 </html>
