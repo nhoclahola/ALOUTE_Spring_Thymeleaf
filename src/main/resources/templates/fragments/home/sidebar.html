@@ -15,17 +15,20 @@
             </a>
             <div class="mt-4">
                 <!-- Menu Items -->
-                <a href="#"
-                   class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded bg-light">
+                <a href="/" id="home-link" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
                     <i class="bi bi-house-door mr-3"></i>
                     <span>Home</span>
                 </a>
-                <a href="#" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                <a href="/videos" id="popular-video-link" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                    <i class="bi bi-house-door mr-3"></i>
+                    <span>Video</span>
+                </a>
+                <a href="notifications" id="notification-link" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
                     <i class="bi bi-bell mr-3"></i>
                     <span>Notifications</span>
                     <span class="badge badge-danger ml-auto">3</span>
                 </a>
-                <a href="#" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                <a href="#" id="profile-link" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
                     <i class="bi bi-bell mr-3"></i>
                     <span>Profile</span>
                     <span class="badge badge-danger ml-auto">3</span>
@@ -49,6 +52,36 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = {
+            '/': 'home-link',
+            '/notifications': 'notification-link',
+            '/profile': 'profile-link',
+            '/videos': 'popular-video-link',
+        };
+
+        const currentPath = window.location.pathname;
+        if (links[currentPath]) {
+            const activeLink = document.getElementById(links[currentPath]);
+            if (activeLink) {
+                activeLink.classList.add('bg-secondary');
+            }
+        }
+
+        // Ngăn không cho chuyển hướng nếu đã ở đúng đường dẫn
+        Object.keys(links).forEach(path => {
+            const link = document.getElementById(links[path]);
+            if (link) {
+                link.addEventListener('click', (event) => {
+                    if (window.location.pathname === path) {
+                        event.preventDefault(); // Ngừng chuyển hướng nếu đang ở đúng đường dẫn
+                    }
+                });
+            }
+        });
+    });
+</script>
 <script src="/js/main.js"></script>
 </body>
 </html>

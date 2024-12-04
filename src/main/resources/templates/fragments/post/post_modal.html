@@ -12,14 +12,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Nội dung của modal ở đây -->
                 <form id="postForm">
                     <textarea class="form-control" placeholder="What are you thinking?" rows="4"></textarea>
                     <input type="file" class="form-control mt-2" accept="image/*,video/*"> <!-- Input file mới -->
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closePostModal()">Close</button>
                 <button type="button" class="btn btn-primary" onclick="submitPost()">Post</button>
             </div>
         </div>

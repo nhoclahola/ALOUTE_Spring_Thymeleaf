@@ -13,12 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexController
 {
     @GetMapping("/")
-    public String getAll(Model model)
+    public String getAll()
     {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
-        System.out.println(authentication.getName());
-        model.addAttribute("authentication", authentication);
         return "index";
     }
 }

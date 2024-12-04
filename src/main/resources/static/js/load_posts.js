@@ -1,96 +1,79 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="content">
-<head>
-    <meta charset="UTF-8">
-    <title>Content</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-</head>
-<body>
-<!-- HomePage Content -->
-<div class="col-12 col-md-6">
-    <div class="mt-3">
-        <!-- Create Post -->
-        <div class="card mb-4 p-3 shadow rounded-3">
-            <div class="d-flex align-items-center gap-4">
-                <img src="https://upload.wikimedia.org/wikipedia/vi/7/7d/Bliss.png" alt="Avatar"
-                     class="rounded-circle mr-3"
-                     style="width: 50px; height: 50px;">
-                <input type="text" class="form-control rounded-4" placeholder="What are you thinking?"
-                       onclick="openPostModal()">
-            </div>
-        </div>
-
-        <script th:src="@{/js/load_posts.js}">
-
-        </script>
-        <!--        <div th:replace="fragments/post/post :: post">-->
-
-        <!--        </div>-->
-        <!-- Posts Feed -->
-        <div id="postContainer">
-
-        </div>
-
-    </div>
-
-    <!-- Chèn modal fragment -->
-    <div th:insert="~{fragments/post/post_modal :: postModal}"></div>
-</div>
-
-<script>
-    const token = localStorage.getItem('jwt');
-    var myModal = new bootstrap.Modal(document.getElementById('postModal'));
-
-    function openPostModal() {
-        myModal.show();
-    }
-    function closePostModal() {
-        myModal.hide();
-    }
-
-    // Load posts khi trang được load
-    document.addEventListener('DOMContentLoaded', loadPosts('/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=0', token));
-
-    function submitPost() {
-        const caption = document.querySelector('#postForm textarea').value;
-        const fileInput = document.querySelector('#postForm input[type="file"]');
-        const formData = new FormData();
-        formData.append('caption', caption);
-
-        if (fileInput && fileInput.files.length > 0) {
-            formData.append('file', fileInput.files[0]);
-        } else {
-            // Gửi giá trị rỗng nếu không có file
-            formData.append('file', new Blob());
+function loadPosts(url, token) {
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`, // Thêm token vào header
+            'Content-Type': 'application/json'  // Nếu cần gửi dữ liệu dưới dạng JSON
         }
-
-        fetch('/api/posts', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`, // Thêm token vào header
-            },
-            body: formData,
+    })
+        .then(response => response.json())
+        .then(data => {
+            const postContainer = document.getElementById('postContainer');
+            postContainer.innerHTML = ''; // Xóa các post cũ trước khi thêm post mới
+            // Kiểm tra nếu có bài đăng
+            if (data.responseCode === 1000 && Array.isArray(data.result)) {
+                data.result.forEach(post => {
+                    // Gọi hàm tạo HTML cho mỗi bài đăng
+                    const postElement = createPostHtml(post);
+                    postContainer.insertAdjacentHTML('beforeend', postElement);
+                });
+            } else {
+                console.error('Không có bài đăng hoặc lỗi API.');
+            }
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.responseCode === 1000) {
-                    // Gọi hàm để chèn post mới vào đầu
-                    addNewPost(data.result);
+        .catch(error => console.error('Error fetching posts:', error));
+}
 
-                    // Làm sạch form
-                    document.querySelector('#postForm textarea').value = ''; // Làm sạch textarea
-                    fileInput.value = ''; // Làm sạch file input
-                    myModal.hide();
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function addNewPost(post) {
-        const postContainer = document.getElementById('postContainer');
-        const newPostHtml = `
+function createPostHtml(post) {
+    return `
             <div class="card d-flex flex-row p-2 card shadow rounded-3 mb-4">
+                <style>
+                    /* Nút chung */
+                    button {
+                        background: none;
+                        border: none;
+                        padding: 8px;
+                        cursor: pointer;
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+            
+                    .already {
+                        fill: red;
+                    }
+            
+                    /* Nút yêu thích */
+                    .heart-button:hover .heart-icon {
+                        fill: red;
+                    }
+            
+                    .heart-icon {
+                        width: 24px;
+                        height: 24px;
+                        fill: currentColor;
+                    }
+            
+                    /* Nút trò chuyện */
+                    .chat-button:hover .chat-icon {
+                        fill: cyan;
+                    }
+            
+                    .chat-icon {
+                        width: 24px;
+                        height: 24px;
+                        fill: currentColor;
+                    }
+            
+                    /* Hover màu chữ theo kiểu Tailwind */
+                    .hover\\:text-red-400:hover {
+                        color: #f87171; /* Màu đỏ */
+                    }
+            
+                    .hover\\:text-cyan-400:hover {
+                        color: #22d3ee; /* Màu xanh cyan */
+                    }
+                </style>
                 <div class="d-flex ">
                     <img src="${post.user.avatarUrl || 'https://upload.wikimedia.org/wikipedia/vi/7/7d/Bliss.png'}" alt="avatar" class="rounded-circle border border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
                 </div>
@@ -115,6 +98,7 @@
                             <!-- Like Button -->
                             <div class="d-flex align-items-center">
                                 <button
+                                  title="Like this post"
                                   class="heart-button hover:text-red-400"
                                   type="button"
                                   tabindex="0"
@@ -131,14 +115,13 @@
                                   </svg>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-danger" onclick="likePost()">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">0</span>
+                                    <span class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">${post.likedCount}</span>
                                 </button>
                             </div>
 
                             <!-- Comment button -->
                             <div class="d-flex align-items-center">
                                 <button
-                                  title="Like this post"
                                   class="chat-button hover:text-cyan-400"
                                   type="button"
                                   tabindex="0"
@@ -155,7 +138,7 @@
                                   </svg>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-info" onclick="handleOpenComment()">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenComment()">0</span>
+                                    <span class="hover-underline cursor-pointer" onclick="handleOpenComment()">${post.commentCount}</span>
                                 </button>
                             </div>
                         </section>
@@ -165,8 +148,7 @@
                     </div>
                 </div>
             </div>`;
-        postContainer.insertAdjacentHTML('afterbegin', newPostHtml);
-    }
-</script>
-</body>
-</html>
+}
+
+// Tải posts khi trang được load
+// document.addEventListener('DOMContentLoaded', loadPosts);

@@ -17,4 +17,10 @@ public class WebAuthController
     {
         return "auth/register";
     }
+
+    @GetMapping("user/profile")
+    public String profile()
+    {
+        return "profile";
+    }
 }
