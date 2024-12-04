@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:fragment="sidebar">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Sidebar</title>
+    <title>Spring Boot Rest API with AJAX</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-EVSTQN3azpjGq7AoW3uAO7ZWr69PtkTw9fspd3yD65Voh4pGmpriUMc/H4C60LlF"
+          crossorigin="anonymous">
 </head>
 <body>
+<!--<div class="container" style="min-height: 500px;">-->
+<!--    <div class="starter-template">-->
+<!--        <h1>Spring Boot REST API with AJAX Example</h1>-->
+<!--        <img id="images" src="" alt="" width="100%" />-->
+<!--        <div id="profile"></div>-->
+<!--        <button id="Logout">Logout</button>-->
+<!--    </div>-->
+<!--</div>-->
 <!-- Sidebar -->
 <div class="col-md-3 d-none d-md-block position-sticky vh-100 px-2" style="top: 0;">
     <div class="card h-100 d-flex flex-column justify-content-between p-3 shadow rounded-3">
@@ -40,7 +55,9 @@
                 <div>
                     <strong id="firstName"></strong>
                     <strong id="lastName"></strong>
-                    <p id="username" class="text-muted mb-0">@</p>
+                    <div id="username"></div>
+
+                    <p class="text-muted mb-0">@username</p>
                 </div>
             </div>
             <button class="btn btn-link p-0">
@@ -49,6 +66,12 @@
         </div>
     </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFyZWLAL8N4U5sFZMSMeFMRKnF9+jZnN24q/iw1yJlHBOUheC+OHG6D9Ex"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 <script src="/js/main.js"></script>
 </body>
 </html>

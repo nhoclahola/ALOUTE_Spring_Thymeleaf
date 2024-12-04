@@ -67,6 +67,9 @@
                         <p class="text-break">${post.caption}</p>
                     </div>
                     ${post.imageUrl ? `<img src="${post.imageUrl}" class="img-fluid rounded border w-100" alt="post image" onclick="event.stopPropagation()">` : ''}
+                    ${post.videoUrl ? `<video class="img-fluid rounded border w-100" controls onclick="event.stopPropagation()">
+                                        <source src="${post.videoUrl}">
+                                        </video>` : ''}
                     <div class="d-flex justify-content-between mt-2">
                         <section class="d-flex gap-4">
                             <div>
@@ -169,7 +172,7 @@
                         </a>
                         <span class="text-secondary">@${postData.user.username}</span>
                         <span>·</span>
-                        <span class="text-secondary">${new Date(postData.createdAt).toLocaleString()}</span>
+                        <span class="text-secondary">${new Date(postData.createdAt).toLocaleDateString()}</span>
                     </div>
                     <div class="min-h-12">
                         <p class="text-break">${postData.caption}</p>
