@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALOUTE - Notifications</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <!--    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>-->
+    <script th:src="@{/js/jquery.min.js}"></script>
+
+    <!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>-->
+</head>
+<body>
+<!--<div th:if="${authentication == null}">-->
+<!--    <script>-->
+<!--        window.location.href = "/login"; // Chuyển hướng đến trang login nếu chưa đăng nhập-->
+<!--    </script>-->
+<!--</div>-->
+<!--<div th:if="${authentication != null}">-->
+<!-- Nội dung hiển thị khi người dùng đã đăng nhập -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div th:replace="~{fragments/home/sidebar :: sidebar}">
+
+        </div>
+
+        <!-- HomePage Content -->
+        <div th:replace="~{fragments/notification/content :: content}">
+
+        </div>
+
+        <!-- HomeRight Sidebar -->
+        <div th:replace="~{fragments/home/home_right :: home_right}">
+
+        </div>
+    </div>
+</div>
+<!--</div>-->
+</body>
+</html>
