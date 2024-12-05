@@ -37,24 +37,24 @@
     <h1 class="font-weight-bold text-center mb-4">Notifications</h1>
 
     <!-- Notification List -->
-        <div id="notification-list" class="list-group">
+        <div id="notificationContainer" class="list-group">
             <!-- Notification Item -->
-            <div class="list-group-item notification-card d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <div class="status-indicator bg-cyan-500 rounded-circle me-3"
-                         style="width: 10px; height: 10px;"></div>
-                    <div class="avatar me-3">
-                        <img src="https://via.placeholder.com/50" alt="User Avatar">
-                    </div>
-                    <div>
-                        <h5><strong>@username</strong> liked your post: <strong>Post Caption</strong></h5>
-                        <p class="text-muted">2 hours ago</p>
-                    </div>
-                </div>
-                <button class="btn mark-read-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark as read">
-                    <i class="bi bi-envelope-check"></i>
-                </button>
-            </div>
+<!--            <div class="list-group-item notification-card d-flex justify-content-between align-items-center">-->
+<!--                <div class="d-flex align-items-center">-->
+<!--                    <div class="status-indicator bg-cyan-500 rounded-circle me-3"-->
+<!--                         style="width: 10px; height: 10px;"></div>-->
+<!--                    <div class="avatar me-3">-->
+<!--                        <img src="https://via.placeholder.com/50" alt="User Avatar">-->
+<!--                    </div>-->
+<!--                    <div>-->
+<!--                        <h5><strong>@username</strong> liked your post: <strong>Post Caption</strong></h5>-->
+<!--                        <p class="text-muted">2 hours ago</p>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <button class="btn mark-read-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark as read">-->
+<!--                    <i class="bi bi-envelope-check"></i>-->
+<!--                </button>-->
+<!--            </div>-->
 
             <!-- More notifications can be added here -->
 
@@ -73,6 +73,10 @@
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
+</script>
+<script th:src="@{/js/notification.js}"></script>
+<script>
+    startLoad("/api/notifications/users");
 </script>
 </body>
 </html>
