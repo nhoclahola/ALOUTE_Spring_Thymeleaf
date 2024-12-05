@@ -82,7 +82,7 @@ function createPostHtmlUsers(user) {
                     <a href="/profile/${user.userId}" class="w-100 text-decoration-none">
                         <div class="d-flex align-items-center gap-3 p-2">
                             <div class="avatar-custom">
-                                <img src="${user.imageUrl ? user.imageUrl : '/images/unknown_user.jpg'}" alt="avatar">
+                                <img src="${user.avatarUrl ? user.avatarUrl : '/images/unknown_user.jpg'}" alt="avatar">
                             </div>
                             <div class="d-flex flex-column">
                                 <h1 class="fs-5 fw-bold truncate">${user.firstName} ${user.lastName}</h1>

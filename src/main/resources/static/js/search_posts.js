@@ -126,7 +126,7 @@ function createPostHtml(post) {
                     }
                 </style>
                 <div class="d-flex ">
-                    <img src="${post.user.avatarUrl || 'https://upload.wikimedia.org/wikipedia/vi/7/7d/Bliss.png'}" alt="avatar" class="rounded-circle border border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
+                    <img src="${post.user.avatarUrl ? post.user.avatarUrl : '/images/unknown_user.jpg'}" alt="avatar" alt="avatar" class="rounded-circle border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
                 </div>
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex align-items-center gap-2">

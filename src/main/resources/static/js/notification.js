@@ -50,7 +50,6 @@ function startLoad(url) {
         currentIndex = 0; // Bắt đầu từ index 0
         const initialUrl = `${url}?index=${currentIndex}`;
         loadNotifications(initialUrl, token);
-        // Gán hàm handleScroll vào biến tham chiếu
         setupLoadMoreButton(url, token);
     });
 }
@@ -81,7 +80,7 @@ function createNotificationHtml(notification) {
                     <div class="status-indicator bg-cyan-500 rounded-circle me-3"
                          style="width: 10px; height: 10px;"></div>
                     <div class="avatar me-3">
-                        <img src="https://via.placeholder.com/50" alt="User Avatar">
+                        <img src="${notification.triggerUser.avatarUrl ? notification.triggerUser.avatarUrl : '/images/unknown_user.jpg'}" alt="User Avatar">
                     </div>
                     <div>
                         <h5><strong>@${notification.triggerUser.username}</strong> liked your post: <strong>${notification.post.caption}</strong></h5>

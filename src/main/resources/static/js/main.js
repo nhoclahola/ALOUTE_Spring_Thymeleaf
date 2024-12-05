@@ -15,7 +15,7 @@ $(document).ready(function () {
             $('#firstName').html(data.result.firstName);
             $('#lastName').html(data.result.lastName);
             $('#username').html('@' + data.result.username);
-            $('#images').html(document.getElementById('images').src = data.images);
+            $('#avatar').html(document.getElementById('avatar').src = data.result.avatarUrl);
         },
         error: function (e) {
             var json = e.responseText;
