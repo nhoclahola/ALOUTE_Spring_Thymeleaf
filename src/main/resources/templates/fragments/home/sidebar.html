@@ -15,20 +15,24 @@
             </a>
             <div class="mt-4">
                 <!-- Menu Items -->
-                <a href="/" id="home-link" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                <a href="/" id="home-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
                     <i class="bi bi-house-door mr-3"></i>
                     <span>Home</span>
                 </a>
-                <a href="/videos" id="popular-video-link" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
-                    <i class="bi bi-house-door mr-3"></i>
+                <a href="/videos" id="popular-video-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                    <i class="bi bi-file-play-fill mr-3"></i>
                     <span>Video</span>
                 </a>
-                <a href="notifications" id="notification-link" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                <a href="/search" id="search-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                    <i class="bi bi-search mr-3"></i>
+                    <span>Search</span>
+                </a>
+                <a href="notifications" id="notification-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
                     <i class="bi bi-bell mr-3"></i>
                     <span>Notifications</span>
                     <span class="badge badge-danger ml-auto">3</span>
                 </a>
-                <a href="#" id="profile-link" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                <a href="#" id="profile-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
                     <i class="bi bi-bell mr-3"></i>
                     <span>Profile</span>
                     <span class="badge badge-danger ml-auto">3</span>
@@ -56,6 +60,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const links = {
             '/': 'home-link',
+            '/search': 'search-link',
             '/notifications': 'notification-link',
             '/profile': 'profile-link',
             '/videos': 'popular-video-link',
