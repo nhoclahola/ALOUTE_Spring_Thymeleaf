@@ -5,6 +5,7 @@
     <title>Content</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/load_posts.js}"></script>
 </head>
 <body>
 <!-- HomePage Content -->
@@ -21,9 +22,6 @@
             </div>
         </div>
 
-        <script th:src="@{/js/load_posts.js}">
-
-        </script>
         <!--        <div th:replace="fragments/post/post :: post">-->
 
         <!--        </div>-->
@@ -92,7 +90,7 @@
         const newPostHtml = `
             <div class="card d-flex flex-row p-2 card shadow rounded-3 mb-4">
                 <div class="d-flex ">
-                    <img src="${post.user.avatarUrl || 'https://upload.wikimedia.org/wikipedia/vi/7/7d/Bliss.png'}" alt="avatar" class="rounded-circle border border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
+                    <img src="${post.user.avatarUrl ? post.user.avatarUrl : '/images/unknown_user.jpg'}" alt="avatar" class="rounded-circle border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
                 </div>
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex align-items-center gap-2">

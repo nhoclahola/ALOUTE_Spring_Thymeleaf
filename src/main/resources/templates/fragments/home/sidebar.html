@@ -3,44 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <title>Sidebar</title>
+    <style>
+        .sidebar-color {
+            background-color: rgb(6 182 212);
+        }
+        .hover-sidebar-color:hover {
+            background-color: rgb(203 213 225);
+        }
+    </style>
 </head>
 <body>
 <!-- Sidebar -->
 <div class="col-md-3 d-none d-md-block position-sticky vh-100 px-2" style="top: 0;">
-    <div class="card h-100 d-flex flex-column justify-content-between p-3 shadow rounded-3">
+    <div class="card h-100 d-flex flex-column justify-content-between py-3 shadow rounded-3">
         <div>
             <a href="/" class="d-flex justify-content-center align-items-center gap-2">
                 <img th:src="@{/images/logos/hcmute.png}" alt="ALOUTE" class="img-fluid" style="width: 30px;">
-                <span class="font-weight-bold ml-2">ALOUTE</span>
+                <span class="fw-bold fw-3 ml-2 text-decoration-none">ALOUTE</span>
             </a>
             <div class="mt-4">
                 <!-- Menu Items -->
-                <a href="/" id="home-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
-                    <i class="bi bi-house-door mr-3"></i>
+                <a href="/" id="home-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
+                    <i class="bi bi-house-door-fill mr-3"></i>
                     <span>Home</span>
                 </a>
-                <a href="/videos" id="popular-video-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                <a href="/videos" id="popular-videos-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
                     <i class="bi bi-file-play-fill mr-3"></i>
-                    <span>Video</span>
+                    <span>Videos</span>
                 </a>
-                <a href="/search" id="search-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                <a href="/search" id="search-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
                     <i class="bi bi-search mr-3"></i>
                     <span>Search</span>
                 </a>
-                <a href="notifications" id="notification-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
-                    <i class="bi bi-bell mr-3"></i>
+                <a href="/notifications" id="notification-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
+                    <i class="bi bi-bell-fill mr-3"></i>
                     <span>Notifications</span>
                     <span class="badge badge-danger ml-auto">3</span>
                 </a>
-                <a href="#" id="profile-link" class="d-flex gap-2 align-items-center py-2 px-3 text-decoration-none text-dark rounded">
+                <a href="/messages" id="messages-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
+                    <i class="bi bi-chat-right-text-fill mr-3"></i>
+                    <span>Messages</span>
+                    <span class="badge badge-danger ml-auto"></span>
+                </a>
+                <a href="#" id="profile-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
                     <i class="bi bi-bell mr-3"></i>
                     <span>Profile</span>
-                    <span class="badge badge-danger ml-auto">3</span>
+                    <span class="badge badge-danger ml-auto"></span>
                 </a>
                 <!-- Add other menu items here -->
             </div>
         </div>
-        <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="d-flex justify-content-between align-items-center mt-3 px-3">
             <div class="d-flex align-items-center gap-2">
                 <img src="https://upload.wikimedia.org/wikipedia/vi/1/12/Kenshi_Yonezu_-_Lemon.png" alt="Avatar" class="rounded-circle mr-3"
                      style="width: 40px; height: 40px;">
@@ -60,17 +73,18 @@
     document.addEventListener('DOMContentLoaded', () => {
         const links = {
             '/': 'home-link',
+            '/videos': 'popular-videos-link',
             '/search': 'search-link',
             '/notifications': 'notification-link',
+            '/messages': 'messages-link',
             '/profile': 'profile-link',
-            '/videos': 'popular-video-link',
         };
 
         const currentPath = window.location.pathname;
         if (links[currentPath]) {
             const activeLink = document.getElementById(links[currentPath]);
             if (activeLink) {
-                activeLink.classList.add('bg-secondary');
+                activeLink.classList.add('sidebar-color');
             }
         }
 
