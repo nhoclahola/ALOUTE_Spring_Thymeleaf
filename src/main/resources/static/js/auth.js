@@ -11,7 +11,7 @@ $(document).ready(function () {
             data: JSON.stringify({ email: email, password: password }),
             success: function (response) {
                 localStorage.setItem("jwt", response.jwt);
-                window.location.href = '/home';
+                window.location.href = '/';
             },
             error: function (error) {
                 alert('Your email or password does not match.');

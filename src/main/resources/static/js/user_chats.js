@@ -19,9 +19,13 @@ function loadUserChats(url, token) {
 
                     // Thêm event listener cho từng phần tử vừa tạo
                     const chatDiv = document.getElementById(userChat.chatId);
+                    const chatInput = document.getElementById('chat-input');
                     if (chatDiv) {
                         chatDiv.addEventListener('click', () => {
+                            // disconnectClient();
                             clearAndAddChatMessages(userChat.chatId);
+                            chatInput.style.display = 'flex';
+                            subscribeToUserTopic(userChat.chatId);
                         });
                     }
                 });
@@ -136,7 +140,9 @@ function clearAndAddChatMessages(chatId) {
                                 // If message is from another user, display as incoming message
                                 messageDiv.innerHTML = `
                                 <div id="${message.messageId}" class="d-flex">
-                                    <img src="${message.user.avatarUrl || 'https://via.placeholder.com/40'}" alt="avatar" class="rounded-circle me-2">
+                                    <div class="avatar-custom-2">
+                                        <img src="${message.user.avatarUrl || '/images/unknown_user.jpg'}" alt="avatar" class="rounded-circle me-2">
+                                    </div>
                                     <div>
                                         <div class="bg-light rounded p-2">
                                             <p class="mb-0">${message.content}</p>
@@ -153,18 +159,6 @@ function clearAndAddChatMessages(chatId) {
 
                         // Append chat container to the chatContainer div
                         chatContainer.appendChild(chatMessagesDiv);
-
-
-                        // Thêm phần tử input tin nhắn sau khi render tin nhắn
-                        chatContainer.innerHTML += `
-                            <!-- Chat Input -->
-                            <div class="chat-input p-2">
-                                <textarea class="form-control" rows="1" placeholder="Type your message..."></textarea>
-                                <button class="btn btn-primary">
-                                    <i class="bi bi-send"></i>
-                                </button>
-                            </div>
-                        `;
 
                         // Scroll to the bottom of the chat container
                         chatContainer.scrollTop = chatContainer.scrollHeight;
