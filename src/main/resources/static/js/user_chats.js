@@ -1,3 +1,5 @@
+let currentIndex = 0;
+
 function loadUserChats(url, token) {
     fetch(url, {
         method: 'GET',
@@ -39,25 +41,6 @@ function loadUserChats(url, token) {
         .catch(error => console.error('Error fetching posts:', error));
 }
 
-function removeLoadMoreButton() {
-    const loadMoreButton = document.getElementById('load-more');
-    if (loadMoreButton) {
-        loadMoreButton.remove();
-    }
-}
-
-// Gán sự kiện nhấn nút "See more notifications"
-function setupLoadMoreButton(url, token) {
-    const loadMoreButton = document.getElementById('load-more');
-    if (loadMoreButton) {
-        loadMoreButton.addEventListener('click', () => {
-            currentIndex += 10;
-            const newUrl = `${url}?index=${currentIndex}`;
-            loadNotifications(newUrl, token);
-        });
-    }
-}
-
 function showEndMessage() {
     const endMessage = document.createElement('div');
     endMessage.id = 'endMessage';
@@ -93,8 +76,9 @@ function createUserChatHtml(userChat, otherUser) {
 }
 
 function clearAndAddChatMessages(chatId) {
+    currentIndex = 0;
     let token = localStorage.getItem("jwt");
-    fetch(`/api/messages/chats/${chatId}?index=0`, {
+    fetch(`/api/messages/chats/${chatId}?index=${currentIndex}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -118,6 +102,30 @@ function clearAndAddChatMessages(chatId) {
                         chatMessagesDiv.classList.add('chat-messages');
                         chatMessagesDiv.id = 'chat-messages';
 
+                        // Nếu số lượng tin nhắn ít hơn 10, thêm button để xem thêm tin nhắn cũ
+                        if (messages.length == 10) {
+                            const loadMoreDiv = document.createElement('div');
+                            loadMoreDiv.id = 'load-more';
+                            loadMoreDiv.classList.add('text-center', 'mt-4');
+                            loadMoreDiv.innerHTML = `
+                            <button class="btn btn-outline-primary">See earlier messages</button>
+                        `;
+                            // Thêm sự kiện click để tải thêm tin nhắn cũ
+                            loadMoreDiv.querySelector('button').addEventListener('click', function () {
+                                loadMoreMessages(chatId, messages.length);
+                            });
+                            chatMessagesDiv.appendChild(loadMoreDiv);
+                        }
+                        else {
+                            const noMoreMessage = document.createElement('div');
+                            noMoreMessage.id = 'load-more';
+                            noMoreMessage.classList.add('text-center', 'mt-4');
+                            noMoreMessage.innerHTML = `
+                            <i class="fw-bold">There are no earlier messages</i>
+                        `;
+                            chatMessagesDiv.insertBefore(noMoreMessage, chatMessagesDiv.firstChild);
+                        }
+
                         // Iterate over the userChat messages
                         messages.forEach(message => {
                             const messageDiv = document.createElement('div');
@@ -128,24 +136,26 @@ function clearAndAddChatMessages(chatId) {
                             if (isCurrentUser) {
                                 // If message is from current user, display as outgoing message
                                 messageDiv.classList.add('text-end');
+                                messageDiv.style.marginLeft = '8rem';
                                 messageDiv.innerHTML = `
                                     <div id="${message.messageId}">
                                         <div class="bg-primary text-white rounded p-2 d-inline-block">
-                                            <p class="mb-0">${message.content}</p>
+                                            <p class="mb-0 text-start ps-2 pe-1">${message.content}</p>
                                         </div>
                                         <small class="text-muted d-block">${formatTimestamp(message.timestamp)}</small>
                                     </div>
                                 `;
                             } else {
+                                messageDiv.style.marginRight = '8rem'
                                 // If message is from another user, display as incoming message
                                 messageDiv.innerHTML = `
-                                <div id="${message.messageId}" class="d-flex">
+                                <div id="${message.messageId}" class="d-flex gap-2">
                                     <div class="avatar-custom-2">
                                         <img src="${message.user.avatarUrl || '/images/unknown_user.jpg'}" alt="avatar" class="rounded-circle me-2">
                                     </div>
                                     <div>
                                         <div class="bg-light rounded p-2">
-                                            <p class="mb-0">${message.content}</p>
+                                            <p class="mb-0 ps-2 pe-1">${message.content}</p>
                                         </div>
                                         <small class="text-muted">${formatTimestamp(message.timestamp)}</small>
                                     </div>
@@ -164,6 +174,101 @@ function clearAndAddChatMessages(chatId) {
                         chatContainer.scrollTop = chatContainer.scrollHeight;
                     }
                 });
+            }
+            else {
+                // console.error('Không có bài đăng hoặc lỗi API.');
+                // Nếu không có dữ liệu, loại bỏ event listener
+                showEndMessage(); // Hiển thị thông báo "This is the end..."
+                removeLoadMoreButton();
+            }
+        })
+        .catch(error => console.error('Error fetching posts:', error));
+}
+
+function loadMoreMessages(chatId) {
+    currentIndex += 10;
+    let token = localStorage.getItem("jwt");
+    fetch(`/api/messages/chats/${chatId}?index=${currentIndex}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            const loadMoreDiv = document.getElementById('load-more');
+            loadMoreDiv.remove();
+            // Kiểm tra nếu có bài đăng
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length > 0) {
+                let currentUser = user;
+                let messages = data.result;
+                const chatMessagesDiv = document.getElementById('chat-messages');
+                if (chatMessagesDiv) {
+                    // Iterate over the userChat messages
+                    messages.reverse().forEach(message => {
+                        const messageDiv = document.createElement('div');
+                        messageDiv.classList.add('p-2');
+                        const isCurrentUser = message.user.userId === currentUser.userId;
+
+                        // Check if the message is from the current user or another user
+                        if (isCurrentUser) {
+                            // If message is from current user, display as outgoing message
+                            messageDiv.classList.add('text-end');
+                            messageDiv.style.marginLeft = '8rem';
+                            messageDiv.innerHTML = `
+                                <div id="${message.messageId}">
+                                    <div class="bg-primary text-white rounded p-2 d-inline-block">
+                                        <p class="mb-0 text-start ps-2 pe-1">${message.content}</p>
+                                    </div>
+                                    <small class="text-muted d-block">${formatTimestamp(message.timestamp)}</small>
+                                </div>
+                            `;
+                        } else {
+                            // If message is from another user, display as incoming message
+                            messageDiv.style.marginRight = '8rem';
+                            messageDiv.innerHTML = `
+                                <div id="${message.messageId}" class="d-flex gap-2">
+                                    <div class="avatar-custom-2">
+                                        <img src="${message.user.avatarUrl || '/images/unknown_user.jpg'}" alt="avatar" class="rounded-circle me-2">
+                                    </div>
+                                    <div>
+                                        <div class="bg-light rounded p-2">
+                                            <p class="mb-0 ps-2 pe-1">${message.content}</p>
+                                        </div>
+                                        <small class="text-muted">${formatTimestamp(message.timestamp)}</small>
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        // Chèn tin nhắn vào đầu chatMessagesDiv
+                        chatMessagesDiv.insertBefore(messageDiv, chatMessagesDiv.firstChild);
+                    });
+
+                    if (messages.length === 10) {
+                        const loadMoreDiv = document.createElement('div');
+                        loadMoreDiv.id = 'load-more';
+                        loadMoreDiv.classList.add('text-center', 'mt-4');
+                        loadMoreDiv.innerHTML = `
+                            <button class="btn btn-outline-primary">See earlier messages</button>
+                        `;
+                        // Thêm sự kiện click để tải thêm tin nhắn cũ
+                        loadMoreDiv.querySelector('button').addEventListener('click', function () {
+                            loadMoreMessages(chatId, messages.length);
+                        });
+                        chatMessagesDiv.insertBefore(loadMoreDiv, chatMessagesDiv.firstChild);
+                    }
+                    else {
+                        const noMoreMessage = document.createElement('div');
+                        noMoreMessage.id = 'load-more';
+                        noMoreMessage.classList.add('text-center', 'mt-4');
+                        noMoreMessage.innerHTML = `
+                            <i class="fw-bold">There are no earlier messages</i>
+                        `;
+                        chatMessagesDiv.insertBefore(noMoreMessage, chatMessagesDiv.firstChild);
+                    }
+                }
             }
             else {
                 // console.error('Không có bài đăng hoặc lỗi API.');

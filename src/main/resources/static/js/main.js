@@ -12,7 +12,7 @@ document.addEventListener('userUpdated', () => {
             currentIndex = 0; // Bắt đầu từ index 0
             const initialUrl = `${url}?index=${currentIndex}`;
             loadUserChats(initialUrl, token);
-            setupLoadMoreButton(url, token);
+            // setupLoadMoreButton(url, token);
         }
     }
 });

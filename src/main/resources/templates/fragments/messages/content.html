@@ -48,6 +48,7 @@
             height: 2.5rem;
             border-radius: 50%;
             overflow: hidden;
+            flex-shrink: 0; /* Đảm bảo avatar không bị co */
         }
         .avatar-custom img {
             height: 100%;
@@ -126,10 +127,11 @@
                 if (isCurrentUser) {
                     // If message is from current user, display as outgoing message
                     messageDiv.classList.add('text-end');
+                    messageDiv.style.marginLeft = '8rem';
                     messageDiv.innerHTML = `
                                     <div id="${msg.messageId}">
                                         <div class="bg-primary text-white rounded p-2 d-inline-block">
-                                            <p class="mb-0">${msg.content}</p>
+                                            <p class="mb-0 text-start ps-2 pe-1">${msg.content}</p>
                                         </div>
                                         <small class="text-muted d-block">${formatTimestamp(msg.timestamp)}</small>
                                     </div>
@@ -137,14 +139,15 @@
                 }
                 else {
                     // If message is from another user, display as incoming message
+                    messageDiv.style.marginRight = '8rem';
                     messageDiv.innerHTML = `
-                                <div id="${msg.messageId}" class="d-flex">
+                                <div id="${msg.messageId}" class="d-flex gap-2">
                                     <div class="avatar-custom-2">
                                         <img src="${msg.user.avatarUrl || '/images/unknown_user.jpg'}" alt="avatar" class="rounded-circle me-2">
                                     </div>
                                     <div>
                                         <div class="bg-light rounded p-2">
-                                            <p class="mb-0">${msg.content}</p>
+                                            <p class="mb-0 ps-2 pe-1">${msg.content}</p>
                                         </div>
                                         <small class="text-muted">${formatTimestamp(msg.timestamp)}</small>
                                     </div>
