@@ -1,3 +1,28 @@
+// Tạo event listener tùy chỉnh
+const userEvent = new Event('userUpdated');
+
+// Lắng nghe sự kiện userUpdated
+document.addEventListener('userUpdated', () => {
+    if (user) {
+        let contentContainer = document.getElementById('content-container')
+        if (contentContainer) {
+            contentContainer.style.display = 'block';
+            const token = localStorage.getItem('jwt');
+            const url = "/api/chats/user-chat";
+            currentIndex = 0; // Bắt đầu từ index 0
+            const initialUrl = `${url}?index=${currentIndex}`;
+            loadUserChats(initialUrl, token);
+            setupLoadMoreButton(url, token);
+        }
+    }
+});
+
+// Hàm cập nhật user
+function updateUser(newUser) {
+    user = newUser;
+    document.dispatchEvent(userEvent); // Phát sự kiện userUpdated
+}
+
 $(document).ready(function () {
     // Hiển thị thông tin người dùng đăng nhập thành công
     $.ajax({
@@ -10,7 +35,7 @@ $(document).ready(function () {
             }
         },
         success: function (data) {
-            var json = JSON.stringify(data, null, 4);
+            updateUser(data.result)
             // Cập nhật thông tin người dùng vào phần tử HTML
             $('#firstName').html(data.result.firstName);
             $('#lastName').html(data.result.lastName);
