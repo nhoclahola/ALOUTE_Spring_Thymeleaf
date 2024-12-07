@@ -72,7 +72,7 @@ function showEndMessage() {
 
 function createPostHtml(post) {
     return `
-            <div class="card d-flex flex-row p-2 card shadow rounded-3 mb-4">
+            <div id="${post.postId}" class="card d-flex flex-row p-2 card shadow rounded-3 mb-4">
                 <style>
                     /* Nút chung */
                     button {
@@ -183,8 +183,8 @@ function createPostHtml(post) {
                                     ></path>
                                   </svg>
                                 </button>
-                                <button type="button" class="btn btn-link p-0 text-info" onclick="handleOpenComment()">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenComment()">${post.commentCount}</span>
+                                <button type="button" class="btn btn-link p-0 text-info">
+                                    <span class="hover-underline cursor-pointer" onclick="handleOpenComment(event)">${post.commentCount}</span>
                                 </button>
                             </div>
                         </section>

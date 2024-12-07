@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/load_posts.js}"></script>
+    <script th:src="@{/js/load_comments.js}"></script>
 </head>
 <body>
 <!-- HomePage Content -->
@@ -34,6 +35,7 @@
 
     <!-- Chèn modal fragment -->
     <div th:insert="~{fragments/post/post_modal :: postModal}"></div>
+    <div th:insert="~{fragments/post/comment_modal :: commentModal}"></div>
 </div>
 
 <script>
@@ -215,27 +217,42 @@
     }
 </script>
 <script>
-    // let currentIndex = 0; // Biến lưu trữ index hiện tại của các bài viết đã tải
-    //
-    // document.addEventListener('DOMContentLoaded', () => {
-    //     loadPosts(`/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=${currentIndex}`, token);
-    //
-    //     // Lắng nghe sự kiện cuộn
-    //     window.addEventListener('scroll', () => {
-    //         const scrollableHeight = document.documentElement.scrollHeight; // Chiều cao toàn bộ trang
-    //         const currentScroll = window.scrollY + window.innerHeight; // Vị trí cuộn hiện tại
-    //
-    //         if (currentScroll >= scrollableHeight - 200) { // Khi cuộn đến gần cuối trang
-    //             console.log(currentIndex)
-    //             loadMorePosts(); // Tải thêm bài viết
-    //         }
-    //     });
-    // });
-    //
-    // function loadMorePosts() {
-    //     currentIndex = currentIndex + 10; // Tăng index khi tải thêm bài viết
-    //     loadPosts(`/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=${currentIndex}`, token);
-    // }
+    let commentModal = new bootstrap.Modal(document.getElementById('commentModal'));
+
+    // Mở modal
+    function handleOpenComment(event) {
+        // Lấy phần tử cha của button
+        let targetElement = event.currentTarget;
+        for (let i = 0; i <= 5; i++) {
+            targetElement = targetElement.parentNode;
+        }
+
+        let createCommentButton = document.getElementById('create-comment-button');
+        if (createCommentButton)
+            createCommentButton.remove();
+        createCommentButton = document.createElement('button');
+        createCommentButton.id = 'create-comment-button';
+        createCommentButton.classList.add('btn');
+        createCommentButton.innerHTML = `
+            <i class="bi bi-send text-cyan fs-3"></i>
+        `
+        createCommentButton.addEventListener('click', () => createComment(postId));
+        let createCommentContainer = document.getElementById("create-comment-container");
+        createCommentContainer.appendChild(createCommentButton);
+
+        // Lấy id của phần tử đó
+        const postId = targetElement.id;
+        clearAndAddComment(postId);
+        if (user.avatarUrl != null)
+            $('#userAvatar').html(document.getElementById('userAvatar').src = user.avatarUrl);
+        commentModal.show();
+    }
+
+    // Đóng modal
+    function handleCloseComment() {
+        commentModal.hide();
+    }
+
     startLoad("api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8");
 </script>
 </body>
