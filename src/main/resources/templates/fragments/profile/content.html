@@ -381,13 +381,13 @@
     let token = localStorage.getItem('jwt');
     const url = window.location.pathname;
     const userId = url.split('/').pop();
-    postTab.addEventListener('click', () => startLoad(`/api/posts/users/${userId}`));
-    videoTab.addEventListener('click', () => startLoad(`/api/posts/users/videos/${userId}`));
-    savedTab.addEventListener('click', () => startLoad(`/api/posts/users/saved/${userId}`));
+    postTab.addEventListener('click', () => startLoad(`/api/posts/users/me`));
+    videoTab.addEventListener('click', () => startLoad(`/api/posts/users/videos/me`));
+    savedTab.addEventListener('click', () => startLoad(`/api/posts/users/saved/me`));
 </script>
 
 <script>
-    startLoad(`/api/posts/users/${userId}`);
+    startLoad(`/api/posts/users/me`);
 </script>
 </body>
 </html>

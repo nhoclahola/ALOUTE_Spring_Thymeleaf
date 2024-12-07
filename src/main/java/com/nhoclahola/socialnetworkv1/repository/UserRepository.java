@@ -25,6 +25,14 @@ public interface UserRepository extends JpaRepository<User, String>
             "FROM User u WHERE u.userId = :userId")
     public abstract Optional<UserWithData> findUserWithDataByUserId(@Param("userRequestEmail") String userRequestEmail, @Param("userId") String userId);
 
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.user.UserWithData (u.userId, u.firstName, u.lastName, u.username, u.email, u.description, u.gender, u.avatarUrl, u.coverPhotoUrl, " +
+            "(SELECT COUNT(p) FROM u.posts p), " +
+            "(SELECT COUNT(fr) FROM u.followers fr), " +
+            "(SELECT COUNT(fg) FROM u.followings fg), " +
+            "EXISTS (SELECT fr FROM u.followers fr WHERE fr.email = :userRequestEmail)) " +
+            "FROM User u WHERE u.email = :userRequestEmail")
+    public abstract Optional<UserWithData> findUserWithDataByEmail(@Param("userRequestEmail") String userRequestEmail);
+
     public abstract boolean existsByEmail(String email);
 
     public abstract boolean existsByUsername(String username);

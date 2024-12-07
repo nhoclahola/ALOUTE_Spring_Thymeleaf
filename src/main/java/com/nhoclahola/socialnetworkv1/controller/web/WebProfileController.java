@@ -7,9 +7,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Controller
 public class WebProfileController
 {
+    @GetMapping("/profile/me")
+    public String profileMe()
+    {
+        return "profile_me";
+    }
+
     @GetMapping("/profile/{userId}")
     public String profile(@PathVariable String userId)
     {
-        return "profile";
+        return "user_profile_page";
     }
 }

@@ -24,6 +24,8 @@ public interface UserService
 
     public abstract User findUserByEmail(String email);
 
+    UserWithDataResponse findCurrentUserData();
+
     public abstract String followUser(String userIdToFollow);
 
     public abstract UserResponse updateUser(String userId, UserUpdateRequest request);

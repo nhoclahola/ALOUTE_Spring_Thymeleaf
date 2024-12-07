@@ -39,6 +39,15 @@ public class UserController
         return response;
     }
 
+    @GetMapping("/users/me")
+    public ApiResponse<UserWithDataResponse> getCurrentUser()
+    {
+        UserWithDataResponse user = userService.findCurrentUserData();
+        ApiResponse<UserWithDataResponse> response = new ApiResponse<>();
+        response.setResult(user);
+        return response;
+    }
+
     @PutMapping("/users/{id}")
     public ApiResponse<UserResponse> updateUser(@PathVariable String id, @RequestBody @Valid UserUpdateRequest request)
     {

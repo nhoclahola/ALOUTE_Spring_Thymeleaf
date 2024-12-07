@@ -1,7 +1,7 @@
 $(document).ready(function () {
     // Hiển thị thông tin người dùng đăng nhập thành công
     const url = window.location.pathname;
-    const userId = url.split('/').pop();
+    let userId = url.split('/').pop();
     $.ajax({
         type: 'GET',
         url: `/api/users/${userId}`,

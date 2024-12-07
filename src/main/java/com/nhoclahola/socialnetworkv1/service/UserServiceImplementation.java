@@ -91,6 +91,15 @@ public class UserServiceImplementation implements UserService
     }
 
     @Override
+    public UserWithDataResponse findCurrentUserData()
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserWithData user = userRepository.findUserWithDataByEmail(currentUserEmail).orElseThrow(() ->
+                new AppException(ErrorCode.USER_NOT_EXIST));
+        return userMapper.toUserWithDataResponse(user);
+    }
+
+    @Override
     @Transactional
     public String followUser(String userIdToFollow)
     {
