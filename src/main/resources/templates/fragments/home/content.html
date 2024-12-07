@@ -38,31 +38,58 @@
 
 <script>
     const token = localStorage.getItem('jwt');
-    var myModal = new bootstrap.Modal(document.getElementById('postModal'));
+    const myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
+    const loadingOverlay = document.getElementById('loadingOverlay');
 
+    // Mở modal
     function openPostModal() {
+        $('#uFirstName').html(user.firstName);
+        $('#uLastName').html(user.lastName);
+        $('#uUsername').html('@' + user.username);
+        if (user.avatarUrl != null)
+            $('#uAvatar').html(document.getElementById('uAvatar').src = user.avatarUrl);
         myModal.show();
     }
+
+    // Đóng modal
     function closePostModal() {
         myModal.hide();
     }
 
-    // Load posts khi trang được load
-    // document.addEventListener('DOMContentLoaded', loadPosts('/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=0', token));
-
+    // Gửi bài post
     function submitPost() {
-        const caption = document.querySelector('#postForm textarea').value;
-        const fileInput = document.querySelector('#postForm input[type="file"]');
+        const caption = document.querySelector('#createPostForm textarea').value.trim();
+        const imageFile = document.querySelector('#imageInput').files[0];
+        const videoFile = document.querySelector('#videoInput').files[0];
         const formData = new FormData();
+
+        // Kiểm tra caption
+        if (!caption) {
+            errorMessage.textContent = 'Caption is required!';
+            errorMessage.classList.remove('d-none');
+            return;
+        } else {
+            errorMessage.classList.add('d-none');
+        }
+
+        // Append dữ liệu
         formData.append('caption', caption);
 
-        if (fileInput && fileInput.files.length > 0) {
-            formData.append('file', fileInput.files[0]);
+        if (imageFile) {
+            formData.append('file', imageFile);
+        } else if (videoFile) {
+            formData.append('file', videoFile);
         } else {
             // Gửi giá trị rỗng nếu không có file
             formData.append('file', new Blob());
         }
 
+        // // Hiển thị loading spinner
+        // loadingSpinner.classList.remove('d-none');
+        // Hiển thị overlay loading
+        loadingOverlay.classList.remove('d-none');
+
+        // Gửi request
         fetch('/api/posts', {
             method: 'POST',
             headers: {
@@ -70,19 +97,40 @@
             },
             body: formData,
         })
-            .then(response => response.json())
+            .then(response => {
+                // Kiểm tra trạng thái response
+                if (!response.ok) {
+                    throw new Error('Failed to create post');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.responseCode === 1000) {
-                    // Gọi hàm để chèn post mới vào đầu
+                    // Gọi hàm để chèn post mới vào danh sách
                     addNewPost(data.result);
 
                     // Làm sạch form
-                    document.querySelector('#postForm textarea').value = ''; // Làm sạch textarea
-                    fileInput.value = ''; // Làm sạch file input
-                    myModal.hide();
+                    createPostForm.reset();
+                    mediaPreview.innerHTML = ''; // Làm sạch preview
+
+                    // Đóng modal
+                    closePostModal();
+                } else {
+                    errorMessage.textContent = data.message || 'Error occurred!';
+                    errorMessage.classList.remove('d-none');
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.textContent = 'Something went wrong! Please try again.';
+                errorMessage.classList.remove('d-none');
+            })
+            .finally(() => {
+                // // Ẩn loading spinner
+                // loadingSpinner.classList.add('d-none');
+                // Ẩn overlay loading
+                loadingOverlay.classList.add('d-none');
+            });
     }
 
     function addNewPost(post) {
