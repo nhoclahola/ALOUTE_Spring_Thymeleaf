@@ -138,13 +138,13 @@
     function addNewPost(post) {
         const postContainer = document.getElementById('postContainer');
         const newPostHtml = `
-            <div class="card d-flex flex-row p-2 card shadow rounded-3 mb-4">
+            <div id="${post.postId}" class="card d-flex flex-row p-2 card shadow rounded-3 mb-4">
                 <div class="d-flex ">
                     <img src="${post.user.avatarUrl ? post.user.avatarUrl : '/images/unknown_user.jpg'}" alt="avatar" class="rounded-circle border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
                 </div>
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex align-items-center gap-2">
-                        <a class="font-weight-bold">
+                        <a href="/profile/${post.user.userId}" class="font-weight-bold">
                             ${post.user.firstName} ${post.user.lastName}
                         </a>
                         <span class="text-secondary">@${post.user.username}</span>
@@ -164,14 +164,17 @@
                             <div class="d-flex align-items-center">
                                 <button
                                   class="heart-button hover:text-red-400"
+                                  onclick="likePost(event)"
                                   type="button"
                                   tabindex="0"
                                 >
                                   <svg
+                                    id="btn-${post.postId}"
                                     class="heart-icon"
                                     aria-hidden="true"
                                     viewBox="0 0 24 24"
                                     focusable="false"
+                                    style="${post.liked ? 'fill: red;' : 'fill: black;'}"
                                   >
                                     <path
                                       d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"
@@ -179,7 +182,7 @@
                                   </svg>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-danger" onclick="likePost()">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">0</span>
+                                    <span id="count-liked-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">0</span>
                                 </button>
                             </div>
 
@@ -202,8 +205,8 @@
                                     ></path>
                                   </svg>
                                 </button>
-                                <button type="button" class="btn btn-link p-0 text-info" onclick="handleOpenComment()">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenComment()">0</span>
+                                <button type="button" class="btn btn-link p-0 text-info">
+                                    <span id="count-comment-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenComment(event)">0</span>
                                 </button>
                             </div>
                         </section>

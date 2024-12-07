@@ -123,6 +123,9 @@
                     commentContainer.appendChild(messageDiv);
                     // Xóa nội dung input
                     commentInput.value = '';
+                    let countComment = document.getElementById(`count-comment-${postId}`)
+                    countComment.textContent = (parseInt(countComment.textContent) + 1).toString();
+
                 } else {
                     alert(data.message || 'An error occurred while sending the comment.');
                 }

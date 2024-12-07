@@ -108,7 +108,7 @@ function createPostHtml(post) {
                     .chat-icon {
                         width: 24px;
                         height: 24px;
-                        fill: currentColor;
+                        /*fill: currentColor;*/
                     }
             
                     /* Hover màu chữ theo kiểu Tailwind */
@@ -125,7 +125,7 @@ function createPostHtml(post) {
                 </div>
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex align-items-center gap-2">
-                        <a class="font-weight-bold">
+                        <a href="/profile/${post.user.userId}" class="font-weight-bold">
                             ${post.user.firstName} ${post.user.lastName}
                         </a>
                         <span class="text-secondary">@${post.user.username}</span>
@@ -146,22 +146,25 @@ function createPostHtml(post) {
                                 <button
                                   title="Like this post"
                                   class="heart-button hover:text-red-400"
+                                  onclick="likePost(event)"
                                   type="button"
                                   tabindex="0"
                                 >
                                   <svg
+                                    id="btn-${post.postId}"
                                     class="heart-icon"
                                     aria-hidden="true"
                                     viewBox="0 0 24 24"
                                     focusable="false"
+                                    style="${post.liked ? 'fill: red;' : 'fill: black;'}"
                                   >
                                     <path
                                       d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"
                                     ></path>
                                   </svg>
                                 </button>
-                                <button type="button" class="btn btn-link p-0 text-danger" onclick="likePost()">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">${post.likedCount}</span>
+                                <button type="button" class="btn btn-link p-0 text-danger">
+                                    <span id="count-liked-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">${post.likedCount}</span>
                                 </button>
                             </div>
 
@@ -184,7 +187,7 @@ function createPostHtml(post) {
                                   </svg>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-info">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenComment(event)">${post.commentCount}</span>
+                                    <span id="count-comment-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenComment(event)">${post.commentCount}</span>
                                 </button>
                             </div>
                         </section>
@@ -194,4 +197,47 @@ function createPostHtml(post) {
                     </div>
                 </div>
             </div>`;
+}
+
+function likePost(event) {
+    let targetElement = event.currentTarget;
+    for (let i = 0; i <= 4; i++) {
+        targetElement = targetElement.parentNode;
+    }
+    // Lấy id của phần tử đó
+    const postId = targetElement.id;
+    let token = localStorage.getItem('jwt')
+    fetch(`/api/posts/${postId}/like`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.responseCode === 1000) {
+                let likedButton = document.getElementById(`btn-${postId}`)
+                let countLike = document.getElementById(`count-liked-${postId}`)
+                if (data.result === 'liked') {
+                    likedButton.style.fill = 'red';
+                    countLike.textContent = (parseInt(countLike.textContent) + 1).toString();
+                }
+                else if (data.result === 'unliked') {
+                    likedButton.style.fill = 'black';
+                    countLike.textContent = (parseInt(countLike.textContent) - 1).toString();
+                }
+            } else {
+                alert(data.message || 'An error occurred while sending the comment.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to send comment. Please try again.');
+        });
 }

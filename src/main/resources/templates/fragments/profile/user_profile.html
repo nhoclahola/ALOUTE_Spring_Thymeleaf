@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <script th:src="@{/js/profile.js}"></script>
     <script th:src="@{/js/load_posts_in_profile.js}"></script>
+    <script th:src="@{/js/load_comments.js}"></script>
     <style>
         .profile-cover {
             height: 15rem;
@@ -131,7 +132,7 @@
         </div>
     </div>
 
-    <div th:insert="~{fragments/profile/edit_profile_modal :: editProfileModal}"></div>
+    <div th:insert="~{fragments/post/comment_modal :: commentModal}"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
@@ -150,6 +151,44 @@
 
 <script>
     startLoad(`/api/posts/users/${userId}`);
+</script>
+
+<script>
+    let commentModal = new bootstrap.Modal(document.getElementById('commentModal'));
+
+    // Mở modal
+    function handleOpenComment(event) {
+        // Lấy phần tử cha của button
+        let targetElement = event.currentTarget;
+        for (let i = 0; i <= 5; i++) {
+            targetElement = targetElement.parentNode;
+        }
+
+        let createCommentButton = document.getElementById('create-comment-button');
+        if (createCommentButton)
+            createCommentButton.remove();
+        createCommentButton = document.createElement('button');
+        createCommentButton.id = 'create-comment-button';
+        createCommentButton.classList.add('btn');
+        createCommentButton.innerHTML = `
+            <i class="bi bi-send text-cyan fs-3"></i>
+        `
+        createCommentButton.addEventListener('click', () => createComment(postId));
+        let createCommentContainer = document.getElementById("create-comment-container");
+        createCommentContainer.appendChild(createCommentButton);
+
+        // Lấy id của phần tử đó
+        const postId = targetElement.id;
+        clearAndAddComment(postId);
+        if (user.avatarUrl != null)
+            $('#userAvatar').html(document.getElementById('userAvatar').src = user.avatarUrl);
+        commentModal.show();
+    }
+
+    // Đóng modal
+    function handleCloseComment() {
+        commentModal.hide();
+    }
 </script>
 </body>
 </html>
