@@ -23,7 +23,6 @@ $(document).ready(function () {
                 $('#avatar').html(document.getElementById('uAvatar').src = data.result.avatarUrl);
             if (data.result.coverPhotoUrl != null)
                 $('#avatar').html(document.getElementById('uCover').src = data.result.coverPhotoUrl);
-            console.log(data.result);
         },
         // error: function (e) {
         //     var json = e.responseText;

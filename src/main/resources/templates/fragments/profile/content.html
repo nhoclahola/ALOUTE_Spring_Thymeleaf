@@ -43,20 +43,47 @@
             left: 10rem; /* Căn chỉnh nút ở giữa avatar */
             transform: translateX(-50%);
         }
+
+        /* Lớp phủ tối */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Màu tối với độ trong suốt */
+            z-index: 9998; /* Đảm bảo nó nằm dưới vòng tròn loading */
+        }
+
+        /* Vòng tròn loading */
+        #loading-spinner {
+            z-index: 9999;
+        }
+
+        /* Chặn tất cả các tương tác phía sau khi loading */
+        body[style*="pointer-events: none;"] {
+            pointer-events: none;
+        }
     </style>
 </head>
 
 <body>
 <div class="container my-2 col-12 col-md-6">
     <!-- Cover photo -->
-    <div class="profile-cover">
+    <div class="profile-cover position-relative">
         <img id="uCover" src="/images/blank_background.jpg" class="img-fluid w-100 h-100" alt="Cover Photo">
+
+        <!-- Nút đổi cover -->
+        <label for="cover-input" class="btn btn-light border btn-sm position-absolute bottom-0 end-0 m-2">
+            Change Cover
+        </label>
+        <input type="file" accept="image/*" id="cover-input" class="d-none">
+
+        <!-- Nút Save/Cancel -->
         <div class="save-cancel-btn">
-            <button class="btn btn-outline-danger btn-sm">Cancel</button>
-            <button class="btn btn-outline-primary btn-sm">Save</button>
+            <button id="cancel-cover" class="btn btn-outline-danger btn-sm d-none">Cancel</button>
+            <button id="save-cover" class="btn btn-outline-primary btn-sm d-none">Save</button>
         </div>
-        <label for="cover-input" class="btn btn-outline-secondary bottom-0 end-0 m-2">Change Cover</label>
-        <input type="file" id="cover-input" class="d-none">
     </div>
 
     <!-- Avatar -->
@@ -65,11 +92,11 @@
         <label for="avatar-input" class="btn btn-light border btn-sm profile-avatar-label">
             <i class="bi bi-camera"></i>
         </label>
-        <input type="file" id="avatar-input" class="d-none">
-        <div class="mt-5 d-flex justify-content-end ms-auto">
-            <button class="btn btn-outline-danger btn-circle btn-sm">Cancel</button>
-            <button class="btn btn-outline-success btn-circle btn-sm">Save Avatar</button>
-            <button class="btn btn-outline-primary btn-circle btn-sm">Edit Profile</button>
+        <input type="file" accept="image/*" id="avatar-input" class="d-none">
+        <div class="mt-5 d-flex justify-content-end ms-auto gap-2">
+            <button id="cancel-avatar" class="btn btn-outline-danger btn-circle btn-sm d-none">Cancel</button>
+            <button id="save-avatar" class="btn btn-outline-success btn-circle btn-sm d-none">Save Avatar</button>
+            <button class="btn btn-outline-primary btn-circle btn-sm" onclick="openEditProfileModal()">Edit Profile</button>
         </div>
     </div>
 
@@ -113,9 +140,236 @@
             <p>Saved content goes here...</p>
         </div>
     </div>
+
+    <!-- Lớp phủ tối -->
+    <div id="overlay" class="overlay d-none"></div>
+
+    <!-- Vòng tròn loading -->
+    <div id="loading-spinner" class="position-fixed top-50 start-50 translate-middle d-none">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div th:insert="~{fragments/profile/edit_profile_modal :: editProfileModal}"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Thay đổi ảnh cover
+        const coverInput = document.getElementById('cover-input');
+        const coverImage = document.getElementById('uCover');
+        coverInput.addEventListener('change', () => {
+            const file = coverInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    coverImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Thay đổi ảnh avatar
+        const avatarInput = document.getElementById('avatar-input');
+        const avatarImage = document.getElementById('uAvatar');
+        avatarInput.addEventListener('change', () => {
+            const file = avatarInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    avatarImage.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const coverInput = document.getElementById('cover-input');
+        const avatarInput = document.getElementById('avatar-input');
+
+        const coverImage = document.getElementById('uCover');
+        const avatarImage = document.getElementById('uAvatar');
+
+        const saveCoverBtn = document.getElementById('save-cover');
+        const saveAvatarBtn = document.getElementById('save-avatar');
+        const cancelCoverBtn = document.getElementById('cancel-cover');
+        const cancelAvatarBtn = document.getElementById('cancel-avatar');
+
+        const loadingSpinner = document.getElementById('loading-spinner'); // Vòng tròn loading
+        const overlay = document.getElementById('overlay'); // Lớp phủ tối
+        const body = document.body; // Lấy body để khóa giao diện
+
+        // Hiển thị/ẩn vòng tròn loading và lớp phủ tối
+        const toggleLoading = (isLoading) => {
+            if (isLoading) {
+                loadingSpinner.classList.remove('d-none');
+                overlay.classList.remove('d-none');
+                body.style.pointerEvents = 'none'; // Khóa tương tác với giao diện
+            } else {
+                loadingSpinner.classList.add('d-none');
+                overlay.classList.add('d-none');
+                body.style.pointerEvents = 'auto'; // Mở lại tương tác với giao diện
+            }
+        };
+
+        // Hàm để hiển thị các nút Save/Cancel
+        const showSaveCancelBtns = (isCover) => {
+            if (isCover) {
+                saveCoverBtn.classList.remove('d-none');
+                cancelCoverBtn.classList.remove('d-none');
+            } else {
+                saveAvatarBtn.classList.remove('d-none');
+                cancelAvatarBtn.classList.remove('d-none');
+            }
+        };
+
+        // Hàm để ẩn các nút Save/Cancel
+        const hideSaveCancelBtns = (isCover) => {
+            if (isCover) {
+                saveCoverBtn.classList.add('d-none');
+                cancelCoverBtn.classList.add('d-none');
+            } else {
+                saveAvatarBtn.classList.add('d-none');
+                cancelAvatarBtn.classList.add('d-none');
+            }
+        };
+
+        // Thay đổi ảnh cover
+        coverInput.addEventListener('change', () => {
+            const file = coverInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    coverImage.src = e.target.result; // Thay đổi ảnh cover
+                    showSaveCancelBtns(true); // Hiển thị các nút Save/Cancel cho cover
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Thay đổi ảnh avatar
+        avatarInput.addEventListener('change', () => {
+            const file = avatarInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    avatarImage.src = e.target.result; // Thay đổi ảnh avatar
+                    showSaveCancelBtns(false); // Hiển thị các nút Save/Cancel cho avatar
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Hành động khi nhấn Cancel cho cover
+        cancelCoverBtn.addEventListener('click', () => {
+            coverImage.src = user.coverPhotoUrl || '/images/blank_background.jpg'; // Đặt lại ảnh cover ban đầu
+            hideSaveCancelBtns(true); // Ẩn các nút Save/Cancel cho cover
+        });
+
+        // Hành động khi nhấn Cancel cho avatar
+        cancelAvatarBtn.addEventListener('click', () => {
+            avatarImage.src = user.avatarUrl || '/images/unknown_user.jpg'; // Đặt lại ảnh avatar ban đầu
+            hideSaveCancelBtns(false); // Ẩn các nút Save/Cancel cho avatar
+        });
+
+        // Lưu avatar
+        saveAvatarBtn.addEventListener('click', async () => {
+            const file = avatarInput.files[0];
+            if (!file) {
+                alert('Please select an avatar image!');
+                return;
+            }
+
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                alert('Authentication token not found. Please log in again.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                toggleLoading(true); // Hiển thị vòng tròn loading và lớp phủ tối
+                const response = await fetch('/api/users/avatar', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to update avatar: ${error.message || 'Unknown error'}`);
+                }
+            } catch (err) {
+                console.error('Error while updating avatar:', err);
+                alert('An error occurred. Please try again later.');
+            } finally {
+                toggleLoading(false);
+            }
+        });
+
+        // Lưu cover
+        saveCoverBtn.addEventListener('click', async () => {
+            const file = coverInput.files[0];
+            if (!file) {
+                alert('Please select a cover image!');
+                return;
+            }
+
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                alert('Authentication token not found. Please log in again.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', file);
+
+            try {
+                toggleLoading(true); // Hiển thị vòng tròn loading và lớp phủ tối
+                const response = await fetch('/api/users/cover', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    const error = await response.json();
+                    alert(`Failed to update cover: ${error.message || 'Unknown error'}`);
+                }
+            } catch (err) {
+                console.error('Error while updating cover:', err);
+                alert('An error occurred. Please try again later.');
+            } finally {
+                toggleLoading(false);
+            }
+        });
+    });
+</script>
+<script>
+    const myEditProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
+    function openEditProfileModal() {
+        myEditProfileModal.show();
+    }
+
+    function closeEditProfileModal() {
+        myEditProfileModal.hide();
+        document.getElementById('error-message').textContent = ''; // Clear error message
+    }
+</script>
 </body>
 
 </html>
