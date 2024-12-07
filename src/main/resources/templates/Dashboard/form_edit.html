@@ -1,14 +1,15 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit User</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" th:href="@{/css/styles_dashboard.css}">
 </head>
   <header>
     <div class="logo">
-      <img src="logo.png" alt="Logo">
+      <img th:src="@{/images/logos/hcmute.png}" alt="Logo">
       <h3>Social network Dashboard</h3>
     </div>
     <nav>
