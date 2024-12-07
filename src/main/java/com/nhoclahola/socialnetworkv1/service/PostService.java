@@ -40,4 +40,10 @@ public interface PostService
     public abstract List<PostWithDataResponse> findUsersSavedPosts(String userId, int index);
 
     public abstract PostWithDataResponse findPostWithDataByPostId(String postId);
+
+    List<PostWithDataResponse> findCurrentUserPosts(int index);
+
+    List<PostWithDataResponse> findCurrentUsersVideoPosts(int index);
+
+    List<PostWithDataResponse> findCurrentUsersSavedPosts(int index);
 }
