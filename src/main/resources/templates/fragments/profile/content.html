@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="content">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+    <script th:src="@{/js/profile.js}"></script>
+    <style>
+        .profile-cover {
+            height: 15rem;
+            background-color: #cbd5e1;
+            position: relative;
+            overflow: hidden; /* Đảm bảo các phần tử không tràn ra ngoài */
+        }
+
+        .profile-avatar {
+            width: 10rem;
+            height: 10rem;
+            border: 4px solid #e2e8f0;
+            position: absolute;
+            bottom: 1rem; /* Căn chỉnh avatar bên dưới cover */
+            left: 1rem;
+            background-color: #fff; /* Màu nền đảm bảo hiển thị rõ avatar */
+        }
+
+        .btn-circle {
+            border-radius: 50px;
+        }
+
+        .save-cancel-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 10px;
+        }
+
+        .profile-avatar-label {
+            position: absolute;
+            bottom: 2rem; /* Đặt nút chỉnh sửa ngay dưới avatar */
+            left: 10rem; /* Căn chỉnh nút ở giữa avatar */
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+
+<body>
+<div class="container my-2 col-12 col-md-6">
+    <!-- Cover photo -->
+    <div class="profile-cover">
+        <img id="uCover" src="/images/blank_background.jpg" class="img-fluid w-100 h-100" alt="Cover Photo">
+        <div class="save-cancel-btn">
+            <button class="btn btn-outline-danger btn-sm">Cancel</button>
+            <button class="btn btn-outline-primary btn-sm">Save</button>
+        </div>
+        <label for="cover-input" class="btn btn-outline-secondary bottom-0 end-0 m-2">Change Cover</label>
+        <input type="file" id="cover-input" class="d-none">
+    </div>
+
+    <!-- Avatar -->
+    <div class="position-relative">
+        <img id="uAvatar" src="/images/unknown_user.jpg" alt="Avatar" class="rounded-circle profile-avatar">
+        <label for="avatar-input" class="btn btn-light border btn-sm profile-avatar-label">
+            <i class="bi bi-camera"></i>
+        </label>
+        <input type="file" id="avatar-input" class="d-none">
+        <div class="mt-5 d-flex justify-content-end ms-auto">
+            <button class="btn btn-outline-danger btn-circle btn-sm">Cancel</button>
+            <button class="btn btn-outline-success btn-circle btn-sm">Save Avatar</button>
+            <button class="btn btn-outline-primary btn-circle btn-sm">Edit Profile</button>
+        </div>
+    </div>
+
+
+    <!-- User Info -->
+    <div class="mt-xl-5">
+        <h1 class="h4 fw-bold">
+            <strong id="uFirstName"></strong>
+            <strong id="uLastName"></strong>
+        </h1>
+        <p id="uUsername" class="text-muted"></p>
+        <div class="d-flex gap-2">
+            <span id="uPosts"></span>
+            <a id="uFollowers" href="#" class="text-decoration-none fw-bold"></a>
+            <a id="uFollowings" href="#" class="text-decoration-none fw-bold"></a>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs mt-4">
+        <li class="nav-item">
+            <a class="nav-link active" href="#posts" data-bs-toggle="tab">Posts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#videos" data-bs-toggle="tab">Videos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#saved" data-bs-toggle="tab">Saved</a>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="posts">
+            <p>Posts content goes here...</p>
+        </div>
+        <div class="tab-pane fade" id="videos">
+            <p>Videos content goes here...</p>
+        </div>
+        <div class="tab-pane fade" id="saved">
+            <p>Saved content goes here...</p>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

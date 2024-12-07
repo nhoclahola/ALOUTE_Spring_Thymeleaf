@@ -20,6 +20,9 @@ document.addEventListener('userUpdated', () => {
 // Hàm cập nhật user
 function updateUser(newUser) {
     user = newUser;
+    const profileLink = `/profile/${user.userId}`;
+    links[profileLink] = 'profile-link';
+    document.querySelector('#profile-link').setAttribute('href', profileLink);
     document.dispatchEvent(userEvent); // Phát sự kiện userUpdated
 }
 

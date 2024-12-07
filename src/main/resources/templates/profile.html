@@ -1,77 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-    <title>Spring Boot Rest API with AJAX</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-EVSTQN3azpjGq7AoW3uAO7ZWr69PtkTw9fspd3yD65Voh4pGmpriUMc/H4C60LlF"
-          crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALOUTE - Profile</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <!--    <link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}">-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 <body>
-<!--<div class="container" style="min-height: 500px;">-->
-<!--    <div class="starter-template">-->
-<!--        <h1>Spring Boot REST API with AJAX Example</h1>-->
-<!--        <img id="images" src="" alt="" width="100%" />-->
-<!--        <div id="profile"></div>-->
-<!--        <button id="Logout">Logout</button>-->
-<!--    </div>-->
-<!--</div>-->
-<!-- Sidebar -->
-<div class="col-md-3 d-none d-md-block position-sticky vh-100 px-2" style="top: 0;">
-    <div class="card h-100 d-flex flex-column justify-content-between p-3 shadow rounded-3">
-        <div>
-            <a href="/" class="d-flex justify-content-center align-items-center gap-2">
-                <img th:src="@{/images/logos/hcmute.png}" alt="ALOUTE" class="img-fluid" style="width: 30px;">
-                <span class="font-weight-bold ml-2">ALOUTE</span>
-            </a>
-            <div class="mt-4">
-                <!-- Menu Items -->
-                <a href="#"
-                   class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded bg-light">
-                    <i class="bi bi-house-door mr-3"></i>
-                    <span>Home</span>
-                </a>
-                <a href="#" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
-                    <i class="bi bi-bell mr-3"></i>
-                    <span>Notifications</span>
-                    <span class="badge badge-danger ml-auto">3</span>
-                </a>
-                <a href="#" class="d-flex align-items-center py-2 px-3 text-decoration-none text-dark rounded">
-                    <i class="bi bi-bell mr-3"></i>
-                    <span>Profile</span>
-                    <span class="badge badge-danger ml-auto">3</span>
-                </a>
-                <!-- Add other menu items here -->
-            </div>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-3">
-            <div class="d-flex align-items-center gap-2">
-                <img src="https://upload.wikimedia.org/wikipedia/vi/1/12/Kenshi_Yonezu_-_Lemon.png" alt="Avatar" class="rounded-circle mr-3"
-                     style="width: 40px; height: 40px;">
-                <div>
-                    <strong id="firstName"></strong>
-                    <strong id="lastName"></strong>
-                    <div id="username"></div>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div th:replace="~{fragments/home/sidebar :: sidebar}">
 
-                    <p class="text-muted mb-0">@username</p>
-                </div>
-            </div>
-            <button class="btn btn-link p-0">
-                <i class="bi bi-three-dots-vertical"></i>
-            </button>
+        </div>
+
+        <!-- HomePage Content -->
+        <div th:replace="~{fragments/profile/content :: content}">
+
+        </div>
+
+        <!-- HomeRight Sidebar -->
+        <div th:replace="~{fragments/home/home_right :: home_right}">
+
         </div>
     </div>
 </div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFyZWLAL8N4U5sFZMSMeFMRKnF9+jZnN24q/iw1yJlHBOUheC+OHG6D9Ex"
-        crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
-<script src="/js/main.js"></script>
 </body>
 </html>
