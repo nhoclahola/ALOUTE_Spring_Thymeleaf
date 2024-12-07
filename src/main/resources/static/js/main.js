@@ -20,6 +20,9 @@ document.addEventListener('userUpdated', () => {
 // Hàm cập nhật user
 function updateUser(newUser) {
     user = newUser;
+    let createPostUserAvatar = document.getElementById('createPostUserAvatar');
+    if (createPostUserAvatar && user.avatarUrl != null)
+        createPostUserAvatar.src = user.avatarUrl
     const profileLink = `/profile/${user.userId}`;
     links[profileLink] = 'profile-link';
     document.querySelector('#profile-link').setAttribute('href', profileLink);

@@ -7,6 +7,7 @@
     <title>Profile Page</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <script th:src="@{/js/profile.js}"></script>
+    <script th:src="@{/js/load_posts_in_profile.js}"></script>
     <style>
         .profile-cover {
             height: 15rem;
@@ -117,13 +118,13 @@
 
     <!-- Tabs -->
     <ul class="nav nav-tabs mt-4">
-        <li class="nav-item">
+        <li id="post-tab" class="nav-item">
             <a class="nav-link active" href="#posts" data-bs-toggle="tab">Posts</a>
         </li>
-        <li class="nav-item">
+        <li id="video-tab" class="nav-item">
             <a class="nav-link" href="#videos" data-bs-toggle="tab">Videos</a>
         </li>
-        <li class="nav-item">
+        <li id="saved-tab" class="nav-item">
             <a class="nav-link" href="#saved" data-bs-toggle="tab">Saved</a>
         </li>
     </ul>
@@ -131,13 +132,13 @@
     <!-- Tab Content -->
     <div class="tab-content mt-3">
         <div class="tab-pane fade show active" id="posts">
-            <p>Posts content goes here...</p>
         </div>
         <div class="tab-pane fade" id="videos">
-            <p>Videos content goes here...</p>
         </div>
         <div class="tab-pane fade" id="saved">
-            <p>Saved content goes here...</p>
+        </div>
+        <div id="postContainer">
+
         </div>
     </div>
 
@@ -362,6 +363,8 @@
 <script>
     const myEditProfileModal = new bootstrap.Modal(document.getElementById('editProfileModal'));
     function openEditProfileModal() {
+        document.getElementById('firstNameInput').value = user.firstName;
+        document.getElementById('lastNameInput').value = user.lastName;
         myEditProfileModal.show();
     }
 
@@ -370,6 +373,21 @@
         document.getElementById('error-message').textContent = ''; // Clear error message
     }
 </script>
-</body>
 
+<script>
+    const postTab = document.getElementById('post-tab');
+    const videoTab = document.getElementById('video-tab');
+    const savedTab = document.getElementById('saved-tab');
+    let token = localStorage.getItem('jwt');
+    const url = window.location.pathname;
+    const userId = url.split('/').pop();
+    postTab.addEventListener('click', () => startLoad(`/api/posts/users/${userId}`));
+    videoTab.addEventListener('click', () => startLoad(`/api/posts/users/videos/${userId}`));
+    savedTab.addEventListener('click', () => startLoad(`/api/posts/users/saved/${userId}`));
+</script>
+
+<script>
+    startLoad(`/api/posts/users/${userId}`);
+</script>
+</body>
 </html>

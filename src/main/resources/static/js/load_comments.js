@@ -70,7 +70,6 @@ function loadMoreMessages(postId) {
             loadMoreDiv.remove();
             if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length >= 0) {
                 let comments = data.result;
-                console.log(comments);
                 comments.reverse().forEach(comment => {
                     const messageDiv = createCommentHtml(comment);
                     commentContainer.insertBefore(messageDiv, commentContainer.firstChild);

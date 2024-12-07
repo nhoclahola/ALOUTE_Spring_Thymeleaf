@@ -1,8 +1,6 @@
-// Khai báo biến tham chiếu bên ngoài
-let scrollHandler;
-
 function loadPosts(url, token) {
-    fetch(url, {
+    console.log(url);
+    fetch(`${url}?index=0`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -17,36 +15,93 @@ function loadPosts(url, token) {
                     const postElement = createPostHtml(post);
                     postContainer.insertAdjacentHTML('beforeend', postElement);
                 });
-            } else {
-                // console.error('Không có bài đăng hoặc lỗi API.');
-                // Nếu không có dữ liệu, loại bỏ event listener
-                showEndMessage(); // Hiển thị thông báo "This is the end..."
-                window.removeEventListener('scroll', scrollHandler);
+                if (data.result.length === 10) {
+                    const loadMoreDiv = document.createElement('div');
+                    loadMoreDiv.id = 'load-more';
+                    loadMoreDiv.classList.add('text-center', 'mt-4');
+                    loadMoreDiv.innerHTML = `
+                            <button class="btn btn-outline-primary">See earlier posts</button>
+                        `;
+                    // Thêm sự kiện click để tải thêm tin nhắn cũ
+                    loadMoreDiv.querySelector('button').addEventListener('click', function () {
+                        loadMorePosts(url);
+                    });
+                    postContainer.appendChild(loadMoreDiv);
+                }
+                else {
+                    const noMoreMessage = document.createElement('div');
+                    noMoreMessage.id = 'load-more';
+                    noMoreMessage.classList.add('text-center', 'mt-4');
+                    noMoreMessage.innerHTML = `
+                            <i class="fw-bold">There are no earlier posts</i>
+                        `;
+                    postContainer.appendChild(noMoreMessage);
+                }
+            }
+            else {
+                showEndMessage();
             }
         })
         .catch(error => console.error('Error fetching posts:', error));
 }
 
-// Hàm xử lý sự kiện cuộn
-function handleScroll(url, token) {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        currentIndex += 10;
-        const newUrl = `${url}?index=${currentIndex}`;
-        loadPosts(newUrl, token);
-    }
+function loadMorePosts(url) {
+    currentIndex += 10;
+    const postContainer = document.getElementById('postContainer');
+    let token = localStorage.getItem("jwt");
+    fetch(`${url}?index=${currentIndex}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            const loadMoreDiv = document.getElementById('load-more');
+            loadMoreDiv.remove();
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length > 0) {
+                data.result.forEach(post => {
+                    const postElement = createPostHtml(post);
+                    postContainer.insertAdjacentHTML('beforeend', postElement);
+                });
+                if (data.result.length === 10) {
+                    const loadMoreDiv = document.createElement('div');
+                    loadMoreDiv.id = 'load-more';
+                    loadMoreDiv.classList.add('text-center', 'mt-4');
+                    loadMoreDiv.innerHTML = `
+                            <button class="btn btn-outline-primary">See earlier posts</button>
+                        `;
+                    // Thêm sự kiện click để tải thêm tin nhắn cũ
+                    loadMoreDiv.querySelector('button').addEventListener('click', function () {
+                        loadMorePosts(url);
+                    });
+                    postContainer.appendChild(loadMoreDiv);
+                }
+                else {
+                    const noMoreMessage = document.createElement('div');
+                    noMoreMessage.id = 'load-more';
+                    noMoreMessage.classList.add('text-center', 'mt-4');
+                    noMoreMessage.innerHTML = `
+                            <i class="fw-bold">There are no earlier posts</i>
+                        `;
+                    postContainer.appendChild(noMoreMessage);
+                }
+            }
+            else {
+                showEndMessage();
+            }
+        })
+        .catch(error => console.error('Error fetching posts:', error));
 }
 
 // Thêm event listener khi trang được load
 function startLoad(url) {
+    let postContainer = document.getElementById('postContainer');
+    postContainer.innerHTML = '';
     const token = localStorage.getItem('jwt');
-    document.addEventListener('DOMContentLoaded', () => {
-        currentIndex = 0; // Bắt đầu từ index 0
-        const initialUrl = `${url}?index=${currentIndex}`;
-        loadPosts(initialUrl, token);
-        // Gán hàm handleScroll vào biến tham chiếu
-        scrollHandler = () => handleScroll(url, token);
-        window.addEventListener('scroll', scrollHandler);
-    });
+    currentIndex = 0; // Bắt đầu từ index 0
+    loadPosts(url, token);
 }
 
 function showEndMessage() {
