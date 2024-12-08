@@ -31,6 +31,7 @@ public class UserServiceImplementation implements UserService
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final EmailService emailService;
     private final ImageAwsS3UploadServiceImplementation imageAwsS3UploadServiceImplementation;
 
     private final String AVATAR_DIR = "/avatars/";
@@ -51,6 +52,7 @@ public class UserServiceImplementation implements UserService
             throw new AppException(ErrorCode.EMAIL_EXIST_REGISTER);
         if (userRepository.existsByUsername(request.getUsername()))
             throw new AppException(ErrorCode.USERNAME_EXIST_REGISTER);
+        emailService.sendConfirmationEmail(request.getEmail());
         User user = userMapper.userLoginRequestToUser(request);
         // userId is already null after mapping,
         // Just don't set it, Hibernate won't check it is exist or not again

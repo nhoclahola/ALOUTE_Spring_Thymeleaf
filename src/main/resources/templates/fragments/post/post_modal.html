@@ -105,14 +105,31 @@
         const file = input.files[0];
         if (file) {
             const url = URL.createObjectURL(file);
-            mediaPreview.innerHTML = type === 'image'
-                ? `<img src="${url}" alt="Preview" class="rounded">`
-                : `<video src="${url}" controls class="rounded"></video>`;
+
+            // Clear the preview before showing the new file
+            mediaPreview.innerHTML = '';
+
+            // Show the preview based on the file type
+            if (type === 'image') {
+                mediaPreview.innerHTML = `<img src="${url}" alt="Preview" class="rounded">`;
+            } else if (type === 'video') {
+                mediaPreview.innerHTML = `<video src="${url}" controls class="rounded"></video>`;
+            }
         }
     }
 
-    imageInput.addEventListener('change', () => handleFileInput(imageInput, 'image'));
-    videoInput.addEventListener('change', () => handleFileInput(videoInput, 'video'));
+    // Reset the other input when one is changed
+    imageInput.addEventListener('change', () => {
+        // Clear the video input if image input is changed
+        videoInput.value = '';
+        handleFileInput(imageInput, 'image');
+    });
+
+    videoInput.addEventListener('change', () => {
+        // Clear the image input if video input is changed
+        imageInput.value = '';
+        handleFileInput(videoInput, 'video');
+    });
     
 </script>
 </body>
