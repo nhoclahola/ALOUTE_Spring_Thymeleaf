@@ -136,3 +136,44 @@ public class CommentController {
     }
 }
 --MessageController
+package com.nhoclahola.socialnetworkv1.controller.api;
+
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
+import com.nhoclahola.socialnetworkv1.dto.message.request.MessageCreateRequest;
+import com.nhoclahola.socialnetworkv1.dto.message.response.MessageResponse;
+import com.nhoclahola.socialnetworkv1.service.MessageService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/messages")
+public class MessageController {
+
+    private final MessageService messageService;
+
+    // Tạo tin nhắn trong một cuộc trò chuyện
+    @PostMapping("/chats/{chatId}")
+    public ApiResponse<MessageResponse> createMessage(
+            @PathVariable String chatId,
+            @RequestBody @Valid MessageCreateRequest request) {
+        return ApiResponse.of(messageService.createMessage(chatId, request));
+    }
+
+    // Lấy danh sách tin nhắn trong một cuộc trò chuyện
+    @GetMapping("/chats/{chatId}")
+    public ApiResponse<List<MessageResponse>> getChatsMessages(
+            @PathVariable String chatId,
+            @RequestParam(defaultValue = "0") int index) {
+        return ApiResponse.of(messageService.findMessagesByChatId(chatId, index));
+    }
+
+    // Lấy thông tin tin nhắn theo ID
+    @GetMapping("/{messageId}")
+    public ApiResponse<MessageResponse> getMessageById(@PathVariable String messageId) {
+        return ApiResponse.of(messageService.findMessageByIdResponse(messageId));
+    }
+}
