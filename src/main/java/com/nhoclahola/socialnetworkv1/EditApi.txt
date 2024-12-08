@@ -1,0 +1,45 @@
+--AdminController
+package com.nhoclahola.socialnetworkv1.controller.api;
+
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
+import com.nhoclahola.socialnetworkv1.dto.admin.response.DashBoardInfo;
+import com.nhoclahola.socialnetworkv1.dto.user.request.AdminResetPassword;
+import com.nhoclahola.socialnetworkv1.dto.user.request.AdminUpdateUser;
+import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
+import com.nhoclahola.socialnetworkv1.service.AdminService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/admin")
+public class AdministratorController {
+
+    private final AdminService adminService;
+
+    @GetMapping("/dashboard")
+    public ApiResponse<DashBoardInfo> getDashBoardInfo() {
+        return ApiResponse.of(adminService.getDashBoardInfo());
+    }
+
+    @GetMapping("/users")
+    public ApiResponse<Page<UserResponse>> getAllUsers(@RequestParam(defaultValue = "0") int page) {
+        return ApiResponse.of(adminService.getAllUsersAdmin(page));
+    }
+
+    @PatchMapping("/users/{userId}")
+    public ApiResponse<UserResponse> adminUpdateUser(
+            @PathVariable String userId,
+            @RequestBody @Valid AdminUpdateUser request) {
+        return ApiResponse.of(adminService.adminUpdateUser(userId, request));
+    }
+
+    @PatchMapping("/users/{userId}/reset-password")
+    public ApiResponse<UserResponse> adminUpdatePassword(
+            @PathVariable String userId,
+            @RequestBody @Valid AdminResetPassword request) {
+        return ApiResponse.of(adminService.adminUpdatePassword(userId, request));
+    }
+}
