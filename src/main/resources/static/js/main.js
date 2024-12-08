@@ -45,6 +45,8 @@ $(document).ready(function () {
             $('#username').html('@' + data.result.username);
             if (data.result.avatarUrl != null)
                 $('#avatar').html(document.getElementById('avatar').src = data.result.avatarUrl);
+            if (data.result.role === 'ADMIN')
+                document.getElementById('admin-link').classList.remove('d-none');
         },
         error: function (e) {
             var json = e.responseText;
