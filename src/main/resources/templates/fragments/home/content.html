@@ -7,6 +7,7 @@
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/load_posts.js}"></script>
     <script th:src="@{/js/load_comments.js}"></script>
+    <script th:src="@{/js/format_time.js}"></script>
 </head>
 <body>
 <!-- HomePage Content -->
@@ -149,7 +150,7 @@
                         </a>
                         <span class="text-secondary">@${post.user.username}</span>
                         <span>·</span>
-                        <span class="text-secondary">${new Date(post.createdAt).toLocaleDateString()}</span>
+                        <span class="text-secondary">${formatDateFromString(post.createdAt)}</span>
                     </div>
                     <div class="min-h-12">
                         <p class="text-break">${post.caption}</p>
@@ -210,8 +211,8 @@
                                 </button>
                             </div>
                         </section>
-                        <button type="button" class="btn btn-link p-0 text-info">
-                            <i class="bi bi-share"></i>
+                        <button onclick="savePost(event)" type="button" class="btn btn-link p-0 text-info">
+                            <i title="${post.saved ? 'Unsave this post' : 'Save this post'}" id="btn-save-${post.postId}" class="bi bi-bookmarks-fill" style="${post.saved ? 'color: blue;' : 'color: black;'}"></i>
                         </button>
                     </div>
                 </div>

@@ -6,6 +6,7 @@
     <script th:src="@{/js/user_chats.js}"></script>
 <!--    <script th:src="@{/js/web_socket_chat.js}"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script th:src="@{/js/format_time.js}"></script>
     <title>Messages Page</title>
     <style>
         .message-page-container {
@@ -133,7 +134,7 @@
                                         <div class="bg-primary text-white rounded p-2 d-inline-block">
                                             <p class="mb-0 text-start ps-2 pe-1">${msg.content}</p>
                                         </div>
-                                        <small class="text-muted d-block">${formatTimestamp(msg.timestamp)}</small>
+                                        <small class="text-muted d-block">${formatDateFromString(msg.timestamp)}</small>
                                     </div>
                                 `;
                 }
@@ -149,7 +150,7 @@
                                         <div class="bg-light rounded p-2">
                                             <p class="mb-0 ps-2 pe-1">${msg.content}</p>
                                         </div>
-                                        <small class="text-muted">${formatTimestamp(msg.timestamp)}</small>
+                                        <small class="text-muted">${formatDateFromString(msg.timestamp)}</small>
                                     </div>
                                 </div>
                                 `;

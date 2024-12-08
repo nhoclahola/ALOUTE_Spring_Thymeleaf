@@ -84,7 +84,7 @@ function createNotificationHtml(notification) {
                     </div>
                     <div>
                         <h5><strong>@${notification.triggerUser.username}</strong> liked your post: <strong>${notification.post.caption}</strong></h5>
-                        <p class="text-muted">${new Date(notification.createdAt).toLocaleDateString()}</p>
+                        <p class="text-muted">${formatDateFromString(notification.createdAt)}</p>
                     </div>
                 </div>
                 <button class="btn mark-read-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark as read">

@@ -142,7 +142,7 @@ function clearAndAddChatMessages(chatId) {
                                         <div class="bg-primary text-white rounded p-2 d-inline-block">
                                             <p class="mb-0 text-start ps-2 pe-1">${message.content}</p>
                                         </div>
-                                        <small class="text-muted d-block">${formatTimestamp(message.timestamp)}</small>
+                                        <small class="text-muted d-block">${formatDateFromString(message.timestamp)}</small>
                                     </div>
                                 `;
                             } else {
@@ -157,7 +157,7 @@ function clearAndAddChatMessages(chatId) {
                                         <div class="bg-light rounded p-2">
                                             <p class="mb-0 ps-2 pe-1">${message.content}</p>
                                         </div>
-                                        <small class="text-muted">${formatTimestamp(message.timestamp)}</small>
+                                        <small class="text-muted">${formatDateFromString(message.timestamp)}</small>
                                     </div>
                                 </div>
                                 `;
@@ -234,7 +234,7 @@ function loadMoreMessages(chatId) {
                                     <div class="bg-primary text-white rounded p-2 d-inline-block">
                                         <p class="mb-0 text-start ps-2 pe-1">${message.content}</p>
                                     </div>
-                                    <small class="text-muted d-block">${formatTimestamp(message.timestamp)}</small>
+                                    <small class="text-muted d-block">${formatDateFromString(message.timestamp)}</small>
                                 </div>
                             `;
                         } else {
@@ -249,7 +249,7 @@ function loadMoreMessages(chatId) {
                                         <div class="bg-light rounded p-2">
                                             <p class="mb-0 ps-2 pe-1">${message.content}</p>
                                         </div>
-                                        <small class="text-muted">${formatTimestamp(message.timestamp)}</small>
+                                        <small class="text-muted">${formatDateFromString(message.timestamp)}</small>
                                     </div>
                                 </div>
                             `;

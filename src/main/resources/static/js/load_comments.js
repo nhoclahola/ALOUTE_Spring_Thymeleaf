@@ -108,7 +108,7 @@ function loadMoreMessages(postId) {
 
 function createCommentHtml(comment) {
     const htmlString = `
-        <div class="container mt-3">
+        <div id="${comment.commentId}" class="container mt-3">
             <div class="d-flex gap-3">
                 <!-- Avatar -->
                 <a href="/profile/${comment.user.userId}">
@@ -129,12 +129,12 @@ function createCommentHtml(comment) {
                     <div class="d-flex gap-3 align-items-center">
                         <div class="d-flex align-items-center">
                             <!-- Like Button -->
-                            <button class="btn btn-link text-cyan cursor-pointer p-0" onclick="likeComment()">
-                                <i class="bi bi-hand-thumbs-up" style="font-size: 1rem;"></i>
+                            <button class="btn btn-link text-cyan cursor-pointer p-0" onclick="likeComment(event)">
+                                <i title="${comment.liked ? 'Unlike this comment' : 'Like this comment'}" id="btn-like-${comment.commentId}" class="bi bi-hand-thumbs-up-fill" style="font-size: 1rem; ${comment.liked ? 'color: blue;' : 'color: black;'}""></i>
                             </button>
-                            <span class="cursor-pointer" onclick="showLikedUsers()" style="font-size: 0.875rem;">${comment.likedCount || 0}</span> <!-- Liked count -->
+                            <span id="count-liked-${comment.commentId}" class="cursor-pointer" onclick="showLikedUsers()" style="font-size: 0.875rem;">${comment.likedCount || 0}</span> <!-- Liked count -->
                         </div>
-                        <span class="text-muted" style="font-size: 0.75rem;">${comment.createdAt}</span> <!-- Timestamp -->
+                        <span class="text-muted" style="font-size: 0.75rem;">${formatDateFromString(comment.createdAt)}</span> <!-- Timestamp -->
                     </div>
                 </div>
             </div>
@@ -144,4 +144,49 @@ function createCommentHtml(comment) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(htmlString, 'text/html');
     return doc.body.firstChild; // Trả về node đầu tiên trong body
+}
+
+function likeComment(event) {
+    let targetElement = event.currentTarget;
+    for (let i = 0; i <= 4; i++) {
+        targetElement = targetElement.parentNode;
+    }
+    // Lấy id của phần tử đó
+    const commentId = targetElement.id;
+    let token = localStorage.getItem('jwt')
+    fetch(`/api/comments/like/${commentId}`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.responseCode === 1000) {
+                let likedButton = document.getElementById(`btn-like-${commentId}`)
+                let countLike = document.getElementById(`count-liked-${commentId}`)
+                if (data.result === 'liked') {
+                    likedButton.style.color = 'blue';
+                    likedButton.title = 'Unlike this comment';
+                    countLike.textContent = (parseInt(countLike.textContent) + 1).toString();
+                }
+                else if (data.result === 'unliked') {
+                    likedButton.style.color = 'black';
+                    likedButton.title = 'Like this comment';
+                    countLike.textContent = (parseInt(countLike.textContent) - 1).toString();
+                }
+            } else {
+                alert(data.message || 'An error occurred while sending the comment.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to send comment. Please try again.');
+        });
 }

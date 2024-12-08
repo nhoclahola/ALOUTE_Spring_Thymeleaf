@@ -134,7 +134,7 @@ function createPostHtml(post) {
                         </a>
                         <span class="text-secondary">@${post.user.username}</span>
                         <span>·</span>
-                        <span class="text-secondary">${new Date(post.createdAt).toLocaleDateString()}</span>
+                        <span class="text-secondary">${formatDateFromString(post.createdAt)}</span>
                     </div>
                     <div class="min-h-12">
                         <p class="text-break">${post.caption}</p>
@@ -195,8 +195,8 @@ function createPostHtml(post) {
                                 </button>
                             </div>
                         </section>
-                        <button type="button" class="btn btn-link p-0 text-info">
-                            <i class="bi bi-share"></i>
+                        <button onclick="savePost(event)" type="button" class="btn btn-link p-0 text-info">
+                            <i title="${post.saved ? 'Unsave this post' : 'Save this post'}" id="btn-save-${post.postId}" class="bi bi-bookmarks-fill" style="${post.saved ? 'color: blue;' : 'color: black;'}"></i>
                         </button>
                     </div>
                 </div>
@@ -235,6 +235,48 @@ function likePost(event) {
                 else if (data.result === 'unliked') {
                     likedButton.style.fill = 'black';
                     countLike.textContent = (parseInt(countLike.textContent) - 1).toString();
+                }
+            } else {
+                alert(data.message || 'An error occurred while sending the comment.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Failed to send comment. Please try again.');
+        });
+}
+
+function savePost(event) {
+    let targetElement = event.currentTarget;
+    for (let i = 0; i <= 2; i++) {
+        targetElement = targetElement.parentNode;
+    }
+    // Lấy id của phần tử đó
+    const postId = targetElement.id;
+    let token = localStorage.getItem('jwt')
+    fetch(`/api/posts/${postId}/save`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.responseCode === 1000) {
+                let saveButton = document.getElementById(`btn-save-${postId}`)
+                if (data.result === 'saved') {
+                    saveButton.style.color = 'blue';
+                    saveButton.title = 'Unsave this post'
+                }
+                else if (data.result === 'unliked') {
+                    saveButton.style.color = 'black';
+                    saveButton.title = 'Save this post'
                 }
             } else {
                 alert(data.message || 'An error occurred while sending the comment.');
