@@ -76,3 +76,63 @@ public class ChatController {
     }
 }
 --CommentController
+package com.nhoclahola.socialnetworkv1.controller.api;
+
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
+import com.nhoclahola.socialnetworkv1.dto.comment.request.CommentCreateRequest;
+import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
+import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentWithDataResponse;
+import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
+import com.nhoclahola.socialnetworkv1.service.CommentService;
+import com.nhoclahola.socialnetworkv1.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/comments")
+public class CommentController {
+
+    private final CommentService commentService;
+    private final UserService userService;
+
+    // Tạo mới bình luận cho một bài viết
+    @PostMapping("/posts/{postId}")
+    public ApiResponse<CommentResponse> createComment(
+            @PathVariable String postId,
+            @RequestBody @Valid CommentCreateRequest request) {
+        return ApiResponse.of(commentService.createComment(postId, request));
+    }
+
+    // Thích một bình luận
+    @PutMapping("/{commentId}/like")
+    public ApiResponse<String> likeComment(@PathVariable String commentId) {
+        return ApiResponse.of(commentService.likeComment(commentId));
+    }
+
+    // Lấy chi tiết bình luận theo ID
+    @GetMapping("/{commentId}")
+    public ApiResponse<CommentResponse> getCommentById(@PathVariable String commentId) {
+        return ApiResponse.of(commentService.findCommentByIdResponse(commentId));
+    }
+
+    // Lấy danh sách bình luận của một bài viết
+    @GetMapping("/posts/{postId}")
+    public ApiResponse<List<CommentWithDataResponse>> getPostsComments(
+            @PathVariable String postId,
+            @RequestParam(defaultValue = "0") int index) {
+        return ApiResponse.of(commentService.findCommentsByPostId(postId, index));
+    }
+
+    // Lấy danh sách người dùng đã thích một bình luận
+    @GetMapping("/{commentId}/users/liked")
+    public ApiResponse<List<UserResponse>> getUsersLikedComment(
+            @PathVariable String commentId,
+            @RequestParam(defaultValue = "0") int index) {
+        return ApiResponse.of(userService.findUsersLikedCommentByCommentId(commentId, index));
+    }
+}
+--MessageController
