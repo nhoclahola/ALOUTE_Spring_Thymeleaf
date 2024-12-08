@@ -3,6 +3,7 @@ package com.nhoclahola.socialnetworkv1.controller.api;
 import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
 import com.nhoclahola.socialnetworkv1.dto.admin.response.DashBoardInfo;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentWithDataResponse;
+import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.request.AdminResetPassword;
 import com.nhoclahola.socialnetworkv1.dto.user.request.AdminUpdateUser;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
@@ -51,6 +52,14 @@ public class AdministratorController
     {
         ApiResponse<UserResponse> response = new ApiResponse<>();
         response.setResult(adminService.adminUpdatePassword(userId, request));
+        return response;
+    }
+
+    @GetMapping("/posts")
+    public ApiResponse<Page<PostResponse>> getAllPosts(@RequestParam int page)
+    {
+        ApiResponse<Page<PostResponse>> response = new ApiResponse<>();
+        response.setResult(adminService.getAllPostsAdmin(page));
         return response;
     }
 }

@@ -6,6 +6,8 @@ import com.nhoclahola.socialnetworkv1.dto.post.response.PostWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 import java.util.Set;
@@ -32,5 +34,11 @@ public interface PostMapper
     public abstract List<PostWithDataResponse> toListPostWithDataResponse(List<PostWithData> postWithDataList);
 
     public abstract List<PostWithDataResponse> toListPostWithDataResponse(Set<PostWithData> postWithDataSet);
+
+    public default Page<PostResponse> pagePostToPagePostResponse(Page<Post> posts)
+    {
+        List<PostResponse> postResponses = toListPostResponse(posts.getContent());
+        return new PageImpl<>(postResponses, posts.getPageable(), posts.getTotalElements());
+    }
 
 }

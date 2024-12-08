@@ -24,4 +24,10 @@ public class WebAdminController
     {
         return "admin/form_edit";
     }
+
+    @GetMapping("/admin/manage_post")
+    public String managePost()
+    {
+        return "admin/manage_post";
+    }
 }

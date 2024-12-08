@@ -1,13 +1,17 @@
 package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.dto.admin.response.DashBoardInfo;
+import com.nhoclahola.socialnetworkv1.dto.post.response.PostResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.request.AdminResetPassword;
 import com.nhoclahola.socialnetworkv1.dto.user.request.AdminUpdateUser;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
+import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.exception.AppException;
 import com.nhoclahola.socialnetworkv1.exception.ErrorCode;
+import com.nhoclahola.socialnetworkv1.mapper.PostMapper;
 import com.nhoclahola.socialnetworkv1.mapper.UserMapper;
+import com.nhoclahola.socialnetworkv1.repository.PostRepository;
 import com.nhoclahola.socialnetworkv1.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,8 +25,10 @@ import org.springframework.stereotype.Service;
 public class AdminServiceImplementation implements AdminService
 {
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
     private final UserService userService;
     private final UserMapper userMapper;
+    private final PostMapper postMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -70,5 +76,13 @@ public class AdminServiceImplementation implements AdminService
         User user = userService.findUserById(userId);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         return userMapper.toUserResponse(userRepository.save(user));
+    }
+
+    @Override
+    public Page<PostResponse> getAllPostsAdmin(int page)
+    {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<Post> posts = postRepository.findAllPostsAdmin(pageable);
+        return postMapper.pagePostToPagePostResponse(posts);
     }
 }

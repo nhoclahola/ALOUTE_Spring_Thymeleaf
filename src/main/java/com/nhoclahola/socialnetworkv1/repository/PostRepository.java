@@ -2,6 +2,7 @@ package com.nhoclahola.socialnetworkv1.repository;
 
 import com.nhoclahola.socialnetworkv1.dto.post.PostWithData;
 import com.nhoclahola.socialnetworkv1.entity.Post;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -164,4 +165,7 @@ public interface PostRepository extends JpaRepository<Post, String>
             "ORDER BY p.createdAt DESC")
     public abstract List<PostWithData> findSavedPostsByEmail(@Param("currentUserEmail") String currentUserEmail,
                                                               Pageable pageable);
+
+    @Query("SELECT p FROM Post p")
+    public abstract Page<Post> findAllPostsAdmin(Pageable pageable);
 }
