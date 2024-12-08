@@ -101,10 +101,9 @@ public interface PostRepository extends JpaRepository<Post, String>
             "(SELECT COUNT(c) FROM p.comments c), " +
             "EXISTS (SELECT l FROM p.liked l WHERE l.email = :currentUserEmail), " +
             "EXISTS (SELECT l FROM p.saved l WHERE l.email = :currentUserEmail)) " +
-            "FROM Post p WHERE p.videoUrl IS NOT NULL AND p.createdAt >= :twoDaysAgo " +
+            "FROM Post p WHERE p.videoUrl IS NOT NULL " +
             "ORDER BY likedCount DESC, p.createdAt DESC")
-    public abstract List<PostWithData> findPopularVideoPosts(@Param("currentUserEmail") String currentUserEmail,
-                                                             @Param("twoDaysAgo") LocalDateTime twoDaysAgo, Pageable pageable);
+    public abstract List<PostWithData> findPopularVideoPosts(@Param("currentUserEmail") String currentUserEmail, Pageable pageable);
 
 
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.post.PostWithData(p.postId, p.caption, p.imageUrl, p.videoUrl, p.createdAt, p.user, " +

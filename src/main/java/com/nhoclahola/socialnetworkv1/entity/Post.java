@@ -18,7 +18,7 @@ public class Post
 {
     @Id
     private String postId;
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String caption;
     private String imageUrl;
     private String videoUrl;

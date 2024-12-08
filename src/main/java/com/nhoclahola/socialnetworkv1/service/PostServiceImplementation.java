@@ -196,8 +196,8 @@ public class PostServiceImplementation implements PostService
         String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         int pageNumber = index / 10;
         Pageable pageable = PageRequest.of(pageNumber, 10);
-        LocalDateTime twoDaysAgo = LocalDateTime.now().minusDays(30);
-        List<PostWithData> popularVideoPosts = postRepository.findPopularVideoPosts(currentUserEmail, twoDaysAgo, pageable );
+//        LocalDateTime twoDaysAgo = LocalDateTime.now().minusDays(30);
+        List<PostWithData> popularVideoPosts = postRepository.findPopularVideoPosts(currentUserEmail, pageable);
         return postMapper.toListPostWithDataResponse(popularVideoPosts);
     }
 
