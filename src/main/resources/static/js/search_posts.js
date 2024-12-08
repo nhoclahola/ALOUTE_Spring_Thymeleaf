@@ -129,7 +129,7 @@ function createPostHtml(post) {
                 </div>
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex align-items-center gap-2">
-                        <a class="font-weight-bold">
+                        <a href="/profile/${post.user.userId}" class="font-weight-bold">
                             ${post.user.firstName} ${post.user.lastName}
                         </a>
                         <span class="text-secondary">@${post.user.username}</span>

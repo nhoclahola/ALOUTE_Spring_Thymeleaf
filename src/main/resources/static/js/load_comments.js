@@ -80,7 +80,9 @@ function loadMoreMessages(postId) {
                     loadMoreDiv.id = 'load-more';
                     loadMoreDiv.classList.add('text-center', 'mt-4');
                     loadMoreDiv.innerHTML = `
-                            <button class="btn btn-outline-primary">See earlier comments</button>
+                            <button class="">
+                                <p class="text-center text-primary cursor-pointer fw-bold" id="loadMoreComments">Load more older comments</p>
+                            </button>
                         `;
                     // Thêm sự kiện click để tải thêm tin nhắn cũ
                     loadMoreDiv.querySelector('button').addEventListener('click', function () {

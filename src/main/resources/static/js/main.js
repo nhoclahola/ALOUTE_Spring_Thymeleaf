@@ -23,9 +23,6 @@ function updateUser(newUser) {
     let createPostUserAvatar = document.getElementById('createPostUserAvatar');
     if (createPostUserAvatar && user.avatarUrl != null)
         createPostUserAvatar.src = user.avatarUrl
-    const profileLink = `/profile/${user.userId}`;
-    links[profileLink] = 'profile-link';
-    document.querySelector('#profile-link').setAttribute('href', profileLink);
     document.dispatchEvent(userEvent); // Phát sự kiện userUpdated
 }
 

@@ -45,7 +45,7 @@
                     <span>Messages</span>
                     <span class="badge badge-danger ml-auto"></span>
                 </a>
-                <a href="#" id="profile-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
+                <a href="/profile/me" id="profile-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
                     <i class="bi-person-circle mr-3"></i>
                     <span>Profile</span>
                     <span class="badge badge-danger ml-auto"></span>
@@ -78,6 +78,7 @@
             '/search': 'search-link',
             '/notifications': 'notification-link',
             '/messages': 'messages-link',
+            '/profile/me': 'profile-link',
         };
 
         const currentPath = window.location.pathname;

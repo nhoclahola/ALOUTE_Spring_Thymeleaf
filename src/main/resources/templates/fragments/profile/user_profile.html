@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile Page</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
-    <script th:src="@{/js/profile.js}"></script>
+    <script th:src="@{/js/user_profile.js}"></script>
     <script th:src="@{/js/load_posts_in_profile.js}"></script>
     <script th:src="@{/js/load_comments.js}"></script>
     <style>
@@ -79,6 +79,11 @@
     <!-- Avatar -->
     <div class="position-relative">
         <img id="uAvatar" src="/images/unknown_user.jpg" alt="Avatar" class="rounded-circle profile-avatar">
+        <div class="mt-5 d-flex justify-content-end ms-auto gap-2">
+            <button onclick="followUser()" id="follow-btn" class="btn btn-outline-primary btn-circle btn-sm d-none">Follow</button>
+            <button onclick="unfollowUser()" id="unfollow-btn" class="btn btn-outline-danger btn-circle btn-sm d-none">Unfollow</button>
+            <button onclick="addToChat()" id="add-chat-btn" class="btn btn-outline-success btn-circle btn-sm">Add to Chat</button>
+        </div>
     </div>
 
 
@@ -91,8 +96,14 @@
         <p id="uUsername" class="text-muted"></p>
         <div class="d-flex gap-2">
             <span id="uPosts"></span>
-            <a id="uFollowers" href="#" class="text-decoration-none fw-bold"></a>
-            <a id="uFollowings" href="#" class="text-decoration-none fw-bold"></a>
+            <a href="#" class="text-decoration-none fw-bold">
+                <span id="uFollowers"></span>
+                <span>Followers</span>
+            </a>
+            <a href="#" class="text-decoration-none fw-bold">
+                <span id="uFollowings"></span>
+                <span>Followings</span>
+            </a>
         </div>
     </div>
 
@@ -151,6 +162,113 @@
 
 <script>
     startLoad(`/api/posts/users/${userId}`);
+</script>
+
+<script>
+    const followBtn = document.getElementById('follow-btn');
+    const unfollowBtn = document.getElementById('unfollow-btn');
+    const addChatBtn = document.getElementById('add-chat-btn');
+    function followUser() {
+        fetch(`/api/users/follow/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.responseCode === 1000) {
+                    if (data.result === 'followed') {
+                        hideFollowBtns();
+                        let countFollow = document.getElementById(`uFollowers`)
+                        countFollow.textContent = (parseInt(countFollow.textContent) + 1).toString();
+                    }
+                } else {
+                    alert(data.message || 'An error occurred while following user.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to follow.');
+            });
+    }
+
+    function unfollowUser() {
+        fetch(`/api/users/follow/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.responseCode === 1000) {
+                    if (data.result === 'unfollowed') {
+                        showFollowBtns();
+                        let countFollow = document.getElementById(`uFollowers`)
+                        countFollow.textContent = (parseInt(countFollow.textContent) - 1).toString();
+                    }
+                } else {
+                    alert(data.message || 'An error occurred while unfollowing user.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to unfollow.');
+            });
+    }
+
+    function addToChat() {
+        fetch(`/api/chats/users/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.responseCode === 1000) {
+                    hideAddChatBtns();
+                } else {
+                    alert(data.message || 'An error occurred while creating a chat.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to create a chat.');
+            });
+    }
+    const showFollowBtns = (isCover) => {
+        followBtn.classList.remove('d-none');
+        unfollowBtn.classList.add('d-none');
+    }
+
+    const hideFollowBtns = () => {
+        followBtn.classList.add('d-none');
+        unfollowBtn.classList.remove('d-none');
+    }
+
+    const hideAddChatBtns = () => {
+        addChatBtn.classList.add('d-none');
+    }
 </script>
 
 <script>

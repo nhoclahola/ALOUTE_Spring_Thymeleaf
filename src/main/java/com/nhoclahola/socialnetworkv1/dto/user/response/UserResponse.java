@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.dto.user.response;
 
+import com.nhoclahola.socialnetworkv1.entity.Role;
 import lombok.*;
 
 @NoArgsConstructor
@@ -18,4 +19,5 @@ public class UserResponse
     private Boolean gender;
     private String avatarUrl;
     private String coverPhotoUrl;
+    private Role role;
 }
