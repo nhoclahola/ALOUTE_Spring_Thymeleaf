@@ -7,6 +7,8 @@ import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import org.mapstruct.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 
@@ -27,4 +29,11 @@ public interface UserMapper
     @Mapping(target = "coverPhotoUrl", expression = "java(user.getCoverPhotoUrl() != null ? com.nhoclahola.socialnetworkv1.configuration.WebConfig.getUrl(user.getCoverPhotoUrl()) : null)")
     @Mapping(source = "follow", target = "isFollow")
     public abstract UserWithDataResponse toUserWithDataResponse(UserWithData user);
+
+    @AfterMapping
+    public default Page<UserResponse> pageUserToPageUserResponse(Page<User> users)
+    {
+        List<UserResponse> userResponses = toListUserResponse(users.getContent());
+        return new PageImpl<>(userResponses, users.getPageable(), users.getTotalElements());
+    }
 }

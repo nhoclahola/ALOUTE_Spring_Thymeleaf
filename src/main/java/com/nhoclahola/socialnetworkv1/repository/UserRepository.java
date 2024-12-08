@@ -3,6 +3,7 @@ package com.nhoclahola.socialnetworkv1.repository;
 import com.nhoclahola.socialnetworkv1.dto.admin.response.DashBoardInfo;
 import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -88,6 +89,13 @@ public interface UserRepository extends JpaRepository<User, String>
 
     @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.admin.response.DashBoardInfo(" +
             "(SELECT COUNT(u) FROM User u), " +
-            "(SELECT COUNT(p) FROM Post p)) ")
+            "(SELECT COUNT(p) FROM Post p), " +
+            "(SELECT COUNT(c) FROM Chat c)," +
+            "(SELECT COUNT(cm) FROM Comment cm), " +
+            "(SELECT COUNT(p1) FROM Post p1 WHERE p1.imageUrl IS NOT NULL), " +
+            "(SELECT COUNT(p2) FROM Post p2 WHERE p2.videoUrl IS NOT NULL))")
     public abstract DashBoardInfo adminDashBoardInfo();
+
+    @Query("SELECT u FROM User u")
+    public abstract Page<User> findAllUsersAdmin(Pageable pageable);
 }

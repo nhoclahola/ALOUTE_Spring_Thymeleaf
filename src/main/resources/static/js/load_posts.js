@@ -192,7 +192,7 @@ function createPostHtml(post) {
                             </div>
                         </section>
                         <button type="button" class="btn btn-link p-0 text-info">
-                            <i class="bi bi-share"></i>
+                            <i class="bi bi-share" style="color: black"></i>
                         </button>
                     </div>
                 </div>

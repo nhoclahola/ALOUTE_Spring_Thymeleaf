@@ -11,4 +11,8 @@ public class DashBoardInfo
 {
     private long userCount;
     private long postCount;
+    private long chatCount;
+    private long commentCount;
+    private long postsHaveImage;
+    private long postsHaveVideo;
 }
