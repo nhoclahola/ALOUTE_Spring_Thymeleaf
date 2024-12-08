@@ -62,4 +62,20 @@ public class AdministratorController
         response.setResult(adminService.getAllPostsAdmin(page));
         return response;
     }
+
+    @DeleteMapping("/posts/{postId}")
+    public ApiResponse<String> adminDeletePost(@PathVariable String postId)
+    {
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(adminService.adminDeletePost(postId));
+        return response;
+    }
+
+    @DeleteMapping("/users/{userId}")
+    public ApiResponse<String> adminDeleteUser(@PathVariable String userId)
+    {
+        ApiResponse<String> response = new ApiResponse<>();
+        response.setResult(adminService.adminDeleteUser(userId));
+        return response;
+    }
 }

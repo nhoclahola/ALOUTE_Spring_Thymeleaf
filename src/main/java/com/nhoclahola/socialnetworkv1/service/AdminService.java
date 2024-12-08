@@ -6,6 +6,7 @@ import com.nhoclahola.socialnetworkv1.dto.user.request.AdminResetPassword;
 import com.nhoclahola.socialnetworkv1.dto.user.request.AdminUpdateUser;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import org.springframework.data.domain.Page;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface AdminService
 {
@@ -18,4 +19,10 @@ public interface AdminService
     UserResponse adminUpdatePassword(String userId, AdminResetPassword request);
 
     Page<PostResponse> getAllPostsAdmin(int page);
+
+    @Transactional
+    String adminDeletePost(String postId);
+
+    @Transactional
+    String adminDeleteUser(String userId);
 }

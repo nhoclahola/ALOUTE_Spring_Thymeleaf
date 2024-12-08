@@ -31,7 +31,7 @@ public class Post
 
     // Use Set to force Hibernate create primary key for join table of @ManyToMany
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name ="post_liked",
             joinColumns = { @JoinColumn(name = "post_id") },
@@ -39,7 +39,7 @@ public class Post
     )
     private Set<User> liked;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name ="post_saved",
             joinColumns = { @JoinColumn(name = "post_id") },
@@ -47,8 +47,11 @@ public class Post
     )
     private Set<User> saved;
 
-    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "post", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Notification> notifications;
 
     @PrePersist
     public void prePersist()

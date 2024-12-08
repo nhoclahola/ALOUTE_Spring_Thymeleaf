@@ -39,7 +39,7 @@ public class User
     // | follower_id | following_id |
     // |   (join)    |  (inverse)   |
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_follow",
             joinColumns = @JoinColumn(name = "follower_id"),        // userId of this entity
@@ -47,31 +47,31 @@ public class User
     )
     private Set<User> followings;
 
-    @ManyToMany(mappedBy = "followings",fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "followings",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<User> followers;
 
     // Post
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)  // Field user of Post class
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)  // Field user of Post class
     private List<Post> posts;
 
-    @ManyToMany(mappedBy = "liked", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "liked", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Post> likedPost;
 
-    @ManyToMany(mappedBy = "saved", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "saved", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Post> savedPost;
 
     // Comment
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
-    @ManyToMany(mappedBy = "liked", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "liked", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Comment> likedComments;
 
     // Chat
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Chat> chats;
 
     @PrePersist

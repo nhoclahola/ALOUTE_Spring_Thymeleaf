@@ -65,6 +65,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="/communities" id="communities-link" class="nav-link">
+                        <i class="bi bi-back mr-3"></i>
+                        Communities
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/profile/me" id="profile-link" class="nav-link">
                         <i class="bi bi-person-circle mr-3"></i>
                         Profile
@@ -76,6 +82,11 @@
                         Administrator
                     </a>
                 </li>
+                <li>
+                    <button title="Logout" class="btn btn-link p-0" id="logoutButton2">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+                </li>
             </ul>
 
             <!-- Nút X để đóng menu -->
@@ -86,6 +97,23 @@
     </div>
 </nav>
 <script>
+    const logoutButton2 = document.getElementById('logoutButton2');
+
+    // Thêm sự kiện click
+    logoutButton2.addEventListener('click', function () {
+        // Hiển thị hộp thoại xác nhận
+        const confirmed = confirm("Are you sure you want to log out?");
+
+        // Nếu người dùng chọn "OK"
+        if (confirmed) {
+            // Xóa JWT khỏi Local Storage
+            localStorage.removeItem('jwt');
+
+            // Reload lại trang
+            location.reload();
+        }
+    });
+
     // Thêm sự kiện cho nút "X"
     document.getElementById('closeMenuBtn').addEventListener('click', function() {
         var collapseElement = document.getElementById('navbarNav');

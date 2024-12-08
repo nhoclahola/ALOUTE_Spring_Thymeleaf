@@ -45,6 +45,11 @@
                     <span>Messages</span>
                     <span class="badge badge-danger ml-auto"></span>
                 </a>
+                <a href="/communities" id="communities-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
+                    <i class="bi bi-back mr-3"></i>
+                    <span>Communities</span>
+                    <span class="badge badge-danger ml-auto"></span>
+                </a>
                 <a href="/profile/me" id="profile-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
                     <i class="bi bi-person-circle mr-3"></i>
                     <span>Profile</span>
@@ -68,13 +73,29 @@
                     <p id="username" class="text-muted mb-0">@</p>
                 </div>
             </div>
-            <button class="btn btn-link p-0">
-                <i class="bi bi-three-dots-vertical"></i>
+            <button title="Logout" class="btn btn-link p-0" id="logoutButton">
+                <i class="bi bi-box-arrow-right"></i>
             </button>
         </div>
     </div>
 </div>
 <script>
+    const logoutButton = document.getElementById('logoutButton');
+
+    // Thêm sự kiện click
+    logoutButton.addEventListener('click', function () {
+        // Hiển thị hộp thoại xác nhận
+        const confirmed = confirm("Are you sure you want to log out?");
+
+        // Nếu người dùng chọn "OK"
+        if (confirmed) {
+            // Xóa JWT khỏi Local Storage
+            localStorage.removeItem('jwt');
+
+            // Reload lại trang
+            location.reload();
+        }
+    });
     let links;
     document.addEventListener('DOMContentLoaded', () => {
         links = {
@@ -83,6 +104,7 @@
             '/search': 'search-link',
             '/notifications': 'notification-link',
             '/messages': 'messages-link',
+            '/communities': 'communities-link',
             '/profile/me': 'profile-link',
         };
 

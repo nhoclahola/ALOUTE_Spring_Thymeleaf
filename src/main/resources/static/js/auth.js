@@ -1,9 +1,29 @@
 $(document).ready(function () {
     $('#loginForm').submit(function (event) {
         event.preventDefault();
-        const email = $('#email').val();
-        const password = $('#password').val();
 
+        const email = $('#email').val().trim();
+        const password = $('#password').val().trim();
+        let isValid = true;
+
+        // Reset errors
+        $('#loginError').text('');
+
+        // Validate email and password length
+        if (email.length < 6) {
+            $('#loginError').text('Email must be at least 6 characters.');
+            isValid = false;
+        }
+        if (password.length < 6) {
+            $('#loginError').text('Password must be at least 6 characters.');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        // Perform AJAX request
         $.ajax({
             url: '/auth/login',
             type: 'POST',
@@ -14,33 +34,72 @@ $(document).ready(function () {
                 window.location.href = '/';
             },
             error: function (error) {
-                alert('Your email or password does not match.');
+                $('#loginError').text( 'Your email or password does not match.');
             }
         });
     });
 
-    $('#registerForm').submit(function (event) {
-        event.preventDefault();
-        const data = {
-            username: $('#username').val(),
-            firstName: $('#firstName').val(),
-            lastName: $('#lastName').val(),
-            email: $('#email').val(),
-            password: $('#password').val(),
-            gender: $('input[name="gender"]:checked').val()
-        };
+    $(document).ready(function () {
+        $('#registerForm').submit(function (event) {
+            event.preventDefault();
 
-        $.ajax({
-            url: '/auth/register',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function (response) {
-                window.location.href = '/login';
-            },
-            error: function () {
-                alert('An error occurred when registering.');
+            const username = $('#username').val().trim();
+            const firstName = $('#firstName').val().trim();
+            const lastName = $('#lastName').val().trim();
+            const email = $('#email').val().trim();
+            const password = $('#password').val().trim();
+            const rePassword = $('#re-password').val().trim();
+            const genderValue = $('input[name="gender"]:checked').val();
+            let gender;
+
+            // Map gender values
+            if (genderValue === "male") gender = true;
+            else if (genderValue === "female") gender = false;
+            else gender = null;
+
+            let errorMessage = '';
+
+            // Validate username, email, password
+            if (username.length < 6) {
+                errorMessage = 'Username must be at least 6 characters.';
+            } else if (firstName.length === 0 || firstName.length > 40) {
+                errorMessage = 'First Name must not be empty and up to 40 characters.';
+            } else if (lastName.length === 0 || lastName.length > 40) {
+                errorMessage = 'Last Name must not be empty and up to 40 characters.';
+            } else if (email.length < 6) {
+                errorMessage = 'Email must be at least 6 characters.';
+            } else if (password.length < 6) {
+                errorMessage = 'Password must be at least 6 characters.';
+            } else if (password !== rePassword) {
+                errorMessage = 'Passwords do not match.';
             }
+
+            // Show error if exists
+            if (errorMessage) {
+                $('#registerError').text(errorMessage);
+                return;
+            }
+
+            // Perform AJAX request
+            $.ajax({
+                url: '/auth/register',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    username: username,
+                    firstName: firstName,
+                    lastName: lastName,
+                    email: email,
+                    password: password,
+                    gender: gender
+                }),
+                success: function () {
+                    window.location.href = '/login';
+                },
+                error: function (error) {
+                    $('#registerError').text(error.responseJSON.message || 'An error occurred during registration. Please try again.');
+                }
+            });
         });
     });
 

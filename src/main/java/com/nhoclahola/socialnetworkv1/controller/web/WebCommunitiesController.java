@@ -4,11 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class WebNotificationController
+public class WebCommunitiesController
 {
-    @GetMapping("/notifications")
-    public String notificationPage()
+    @GetMapping("/communities")
+    public String communitiesPage()
     {
-        return "user/notification_page";
+        return "user/communities_page";
     }
 }

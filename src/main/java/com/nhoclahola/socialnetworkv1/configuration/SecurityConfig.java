@@ -34,7 +34,8 @@ public class SecurityConfig
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception
     {
         httpSecurity.authorizeHttpRequests(request ->
-                request.requestMatchers("/api/**").authenticated()
+                request.requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/**").authenticated()
                         .anyRequest().permitAll());
 
         httpSecurity.sessionManagement(management ->

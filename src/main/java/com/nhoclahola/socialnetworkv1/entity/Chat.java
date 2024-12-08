@@ -36,7 +36,7 @@ public class Chat
     @Fetch(FetchMode.SUBSELECT)
     private Set<User> users;
 
-    @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "chat", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Message> messages;
 
     @PrePersist

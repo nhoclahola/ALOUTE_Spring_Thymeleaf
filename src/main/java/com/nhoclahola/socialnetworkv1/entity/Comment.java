@@ -28,7 +28,7 @@ public class Comment
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name ="comment_liked",
             joinColumns = { @JoinColumn(name = "comment_id") },

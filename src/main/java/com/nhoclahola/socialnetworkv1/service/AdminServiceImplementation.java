@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -84,5 +85,24 @@ public class AdminServiceImplementation implements AdminService
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<Post> posts = postRepository.findAllPostsAdmin(pageable);
         return postMapper.pagePostToPagePostResponse(posts);
+    }
+
+    @Override
+    @Transactional
+    public String adminDeletePost(String postId)
+    {
+        Post post = postRepository.findById(postId).orElseThrow(() ->
+                new AppException(ErrorCode.POST_NOT_EXIST));
+        postRepository.delete(post);
+        return "Post have been deleted successful";
+    }
+
+    @Override
+    @Transactional
+    public String adminDeleteUser(String userId)
+    {
+        User user = userService.findUserById(userId);
+        userRepository.delete(user);
+        return "User have been deleted successful";
     }
 }
