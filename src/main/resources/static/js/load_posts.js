@@ -12,7 +12,7 @@ function loadPosts(url, token) {
         .then(response => response.json())
         .then(data => {
             // Kiểm tra nếu có bài đăng
-            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length > 0) {
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length >= 0) {
                 data.result.forEach(post => {
                     const postElement = createPostHtml(post);
                     postContainer.insertAdjacentHTML('beforeend', postElement);
