@@ -45,9 +45,14 @@
                     <span>Messages</span>
                     <span class="badge badge-danger ml-auto"></span>
                 </a>
-                <a href="#" id="profile-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
-                    <i class="bi bi-bell mr-3"></i>
+                <a href="/profile/me" id="profile-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded">
+                    <i class="bi bi-person-circle mr-3"></i>
                     <span>Profile</span>
+                    <span class="badge badge-danger ml-auto"></span>
+                </a>
+                <a href="/admin/dashboard" id="admin-link" class="d-flex px-3 hover-sidebar-color fs-5 gap-2 align-items-center py-2 text-decoration-none text-dark rounded d-none">
+                    <i class="bi bi-database-fill mr-3"></i>
+                    <span>Administrator</span>
                     <span class="badge badge-danger ml-auto"></span>
                 </a>
                 <!-- Add other menu items here -->
@@ -70,14 +75,15 @@
     </div>
 </div>
 <script>
+    let links;
     document.addEventListener('DOMContentLoaded', () => {
-        const links = {
+        links = {
             '/': 'home-link',
             '/videos': 'popular-videos-link',
             '/search': 'search-link',
             '/notifications': 'notification-link',
             '/messages': 'messages-link',
-            '/profile': 'profile-link',
+            '/profile/me': 'profile-link',
         };
 
         const currentPath = window.location.pathname;

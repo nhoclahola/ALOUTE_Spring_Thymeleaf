@@ -1,29 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link rel="stylesheet" th:href="@{/css/styles_dashboard.css}">
+  <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/js/jquery.min.js}"></script>
 </head>
-  <header>
-    <div class="logo">
-      <img th:src="@{/images/logos/hcmute.png}" alt="Logo">
-      <h3>Social network Dashboard</h3>
-    </div>
-    <nav>
-      <ul class="nav-menu">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Contact</a></li>
-      </ul>
-    </nav>
-    <div class="user-info">
-      <span>admin</span>
-      <img src="user.png" alt="User">
-    </div>
+<body class="d-none">
+  <header th:replace="~{fragments/admin_header :: header}">
+
   </header>
 
   <div class="container">
@@ -32,36 +20,34 @@
     <!-- Cards -->
     <div class="row">
       <div class="card bg-primary">
-        <h5>Totel user</h5>
-        <h2>14</h2>
-      </div>
-      <div class="card bg-warning">
-        <h5>User online</h5>
-        <h2>1</h2>
+        <h5>Total user</h5>
+        <h2 id="total-users"></h2>
       </div>
       <div class="card bg-purple">
         <h5>Posted Articles</h5>
-        <h2>13</h2>
+        <h2 id="total-posts"></h2>
+      </div>
+      <div class="card bg-warning">
+        <h5>Total Chats</h5>
+        <h2 id="total-chats"></h2>
       </div>
       <div class="card bg-danger">
-        <h5>User banned</h5>
-        <h2>6</h2>
+        <h5>Total Comments</h5>
+        <h2 id="total-comments">6</h2>
       </div>
-      <div class="card bg-success">
-        <h5>Số thiết bị khả dụng</h5>
-        <h2>36</h2>
-      </div>
+<!--      <div class="card bg-success">-->
+<!--        <h5>Số thiết bị khả dụng</h5>-->
+<!--        <h2>36</h2>-->
+<!--      </div>-->
     </div>
 
     <!-- Charts -->
     <div class="Charts" style="margin-top: 20px;">
       <div id="chart1">
         <h5>Tổng số phòng</h5>
-        <img src="chart1.png" alt="Chart 1">
       </div>
       <div id="chart2">
         <h5>Tổng số thiết bị</h5>
-        <img src="chart2.png" alt="Chart 2">
       </div>
     </div>
   </div>
@@ -104,10 +90,42 @@
     var options2 = { 'title': 'Tổng số thiết bị', 'width': 550, 'height': 400 };
 
     // Gọi hàm vẽ biểu đồ với tham số tương ứng
-    drawChart(data1, options1, 'chart1');
+    // drawChart(data1, options1, 'chart1');
     drawChart(data2, options2, 'chart2');
   });
 </script>
-
+<script>
+  let token2 = localStorage.getItem('jwt');
+  fetch('/api/admin/dashboard', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token2}`,
+      'Content-Type': 'application/json',
+    },
+  })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed');
+            }
+            return response.json();
+          })
+          .then(data => {
+            $('#total-users').html(data.result.userCount);
+            $('#total-posts').html(data.result.postCount);
+            $('#total-chats').html(data.result.chatCount);
+            $('#total-comments').html(data.result.commentCount);
+            var data1 = [
+              ['Type of Posts', 'Quantity'],
+              ['Posts Have Image', data.result.postsHaveImage],
+              ['Posts Have Video', data.result.postsHaveVideo],
+              ['Posts Have No Image or Video', data.result.postCount - data.result.postsHaveVideo - data.result.postsHaveImage],
+            ];
+            var options1 = { 'title': 'All Posts', 'width': 550, 'height': 400 };
+            drawChart(data1, options1, 'chart1');
+          })
+          .catch(error => {
+            console.error("Error updating profile:", error);
+          })
+</script>
 </body>
 </html>

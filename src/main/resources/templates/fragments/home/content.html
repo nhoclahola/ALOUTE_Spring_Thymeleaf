@@ -6,6 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/load_posts.js}"></script>
+    <script th:src="@{/js/load_comments.js}"></script>
 </head>
 <body>
 <!-- HomePage Content -->
@@ -14,7 +15,7 @@
         <!-- Create Post -->
         <div class="card mb-4 p-3 shadow rounded-3">
             <div class="d-flex align-items-center gap-4">
-                <img src="https://upload.wikimedia.org/wikipedia/vi/7/7d/Bliss.png" alt="Avatar"
+                <img id="createPostUserAvatar" src="/images/unknown_user.jpg" alt="Avatar"
                      class="rounded-circle mr-3"
                      style="width: 50px; height: 50px;">
                 <input type="text" class="form-control rounded-4" placeholder="What are you thinking?"
@@ -34,35 +35,63 @@
 
     <!-- Chèn modal fragment -->
     <div th:insert="~{fragments/post/post_modal :: postModal}"></div>
+    <div th:insert="~{fragments/post/comment_modal :: commentModal}"></div>
 </div>
 
 <script>
     const token = localStorage.getItem('jwt');
-    var myModal = new bootstrap.Modal(document.getElementById('postModal'));
+    const myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
+    const loadingOverlay = document.getElementById('loadingOverlay');
 
+    // Mở modal
     function openPostModal() {
+        $('#uFirstName').html(user.firstName);
+        $('#uLastName').html(user.lastName);
+        $('#uUsername').html('@' + user.username);
+        if (user.avatarUrl != null)
+            $('#uAvatar').html(document.getElementById('uAvatar').src = user.avatarUrl);
         myModal.show();
     }
+
+    // Đóng modal
     function closePostModal() {
         myModal.hide();
     }
 
-    // Load posts khi trang được load
-    // document.addEventListener('DOMContentLoaded', loadPosts('/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=0', token));
-
+    // Gửi bài post
     function submitPost() {
-        const caption = document.querySelector('#postForm textarea').value;
-        const fileInput = document.querySelector('#postForm input[type="file"]');
+        const caption = document.querySelector('#createPostForm textarea').value.trim();
+        const imageFile = document.querySelector('#imageInput').files[0];
+        const videoFile = document.querySelector('#videoInput').files[0];
         const formData = new FormData();
+
+        // Kiểm tra caption
+        if (!caption) {
+            errorMessage.textContent = 'Caption is required!';
+            errorMessage.classList.remove('d-none');
+            return;
+        } else {
+            errorMessage.classList.add('d-none');
+        }
+
+        // Append dữ liệu
         formData.append('caption', caption);
 
-        if (fileInput && fileInput.files.length > 0) {
-            formData.append('file', fileInput.files[0]);
+        if (imageFile) {
+            formData.append('file', imageFile);
+        } else if (videoFile) {
+            formData.append('file', videoFile);
         } else {
             // Gửi giá trị rỗng nếu không có file
             formData.append('file', new Blob());
         }
 
+        // // Hiển thị loading spinner
+        // loadingSpinner.classList.remove('d-none');
+        // Hiển thị overlay loading
+        loadingOverlay.classList.remove('d-none');
+
+        // Gửi request
         fetch('/api/posts', {
             method: 'POST',
             headers: {
@@ -70,31 +99,52 @@
             },
             body: formData,
         })
-            .then(response => response.json())
+            .then(response => {
+                // Kiểm tra trạng thái response
+                if (!response.ok) {
+                    throw new Error('Failed to create post');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.responseCode === 1000) {
-                    // Gọi hàm để chèn post mới vào đầu
+                    // Gọi hàm để chèn post mới vào danh sách
                     addNewPost(data.result);
 
                     // Làm sạch form
-                    document.querySelector('#postForm textarea').value = ''; // Làm sạch textarea
-                    fileInput.value = ''; // Làm sạch file input
-                    myModal.hide();
+                    createPostForm.reset();
+                    mediaPreview.innerHTML = ''; // Làm sạch preview
+
+                    // Đóng modal
+                    closePostModal();
+                } else {
+                    errorMessage.textContent = data.message || 'Error occurred!';
+                    errorMessage.classList.remove('d-none');
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.textContent = 'Something went wrong! Please try again.';
+                errorMessage.classList.remove('d-none');
+            })
+            .finally(() => {
+                // // Ẩn loading spinner
+                // loadingSpinner.classList.add('d-none');
+                // Ẩn overlay loading
+                loadingOverlay.classList.add('d-none');
+            });
     }
 
     function addNewPost(post) {
         const postContainer = document.getElementById('postContainer');
         const newPostHtml = `
-            <div class="card d-flex flex-row p-2 card shadow rounded-3 mb-4">
+            <div id="${post.postId}" class="card d-flex flex-row p-2 card shadow rounded-3 mb-4">
                 <div class="d-flex ">
                     <img src="${post.user.avatarUrl ? post.user.avatarUrl : '/images/unknown_user.jpg'}" alt="avatar" class="rounded-circle border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
                 </div>
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex align-items-center gap-2">
-                        <a class="font-weight-bold">
+                        <a href="/profile/${post.user.userId}" class="font-weight-bold">
                             ${post.user.firstName} ${post.user.lastName}
                         </a>
                         <span class="text-secondary">@${post.user.username}</span>
@@ -114,14 +164,17 @@
                             <div class="d-flex align-items-center">
                                 <button
                                   class="heart-button hover:text-red-400"
+                                  onclick="likePost(event)"
                                   type="button"
                                   tabindex="0"
                                 >
                                   <svg
+                                    id="btn-${post.postId}"
                                     class="heart-icon"
                                     aria-hidden="true"
                                     viewBox="0 0 24 24"
                                     focusable="false"
+                                    style="${post.liked ? 'fill: red;' : 'fill: black;'}"
                                   >
                                     <path
                                       d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54z"
@@ -129,7 +182,7 @@
                                   </svg>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-danger" onclick="likePost()">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">0</span>
+                                    <span id="count-liked-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">0</span>
                                 </button>
                             </div>
 
@@ -152,8 +205,8 @@
                                     ></path>
                                   </svg>
                                 </button>
-                                <button type="button" class="btn btn-link p-0 text-info" onclick="handleOpenComment()">
-                                    <span class="hover-underline cursor-pointer" onclick="handleOpenComment()">0</span>
+                                <button type="button" class="btn btn-link p-0 text-info">
+                                    <span id="count-comment-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenComment(event)">0</span>
                                 </button>
                             </div>
                         </section>
@@ -167,27 +220,42 @@
     }
 </script>
 <script>
-    // let currentIndex = 0; // Biến lưu trữ index hiện tại của các bài viết đã tải
-    //
-    // document.addEventListener('DOMContentLoaded', () => {
-    //     loadPosts(`/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=${currentIndex}`, token);
-    //
-    //     // Lắng nghe sự kiện cuộn
-    //     window.addEventListener('scroll', () => {
-    //         const scrollableHeight = document.documentElement.scrollHeight; // Chiều cao toàn bộ trang
-    //         const currentScroll = window.scrollY + window.innerHeight; // Vị trí cuộn hiện tại
-    //
-    //         if (currentScroll >= scrollableHeight - 200) { // Khi cuộn đến gần cuối trang
-    //             console.log(currentIndex)
-    //             loadMorePosts(); // Tải thêm bài viết
-    //         }
-    //     });
-    // });
-    //
-    // function loadMorePosts() {
-    //     currentIndex = currentIndex + 10; // Tăng index khi tải thêm bài viết
-    //     loadPosts(`/api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8?index=${currentIndex}`, token);
-    // }
+    let commentModal = new bootstrap.Modal(document.getElementById('commentModal'));
+
+    // Mở modal
+    function handleOpenComment(event) {
+        // Lấy phần tử cha của button
+        let targetElement = event.currentTarget;
+        for (let i = 0; i <= 5; i++) {
+            targetElement = targetElement.parentNode;
+        }
+
+        let createCommentButton = document.getElementById('create-comment-button');
+        if (createCommentButton)
+            createCommentButton.remove();
+        createCommentButton = document.createElement('button');
+        createCommentButton.id = 'create-comment-button';
+        createCommentButton.classList.add('btn');
+        createCommentButton.innerHTML = `
+            <i class="bi bi-send text-cyan fs-3"></i>
+        `
+        createCommentButton.addEventListener('click', () => createComment(postId));
+        let createCommentContainer = document.getElementById("create-comment-container");
+        createCommentContainer.appendChild(createCommentButton);
+
+        // Lấy id của phần tử đó
+        const postId = targetElement.id;
+        clearAndAddComment(postId);
+        if (user.avatarUrl != null)
+            $('#userAvatar').html(document.getElementById('userAvatar').src = user.avatarUrl);
+        commentModal.show();
+    }
+
+    // Đóng modal
+    function handleCloseComment() {
+        commentModal.hide();
+    }
+
     startLoad("api/posts/users/user-50f5f788-86d3-468d-a6a3-5a741ef400d8");
 </script>
 </body>

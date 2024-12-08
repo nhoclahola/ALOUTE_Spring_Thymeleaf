@@ -1,5 +1,5 @@
 function loadPosts(url, token) {
-    fetch(url, {
+    fetch(`${url}?index=0`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -8,71 +8,93 @@ function loadPosts(url, token) {
     })
         .then(response => response.json())
         .then(data => {
-            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length > 0) {
-                const titlePosts = document.getElementById('title-posts');
-                titlePosts.style.display = 'block';
+            // Kiểm tra nếu có bài đăng
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length >= 0) {
                 data.result.forEach(post => {
                     const postElement = createPostHtml(post);
                     postContainer.insertAdjacentHTML('beforeend', postElement);
                 });
-            }
-            if (data.result.length < 10) {
-                showEndMessage();
-                removeLoadMoreButton();
+                if (data.result.length === 10) {
+                    const loadMoreDiv = document.createElement('div');
+                    loadMoreDiv.id = 'load-more';
+                    loadMoreDiv.classList.add('text-center', 'mt-4');
+                    loadMoreDiv.innerHTML = `
+                            <button class="btn btn-outline-primary">See earlier posts</button>
+                        `;
+                    // Thêm sự kiện click để tải thêm tin nhắn cũ
+                    loadMoreDiv.querySelector('button').addEventListener('click', function () {
+                        loadMorePosts(url);
+                    });
+                    postContainer.appendChild(loadMoreDiv);
+                }
+                else {
+                    const noMoreMessage = document.createElement('div');
+                    noMoreMessage.id = 'load-more';
+                    noMoreMessage.classList.add('text-center', 'mt-4');
+                    noMoreMessage.innerHTML = `
+                            <i class="fw-bold">There are no earlier posts</i>
+                        `;
+                    postContainer.appendChild(noMoreMessage);
+                }
             }
         })
         .catch(error => console.error('Error fetching posts:', error));
 }
 
-function removeLoadMoreButton() {
-    const loadMoreButton = document.getElementById('load-more');
-    if (loadMoreButton) {
-        loadMoreButton.remove();
-    }
-}
-
-// Gán sự kiện nhấn nút "See more notifications"
-function setupLoadMoreButton(url, token, query) {
-    const loadMoreButton = document.getElementById('load-more');
-    if (loadMoreButton) {
-        loadMoreButton.style.display = 'block'
-        loadMoreButton.addEventListener('click', () => {
-            currentIndex += 10;
-            const newUrl = `${url}?query=${query}&index=${currentIndex}`;
-            loadPosts(newUrl, token);
-        });
-    }
+function loadMorePosts(url) {
+    currentIndex += 10;
+    const postContainer = document.getElementById('postContainer');
+    let token = localStorage.getItem("jwt");
+    fetch(`${url}?index=${currentIndex}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            const loadMoreDiv = document.getElementById('load-more');
+            loadMoreDiv.remove();
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length >= 0) {
+                data.result.forEach(post => {
+                    const postElement = createPostHtml(post);
+                    postContainer.insertAdjacentHTML('beforeend', postElement);
+                });
+                if (data.result.length === 10) {
+                    const loadMoreDiv = document.createElement('div');
+                    loadMoreDiv.id = 'load-more';
+                    loadMoreDiv.classList.add('text-center', 'mt-4');
+                    loadMoreDiv.innerHTML = `
+                            <button class="btn btn-outline-primary">See earlier posts</button>
+                        `;
+                    // Thêm sự kiện click để tải thêm tin nhắn cũ
+                    loadMoreDiv.querySelector('button').addEventListener('click', function () {
+                        loadMorePosts(url);
+                    });
+                    postContainer.appendChild(loadMoreDiv);
+                }
+                else {
+                    const noMoreMessage = document.createElement('div');
+                    noMoreMessage.id = 'load-more';
+                    noMoreMessage.classList.add('text-center', 'mt-4');
+                    noMoreMessage.innerHTML = `
+                            <i class="fw-bold">There are no earlier posts</i>
+                        `;
+                    postContainer.appendChild(noMoreMessage);
+                }
+            }
+        })
+        .catch(error => console.error('Error fetching posts:', error));
 }
 
 // Thêm event listener khi trang được load
-function startLoad(url, query) {
+function startLoad(url) {
+    let postContainer = document.getElementById('postContainer');
+    postContainer.innerHTML = '';
     const token = localStorage.getItem('jwt');
-    document.addEventListener('DOMContentLoaded', () => {
-        currentIndex = 0; // Bắt đầu từ index 0
-        const initialUrl = `${url}?query=${query}&index=${currentIndex}`;
-        loadPosts(initialUrl, token);
-        setupLoadMoreButton(url, token, query)
-    });
-}
-
-function showEndMessage() {
-    const postContainer = document.getElementById('postContainer');
-    const endMessage = document.createElement('div');
-    endMessage.id = 'endMessage';
-    endMessage.style.textAlign = 'center';
-    endMessage.style.padding = '20px';
-    endMessage.style.fontSize = '18px';
-    endMessage.style.color = '#888';
-    endMessage.style.fontWeight = 'bold';
-    endMessage.style.borderTop = '1px solid #ccc';
-    endMessage.style.marginTop = '20px';
-
-    endMessage.innerHTML = `
-        <div>
-            <p>There are no more posts</p>
-        </div>
-    `;
-    postContainer.appendChild(endMessage);
+    currentIndex = 0; // Bắt đầu từ index 0
+    loadPosts(url, token);
 }
 
 function createPostHtml(post) {
@@ -102,6 +124,7 @@ function createPostHtml(post) {
                     .heart-icon {
                         width: 24px;
                         height: 24px;
+                        fill: currentColor;
                     }
             
                     /* Nút trò chuyện */
@@ -112,7 +135,6 @@ function createPostHtml(post) {
                     .chat-icon {
                         width: 24px;
                         height: 24px;
-                        fill: currentColor;
                     }
             
                     /* Hover màu chữ theo kiểu Tailwind */
@@ -125,7 +147,7 @@ function createPostHtml(post) {
                     }
                 </style>
                 <div class="d-flex ">
-                    <img src="${post.user.avatarUrl ? post.user.avatarUrl : '/images/unknown_user.jpg'}" alt="avatar" alt="avatar" class="rounded-circle border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
+                    <img src="${post.user.avatarUrl ? post.user.avatarUrl : '/images/unknown_user.jpg'}" alt="avatar" class="rounded-circle border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
                 </div>
                 <div class="d-flex flex-column w-100">
                     <div class="d-flex align-items-center gap-2">
@@ -167,7 +189,7 @@ function createPostHtml(post) {
                                     ></path>
                                   </svg>
                                 </button>
-                                <button type="button" class="btn btn-link p-0 text-danger" onclick="likePost()">
+                                <button type="button" class="btn btn-link p-0 text-danger">
                                     <span id="count-liked-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">${post.likedCount}</span>
                                 </button>
                             </div>

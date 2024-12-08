@@ -239,4 +239,36 @@ public class PostServiceImplementation implements PostService
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_EXIST));
         return postMapper.toPostWithDataResponse(post);
     }
+
+    @Override
+    public List<PostWithDataResponse> findCurrentUserPosts(int index)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        // page = index / size
+        // By default, get 10 posts from the user
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("createdAt").descending());
+        List<PostWithData> posts = postRepository.findPostByEmail(currentUserEmail, pageable);
+        return postMapper.toListPostWithDataResponse(posts);
+    }
+
+    @Override
+    public List<PostWithDataResponse> findCurrentUsersVideoPosts(int index)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        List<PostWithData> posts = postRepository.findVideoPostsByEmail(currentUserEmail, pageable);
+        return postMapper.toListPostWithDataResponse(posts);
+    }
+
+    @Override
+    public List<PostWithDataResponse> findCurrentUsersSavedPosts(int index)
+    {
+        String currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        int pageNumber = index / 10;
+        Pageable pageable = PageRequest.of(pageNumber, 10);
+        List<PostWithData> posts = postRepository.findSavedPostsByEmail(currentUserEmail, pageable);
+        return postMapper.toListPostWithDataResponse(posts);
+    }
 }

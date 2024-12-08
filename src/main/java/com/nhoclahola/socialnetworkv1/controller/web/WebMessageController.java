@@ -9,6 +9,6 @@ public class WebMessageController
     @GetMapping("/messages")
     public String messages()
     {
-        return "message_page";
+        return "user/message_page";
     }
 }

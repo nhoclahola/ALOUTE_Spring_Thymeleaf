@@ -147,4 +147,31 @@ public class PostController
         response.setResult(users);
         return response;
     }
+
+    @GetMapping("/posts/users/me")
+    public ApiResponse<List<PostWithDataResponse>> getCurrentUsersPosts(@RequestParam int index)
+    {
+        List<PostWithDataResponse> postResponseList = postService.findCurrentUserPosts(index);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
+    }
+
+    @GetMapping("/posts/users/videos/me")
+    public ApiResponse<List<PostWithDataResponse>> getCurrentUsersVideoPosts(@RequestParam("index") int index)
+    {
+        List<PostWithDataResponse> postResponseList = postService.findCurrentUsersVideoPosts(index);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
+    }
+
+    @GetMapping("/posts/users/saved/me")
+    public ApiResponse<List<PostWithDataResponse>> getCurrentUsersSavedPosts(@RequestParam("index") int index)
+    {
+        List<PostWithDataResponse> postResponseList = postService.findCurrentUsersSavedPosts(index);
+        ApiResponse<List<PostWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(postResponseList);
+        return response;
+    }
 }

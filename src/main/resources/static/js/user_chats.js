@@ -11,7 +11,7 @@ function loadUserChats(url, token) {
         .then(response => response.json())
         .then(data => {
             // Kiểm tra nếu có bài đăng
-            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length > 0) {
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length >= 0) {
                 let currentUser = user;
                 data.result.forEach(userChat => {
                     const otherUser = userChat.users.find(user => user.userId !== currentUser.userId);
@@ -88,7 +88,7 @@ function clearAndAddChatMessages(chatId) {
         .then(response => response.json())
         .then(data => {
             // Kiểm tra nếu có bài đăng
-            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length > 0) {
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length >= 0) {
                 let currentUser = user;
                 let messages = data.result;
                 data.result.forEach(userChat => {
@@ -103,7 +103,7 @@ function clearAndAddChatMessages(chatId) {
                         chatMessagesDiv.id = 'chat-messages';
 
                         // Nếu số lượng tin nhắn ít hơn 10, thêm button để xem thêm tin nhắn cũ
-                        if (messages.length == 10) {
+                        if (messages.length === 10) {
                             const loadMoreDiv = document.createElement('div');
                             loadMoreDiv.id = 'load-more';
                             loadMoreDiv.classList.add('text-center', 'mt-4');
@@ -174,6 +174,19 @@ function clearAndAddChatMessages(chatId) {
                         chatContainer.scrollTop = chatContainer.scrollHeight;
                     }
                 });
+                if (data.result.length === 0) {
+                    const chatContainer = document.getElementById('chat-container');
+                    if (chatContainer) {
+                        // Clear previous chat messages
+                        chatContainer.innerHTML = '';
+                        // Create chat container div
+                        const chatMessagesDiv = document.createElement('div');
+                        chatMessagesDiv.classList.add('chat-messages');
+                        chatMessagesDiv.id = 'chat-messages';
+                        // Append chat container to the chatContainer div
+                        chatContainer.appendChild(chatMessagesDiv);
+                    }
+                }
             }
             else {
                 // console.error('Không có bài đăng hoặc lỗi API.');
@@ -200,7 +213,7 @@ function loadMoreMessages(chatId) {
             const loadMoreDiv = document.getElementById('load-more');
             loadMoreDiv.remove();
             // Kiểm tra nếu có bài đăng
-            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length > 0) {
+            if (data.responseCode === 1000 && Array.isArray(data.result) && data.result.length >= 0) {
                 let currentUser = user;
                 let messages = data.result;
                 const chatMessagesDiv = document.getElementById('chat-messages');

@@ -9,6 +9,6 @@ public class WebVideosController
     @GetMapping("/videos")
     public String popularVideos()
     {
-        return "popular_videos";
+        return "user/popular_videos";
     }
 }

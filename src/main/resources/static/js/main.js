@@ -20,6 +20,9 @@ document.addEventListener('userUpdated', () => {
 // Hàm cập nhật user
 function updateUser(newUser) {
     user = newUser;
+    let createPostUserAvatar = document.getElementById('createPostUserAvatar');
+    if (createPostUserAvatar && user.avatarUrl != null)
+        createPostUserAvatar.src = user.avatarUrl
     document.dispatchEvent(userEvent); // Phát sự kiện userUpdated
 }
 
@@ -42,6 +45,9 @@ $(document).ready(function () {
             $('#username').html('@' + data.result.username);
             if (data.result.avatarUrl != null)
                 $('#avatar').html(document.getElementById('avatar').src = data.result.avatarUrl);
+            if (data.result.role === 'ADMIN')
+                document.getElementById('admin-link').classList.remove('d-none');
+            document.body.classList.remove('d-none');
         },
         error: function (e) {
             var json = e.responseText;
