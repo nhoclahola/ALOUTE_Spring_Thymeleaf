@@ -43,3 +43,36 @@ public class AdministratorController {
         return ApiResponse.of(adminService.adminUpdatePassword(userId, request));
     }
 }
+--chatController
+package com.nhoclahola.socialnetworkv1.controller.api;
+
+import com.nhoclahola.socialnetworkv1.dto.ApiResponse;
+import com.nhoclahola.socialnetworkv1.dto.chat.response.ChatResponse;
+import com.nhoclahola.socialnetworkv1.service.ChatService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/chats")
+public class ChatController {
+    private final ChatService chatService;
+
+    @PostMapping("/users/{targetUserId}")
+    public ApiResponse<ChatResponse> createChat(@PathVariable String targetUserId) {
+        return ApiResponse.of(chatService.createChat(targetUserId));
+    }
+
+    @GetMapping
+    public ApiResponse<List<ChatResponse>> getUsersChat() {
+        return ApiResponse.of(chatService.findUsersChat());
+    }
+
+    @GetMapping("/{chatId}")
+    public ApiResponse<ChatResponse> getChatById(@PathVariable String chatId) {
+        return ApiResponse.of(chatService.findChatByIdResponse(chatId));
+    }
+}
+--CommentController
