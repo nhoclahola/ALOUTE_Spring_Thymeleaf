@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+<head>
+    <script>
+        let token = localStorage.getItem('jwt');
+        fetch('/api/users/fromToken', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    window.location.href = "/";
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.result.role === 'ADMIN') {
+                    document.body.classList.remove('d-none');
+                    if (data.result.avatarUrl != null)
+                        $('#adminAvatar').html(document.getElementById('adminAvatar').src = data.result.avatarUrl);
+                }
+                else {
+                    alert('You are not administrator');
+                    window.location.href = "/";
+                }
+            })
+            .catch(error => {
+                window.location.href = "/";
+            })
+    </script>
+</head>
+<header>
+    <a href="/">
+        <div class="logo">
+            <img th:src="@{/images/logos/hcmute.png}" alt="Logo">
+            <h3 class="text-decoration-none" style="color: red">ALOUTE</h3>
+        </div>
+    </a>
+    <nav>
+        <ul class="nav-menu">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <div class="user-info">
+        <span>Administrator</span>
+        <img id="adminAvatar" src="/images/unknown_user.jpg" alt="avatar" class="rounded-circle mr-3"
+             style="width: 40px; height: 40px;">
+    </div>
+</header>
+</html>

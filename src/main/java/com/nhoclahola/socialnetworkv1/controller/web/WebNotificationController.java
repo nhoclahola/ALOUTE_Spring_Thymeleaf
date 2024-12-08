@@ -9,6 +9,6 @@ public class WebNotificationController
     @GetMapping("/notifications")
     public String popularVideos()
     {
-        return "notification_page";
+        return "user/notification_page";
     }
 }

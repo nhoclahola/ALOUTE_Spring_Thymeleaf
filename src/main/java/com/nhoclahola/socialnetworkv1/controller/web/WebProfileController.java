@@ -10,12 +10,12 @@ public class WebProfileController
     @GetMapping("/profile/me")
     public String profileMe()
     {
-        return "profile_me";
+        return "user/profile_me";
     }
 
     @GetMapping("/profile/{userId}")
     public String profile(@PathVariable String userId)
     {
-        return "user_profile_page";
+        return "user/user_profile_page";
     }
 }

@@ -47,6 +47,7 @@ $(document).ready(function () {
                 $('#avatar').html(document.getElementById('avatar').src = data.result.avatarUrl);
             if (data.result.role === 'ADMIN')
                 document.getElementById('admin-link').classList.remove('d-none');
+            document.body.classList.remove('d-none');
         },
         error: function (e) {
             var json = e.responseText;

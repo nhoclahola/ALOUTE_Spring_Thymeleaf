@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALOUTE - Notifications</title>
+    <title>ALOUTE - Popular Videos</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/js/jquery.min.js}"></script>
 <!--    <link rel="stylesheet" th:href="@{/css/bootstrap-icons.css}">-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body>
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <div th:replace="~{fragments/home/sidebar :: sidebar}">
+<body class="d-none">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div th:replace="~{fragments/home/sidebar :: sidebar}">
 
-        </div>
+            </div>
 
-        <!-- HomePage Content -->
-        <div th:replace="~{fragments/notification/content :: content}">
+            <!-- HomePage Content -->
+            <div th:replace="~{fragments/popular_videos/content :: content}">
 
-        </div>
+            </div>
 
-        <!-- HomeRight Sidebar -->
-        <div th:replace="~{fragments/home/home_right :: home_right}">
+            <!-- HomeRight Sidebar -->
+            <div th:replace="~{fragments/home/home_right :: home_right}">
 
+            </div>
         </div>
     </div>
-</div>
 </body>
 </html>

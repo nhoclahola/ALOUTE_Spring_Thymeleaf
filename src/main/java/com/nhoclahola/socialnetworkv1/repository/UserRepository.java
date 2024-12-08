@@ -1,5 +1,6 @@
 package com.nhoclahola.socialnetworkv1.repository;
 
+import com.nhoclahola.socialnetworkv1.dto.admin.response.DashBoardInfo;
 import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import org.springframework.data.domain.Pageable;
@@ -84,4 +85,9 @@ public interface UserRepository extends JpaRepository<User, String>
             "JOIN c.liked " +
             "WHERE c.commentId = :commentId")
     public abstract List<User> findUsersLikedComment(@Param("commentId") String commentId, Pageable pageable);
+
+    @Query("SELECT new com.nhoclahola.socialnetworkv1.dto.admin.response.DashBoardInfo(" +
+            "(SELECT COUNT(u) FROM User u), " +
+            "(SELECT COUNT(p) FROM Post p)) ")
+    public abstract DashBoardInfo adminDashBoardInfo();
 }

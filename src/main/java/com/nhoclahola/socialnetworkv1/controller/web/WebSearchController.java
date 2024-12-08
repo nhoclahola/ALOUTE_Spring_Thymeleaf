@@ -11,6 +11,6 @@ public class WebSearchController
     @GetMapping("/search")
     public String searchPage(@RequestParam(value = "query", required = false) String query, Model model) {
         model.addAttribute("inputSearch", query);
-        return "search_page";
+        return "user/search_page";
     }
 }
