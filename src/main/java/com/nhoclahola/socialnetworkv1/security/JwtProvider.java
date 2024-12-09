@@ -13,7 +13,7 @@ import java.util.Date;
 @Component
 public class JwtProvider
 {
-    private static final String PRIVATE_KEY = "8acnkodIBNY6iRCuppO1AUCkOKJFBzjCIZuEqgWPCFq/ags2ANcd9PAO8RoGd9fp";
+    private static final String PRIVATE_KEY = "kpKE6NCCjkkduRWiOuYqC8OBBClpPoZIczUFFgIJ1qA/ags2ANcd9PAO8RoGd9fp";
 
     public static String generateJwtToken(User user)
     {
