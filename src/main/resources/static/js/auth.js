@@ -94,7 +94,7 @@ $(document).ready(function () {
                     gender: gender
                 }),
                 success: function () {
-                    alert('Register successfully')
+                    alert('Register successfully, check your email to verify')
                     window.location.href = '/login';
                 },
                 error: function (error) {
@@ -140,7 +140,7 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify({ email: email, newPassword: password }),
             success: function (response) {
-                alert('You have reset the password');
+                alert('You have request to reset the password, check your email to confirm');
                 window.location.href = '/login';
             },
             error: function (error) {
