@@ -41,4 +41,9 @@ public class NotificationController
         response.setResult(count);
         return response;
     }
+    @GetMapping("/notifications/{notificationId}")
+    public NotificationResponse getNotificationById(@PathVariable String notificationId)
+    {
+        return notificationService.findNotificationByIdResponse(notificationId);
+    }
 }
