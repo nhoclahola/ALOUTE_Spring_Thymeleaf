@@ -53,11 +53,11 @@ public class AdministratorController
         response.setResult(adminService.adminUpdatePassword(userId, request));
         return response;
     }
-    @GetMapping("/users/{userId}/comments")
-    public ApiResponse<List<CommentWithDataResponse>> getUserComments(@PathVariable String userId, @RequestParam int index)
+    @PutMapping("/users/{userId}/block")
+    public ApiResponse<UserResponse> blockUser(@PathVariable String userId)
     {
-        ApiResponse<List<CommentWithDataResponse>> response = new ApiResponse<>();
-        response.setResult(adminService.getUserComments(userId, index));
+        ApiResponse<UserResponse> response = new ApiResponse<>();
+        response.setResult(adminService.blockUser(userId));
         return response;
     }
 }
