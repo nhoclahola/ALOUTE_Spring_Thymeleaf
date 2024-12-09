@@ -41,4 +41,12 @@ public class MessageController
     {
         return messageService.findMessageByIdResponse(messageId);
     }
+    @GetMapping("/messages/chats/{chatId}/users/{userId}")
+    public ApiResponse<List<MessageResponse>> getChatsMessagesByUserId(@PathVariable String chatId, @PathVariable String userId, @RequestParam int index)
+    {
+        List<MessageResponse> messageResponseList = messageService.findMessagesByChatIdAndUserId(chatId, userId, index);
+        ApiResponse<List<MessageResponse>> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(messageResponseList);
+        return apiResponse;
+    }
 }

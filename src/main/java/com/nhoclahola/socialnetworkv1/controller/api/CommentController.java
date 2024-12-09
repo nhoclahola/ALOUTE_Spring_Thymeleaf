@@ -65,12 +65,4 @@ public class CommentController
         response.setResult(users);
         return response;
     }
-    @PutMapping("/comments/{commentId}")
-    public ApiResponse<CommentResponse> updateComment(@PathVariable String commentId, @RequestBody @Valid CommentCreateRequest request)
-    {
-        CommentResponse commentResponse = commentService.updateComment(commentId, request);
-        ApiResponse<CommentResponse> response = new ApiResponse<>();
-        response.setResult(commentResponse);
-        return response;
-    }
 }
