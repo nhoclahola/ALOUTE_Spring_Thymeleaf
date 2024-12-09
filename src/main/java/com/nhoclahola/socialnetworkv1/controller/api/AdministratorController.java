@@ -53,4 +53,11 @@ public class AdministratorController
         response.setResult(adminService.adminUpdatePassword(userId, request));
         return response;
     }
+    @GetMapping("/users/{userId}/comments")
+    public ApiResponse<List<CommentWithDataResponse>> getUserComments(@PathVariable String userId, @RequestParam int index)
+    {
+        ApiResponse<List<CommentWithDataResponse>> response = new ApiResponse<>();
+        response.setResult(adminService.getUserComments(userId, index));
+        return response;
+    }
 }
