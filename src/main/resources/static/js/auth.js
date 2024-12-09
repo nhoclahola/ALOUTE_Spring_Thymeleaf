@@ -94,6 +94,7 @@ $(document).ready(function () {
                     gender: gender
                 }),
                 success: function () {
+                    alert('Register successfully')
                     window.location.href = '/login';
                 },
                 error: function (error) {
@@ -103,4 +104,48 @@ $(document).ready(function () {
         });
     });
 
+    $('#resetPasswordForm').submit(function (event) {
+        event.preventDefault();
+
+        const email = $('#email').val().trim();
+        const password = $('#password').val().trim();
+        const rePassword = $('#re-password').val().trim();
+        let isValid = true;
+
+        // Reset errors
+        $('#resetError').text('');
+
+        // Validate email and password length
+        if (email.length < 6) {
+            $('#resetError').text('Email must be at least 6 characters.');
+            isValid = false;
+        }
+        if (password.length < 6) {
+            $('#resetError').text('Password must be at least 6 characters.');
+            isValid = false;
+        }
+        if (password !== rePassword) {
+            $('#resetError').text('Password must be at least 6 characters.');
+            isValid = false;
+        }
+
+        if (!isValid) {
+            return;
+        }
+
+        // Perform AJAX request
+        $.ajax({
+            url: '/auth/reset-password',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ email: email, newPassword: password }),
+            success: function (response) {
+                alert('You have reset the password');
+                window.location.href = '/login';
+            },
+            error: function (error) {
+                $('#resetError').text( 'Your email or password does not match.');
+            }
+        });
+    });
 });

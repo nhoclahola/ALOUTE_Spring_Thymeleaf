@@ -1,6 +1,7 @@
 package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
+import com.nhoclahola.socialnetworkv1.dto.auth.request.UserResetPasswordRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.UserWithData;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
@@ -58,6 +59,15 @@ public class UserServiceImplementation implements UserService
         // Just don't set it, Hibernate won't check it is exist or not again
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User resetPassword(UserResetPasswordRequest request)
+    {
+        User user = this.findUserByEmail(request.getEmail());
+        emailService.sendResetPasswordCofrim(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         return userRepository.save(user);
     }
 

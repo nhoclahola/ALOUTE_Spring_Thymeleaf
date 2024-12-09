@@ -19,7 +19,7 @@ public class AdminUpdateUser
     @Length(max = 40, message = "Maximum characters for last name is 40")
     private String lastName;
     @NotBlank(message = "You must enter the username")
-    @Length(min = 6, max = 20, message = "Username's length must between 6 and 20")
+    @Length(min = 6, max = 25, message = "Username's length must between 6 and 25")
     private String username;
     @NotBlank(message = "You must enter the email")
     @Length(min = 6, max = 40, message = "Email's length must between 6 and 40")

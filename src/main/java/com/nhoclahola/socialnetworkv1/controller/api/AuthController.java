@@ -2,6 +2,7 @@ package com.nhoclahola.socialnetworkv1.controller.api;
 
 import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.auth.request.UserLoginRequest;
+import com.nhoclahola.socialnetworkv1.dto.auth.request.UserResetPasswordRequest;
 import com.nhoclahola.socialnetworkv1.dto.auth.response.AuthResponse;
 import com.nhoclahola.socialnetworkv1.service.AuthService;
 import jakarta.validation.Valid;
@@ -28,5 +29,11 @@ public class AuthController
     public AuthResponse login(@RequestBody @Valid UserLoginRequest request)
     {
         return authService.authenticate(request);
+    }
+
+    @PostMapping("/reset-password")
+    public AuthResponse resetPassword(@RequestBody @Valid UserResetPasswordRequest request)
+    {
+        return authService.resetPassword(request);
     }
 }

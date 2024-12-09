@@ -17,4 +17,10 @@ public class WebAuthController
     {
         return "auth/register";
     }
+
+    @GetMapping("/reset-password")
+    public String resetPassword()
+    {
+        return "auth/reset_password";
+    }
 }

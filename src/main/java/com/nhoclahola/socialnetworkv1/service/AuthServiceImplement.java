@@ -1,6 +1,7 @@
 package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
+import com.nhoclahola.socialnetworkv1.dto.auth.request.UserResetPasswordRequest;
 import com.nhoclahola.socialnetworkv1.dto.auth.response.AuthResponse;
 import com.nhoclahola.socialnetworkv1.dto.auth.request.UserLoginRequest;
 import com.nhoclahola.socialnetworkv1.entity.User;
@@ -37,5 +38,14 @@ public class AuthServiceImplement implements AuthService
         User user = userService.createUser(request);
         String jwtToken = JwtProvider.generateJwtToken(user);
         return new AuthResponse(jwtToken, "Register successfully");
+    }
+
+    @Override
+    @Transactional
+    public AuthResponse resetPassword(UserResetPasswordRequest request)
+    {
+        User user = userService.resetPassword(request);
+        String jwtToken = JwtProvider.generateJwtToken(user);
+        return new AuthResponse(jwtToken, "Reset passoword successfully");
     }
 }

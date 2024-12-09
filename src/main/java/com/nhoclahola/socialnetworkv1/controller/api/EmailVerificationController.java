@@ -13,4 +13,9 @@ public class EmailVerificationController
     public String verifyEmail(@RequestParam String email) {
         return "Xác nhận email thành công cho " + email;
     }
+
+    @GetMapping("/verify-reset")
+    public String verifyReset(@RequestParam String email) {
+        return "Xác nhận reset password thành công cho " + email;
+    }
 }

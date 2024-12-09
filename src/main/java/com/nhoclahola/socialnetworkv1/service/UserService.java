@@ -1,6 +1,7 @@
 package com.nhoclahola.socialnetworkv1.service;
 
 import com.nhoclahola.socialnetworkv1.dto.auth.request.UserCreateRequest;
+import com.nhoclahola.socialnetworkv1.dto.auth.request.UserResetPasswordRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.request.UserUpdateRequest;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserResponse;
 import com.nhoclahola.socialnetworkv1.dto.user.response.UserWithDataResponse;
@@ -15,6 +16,8 @@ public interface UserService
     public abstract List<UserResponse> findAllUsers();
 
     public abstract User createUser(UserCreateRequest request);
+
+    User resetPassword(UserResetPasswordRequest request);
 
     public abstract User findUserById(String userId);
 
