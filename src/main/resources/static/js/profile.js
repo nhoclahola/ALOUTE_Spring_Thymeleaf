@@ -18,7 +18,13 @@ $(document).ready(function () {
             $('#uUsername').html('@' + data.result.username);
             $('#uPosts').html(data.result.posts + ' Posts');
             $('#uFollowers').html(data.result.followers + ' Followers');
+            document.getElementById('uFollowers').addEventListener('click', () => {
+                openFollowersModal(data.result.userId);
+            });
             $('#uFollowings').html(data.result.followings + ' Followings');
+            document.getElementById('uFollowings').addEventListener('click', () => {
+                openFollowingsModal(data.result.userId);
+            });
             if (data.result.avatarUrl != null)
                 $('#avatar').html(document.getElementById('uAvatar').src = data.result.avatarUrl);
             if (data.result.coverPhotoUrl != null)

@@ -190,7 +190,7 @@ function createPostHtml(post) {
                                   </svg>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-danger">
-                                    <span id="count-liked-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">${post.likedCount}</span>
+                                    <span id="count-liked-${post.postId}" class="hover-underline cursor-pointer" onclick="openLikedModal('${post.postId}')">${post.likedCount}</span>
                                 </button>
                             </div>
 

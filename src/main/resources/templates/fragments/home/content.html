@@ -73,6 +73,7 @@
     <!-- Chèn modal fragment -->
     <div th:insert="~{fragments/post/post_modal :: postModal}"></div>
     <div th:insert="~{fragments/post/comment_modal :: commentModal}"></div>
+    <div th:insert="~{fragments/post/liked_modal :: likedModal}"></div>
 
     <div th:insert="~{fragments/notification/notification_snackbar :: notificationSnackbar}"></div>
 </div>
@@ -273,7 +274,7 @@
                                   </svg>
                                 </button>
                                 <button type="button" class="btn btn-link p-0 text-danger" onclick="likePost()">
-                                    <span id="count-liked-${post.postId}" class="hover-underline cursor-pointer" onclick="handleOpenUserLiked()">0</span>
+                                    <span id="count-liked-${post.postId}" class="hover-underline cursor-pointer" onclick="openLikedModal('${post.postId}')">0</span>
                                 </button>
                             </div>
 

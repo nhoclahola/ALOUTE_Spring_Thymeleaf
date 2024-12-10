@@ -97,14 +97,8 @@
         <p id="uUsername" class="text-muted"></p>
         <div class="d-flex gap-2">
             <span id="uPosts"></span>
-            <a href="#" class="text-decoration-none fw-bold">
-                <span id="uFollowers"></span>
-                <span>Followers</span>
-            </a>
-            <a href="#" class="text-decoration-none fw-bold">
-                <span id="uFollowings"></span>
-                <span>Followings</span>
-            </a>
+            <a role="button" id="uFollowers" class="text-decoration-none fw-bold"></a>
+            <a role="button" id="uFollowings" class="text-decoration-none fw-bold"></a>
         </div>
     </div>
 
@@ -145,6 +139,9 @@
     </div>
 
     <div th:insert="~{fragments/post/comment_modal :: commentModal}"></div>
+    <div th:insert="~{fragments/post/liked_modal :: likedModal}"></div>
+    <div th:insert="~{fragments/profile/followers_modal :: followersModal}"></div>
+    <div th:insert="~{fragments/profile/followings_modal :: followingsModal}"></div>
 
     <div th:insert="~{fragments/notification/notification_snackbar :: notificationSnackbar}"></div>
 </div>

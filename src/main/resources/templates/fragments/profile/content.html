@@ -118,8 +118,8 @@
         <p id="uUsername" class="text-muted"></p>
         <div class="d-flex gap-2">
             <span id="uPosts"></span>
-            <a id="uFollowers" href="#" class="text-decoration-none fw-bold"></a>
-            <a id="uFollowings" href="#" class="text-decoration-none fw-bold"></a>
+            <a role="button" id="uFollowers" class="text-decoration-none fw-bold"></a>
+            <a role="button" id="uFollowings" class="text-decoration-none fw-bold"></a>
         </div>
     </div>
 
@@ -161,11 +161,13 @@
 
     <div th:insert="~{fragments/profile/edit_profile_modal :: editProfileModal}"></div>
     <div th:insert="~{fragments/post/comment_modal :: commentModal}"></div>
+    <div th:insert="~{fragments/post/liked_modal :: likedModal}"></div>
+    <div th:insert="~{fragments/profile/followers_modal :: followersModal}"></div>
+    <div th:insert="~{fragments/profile/followings_modal :: followingsModal}"></div>
 
     <div th:insert="~{fragments/notification/notification_snackbar :: notificationSnackbar}"></div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // Thay đổi ảnh cover
