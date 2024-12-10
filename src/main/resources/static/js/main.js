@@ -4,6 +4,7 @@ const userEvent = new Event('userUpdated');
 // Lắng nghe sự kiện userUpdated
 document.addEventListener('userUpdated', () => {
     if (user) {
+        subscribeNotification(user);
         let contentContainer = document.getElementById('content-container')
         if (contentContainer) {
             contentContainer.style.display = 'block';

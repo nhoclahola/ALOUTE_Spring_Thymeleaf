@@ -5,6 +5,7 @@ import com.nhoclahola.socialnetworkv1.dto.comment.request.CommentCreateRequest;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentResponse;
 import com.nhoclahola.socialnetworkv1.dto.comment.response.CommentWithDataResponse;
 import com.nhoclahola.socialnetworkv1.entity.Comment;
+import com.nhoclahola.socialnetworkv1.entity.NotificationType;
 import com.nhoclahola.socialnetworkv1.entity.Post;
 import com.nhoclahola.socialnetworkv1.entity.User;
 import com.nhoclahola.socialnetworkv1.exception.AppException;
@@ -32,6 +33,7 @@ public class CommentServiceImplement implements CommentService
     private final UserService userService;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -45,6 +47,7 @@ public class CommentServiceImplement implements CommentService
         comment.setPost(post);
         comment.setCreatedAt(LocalDateTime.now());
         commentRepository.save(comment);
+        notificationService.createNotification(NotificationType.COMMENT, post.getUser(), user, post);
         return commentMapper.toCommentResponse(comment);
     }
 

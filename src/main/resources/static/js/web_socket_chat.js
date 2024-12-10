@@ -1,16 +1,18 @@
-let socket = new WebSocket('/ws');
-let stompClient = null;
-let subscription;
-let jwtToken = localStorage.getItem('jwt');
+// Already connect in notification
 
-function connectWebSocket() {
-    stompClient = Stomp.over(socket); // Sử dụng WebSocket để tạo client Stomp
+// let socket = new WebSocket('/ws');
+// let stompClient = null;
+// let subscription;
+// let jwtToken = localStorage.getItem('jwt');
 
-    stompClient.connect({}, function(frame) {
-        console.log('Connected: ' + frame);
-    });
-}
-connectWebSocket();
+// function connectWebSocket() {
+//     stompClient = Stomp.over(socket); // Sử dụng WebSocket để tạo client Stomp
+//
+//     stompClient.connect({}, function(frame) {
+//         console.log('Connected: ' + frame);
+//     });
+// }
+// connectWebSocket();
 function subscribeToUserTopic(chatId) {
     if (stompClient && stompClient.connected) {
         // Hủy đăng ký kênh cũ nếu đã có

@@ -83,7 +83,7 @@ function createNotificationHtml(notification) {
                         <img src="${notification.triggerUser.avatarUrl ? notification.triggerUser.avatarUrl : '/images/unknown_user.jpg'}" alt="User Avatar">
                     </div>
                     <div>
-                        <h5><strong>@${notification.triggerUser.username}</strong> liked your post: <strong>${notification.post.caption}</strong></h5>
+                        <h5><strong>@${notification.triggerUser.username}</strong> ${notification.notificationType === "LIKE" ? "liked your post" : "commented on your post"} ${notification.post.caption}</strong></h5>
                         <p class="text-muted">${formatDateFromString(notification.createdAt)}</p>
                     </div>
                 </div>

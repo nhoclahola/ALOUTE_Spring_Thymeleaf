@@ -73,6 +73,8 @@
     <!-- Chèn modal fragment -->
     <div th:insert="~{fragments/post/post_modal :: postModal}"></div>
     <div th:insert="~{fragments/post/comment_modal :: commentModal}"></div>
+
+    <div th:insert="~{fragments/notification/notification_snackbar :: notificationSnackbar}"></div>
 </div>
 <script>
     const apiUrl = '/api/users/latest-activity-followings';
@@ -88,7 +90,6 @@
     function renderUsers(users) {
         userListEl.innerHTML = '';
         users.forEach(user => {
-            console.log(user)
             const userCard = document.createElement('a');
             userCard.href = `/profile/${user.userId}`;
             userCard.className = 'text-decoration-none text-center';
