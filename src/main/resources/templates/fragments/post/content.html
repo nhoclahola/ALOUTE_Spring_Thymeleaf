@@ -200,7 +200,7 @@
         <!-- Comment Input Section -->
         <div class="modal-footer border-0 pb-3">
             <div id="create-comment-container" class="d-flex align-items-center w-100">
-                <img id="userAvatar" src="/images/unknown_user.jpg" class="rounded-circle"
+                <img id="post-current-user" src="/images/unknown_user.jpg" class="rounded-circle"
                      style="width: 40px; height: 40px;" alt="avatar"/>
                 <textarea
                         maxlength="2000"
@@ -254,9 +254,13 @@
             if (post.saved) {
                 $('#btn-save').attr('title', 'Unsave this post')
                 $('#btn-save').css('color', 'blue');
-            } else {
+            }
+            else {
                 $('#btn-save').attr('title', 'Save this post')
                 $('#btn-save').css('color', 'black');
+            }
+            if (post.user.avatarUrl) {
+                $('#post-avatar-url').attr('src', `${post.user.avatarUrl}`)
             }
             $('#btn-save').attr('id', 'btn-save-' + post.postId);
             let mediaDiv = document.getElementById('media-source');

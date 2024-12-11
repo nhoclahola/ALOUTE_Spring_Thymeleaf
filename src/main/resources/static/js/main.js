@@ -15,6 +15,8 @@ document.addEventListener('userUpdated', () => {
             loadUserChats(initialUrl, token);
             // setupLoadMoreButton(url, token);
         }
+        let userAvatar = document.getElementById('post-current-user');
+        userAvatar.src = user.avatarUrl;
     }
 });
 
