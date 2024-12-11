@@ -187,7 +187,7 @@
                     if (data.result === 'followed') {
                         hideFollowBtns();
                         let countFollow = document.getElementById(`uFollowers`)
-                        countFollow.textContent = (parseInt(countFollow.textContent) + 1).toString();
+                        countFollow.textContent = (parseInt(countFollow.textContent) + 1).toString() + ' Followers';
                     }
                 } else {
                     alert(data.message || 'An error occurred while following user.');
@@ -218,7 +218,7 @@
                     if (data.result === 'unfollowed') {
                         showFollowBtns();
                         let countFollow = document.getElementById(`uFollowers`)
-                        countFollow.textContent = (parseInt(countFollow.textContent) - 1).toString();
+                        countFollow.textContent = (parseInt(countFollow.textContent) - 1).toString() + ' Followers';
                     }
                 } else {
                     alert(data.message || 'An error occurred while unfollowing user.');

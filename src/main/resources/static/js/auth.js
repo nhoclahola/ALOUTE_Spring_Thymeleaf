@@ -144,7 +144,7 @@ $(document).ready(function () {
                 window.location.href = '/login';
             },
             error: function (error) {
-                $('#resetError').text( 'Your email or password does not match.');
+                $('#resetError').text( 'The account with this email doesn\'t exists!');
             }
         });
     });
