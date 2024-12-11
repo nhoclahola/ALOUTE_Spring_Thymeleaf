@@ -84,7 +84,8 @@
         }, 7000);
     }
 
-    closeBtn.addEventListener('click', () => {
+    closeBtn.addEventListener('click', (event) => {
+        event.preventDefault();
         snackbar.classList.add('d-none');
     });
 
