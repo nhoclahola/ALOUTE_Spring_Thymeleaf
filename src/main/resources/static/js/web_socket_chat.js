@@ -14,12 +14,12 @@
 // }
 // connectWebSocket();
 function subscribeToUserTopic(chatId) {
-    if (stompClient && stompClient.connected) {
+    if (notifyStompClient && notifyStompClient.connected) {
         // Hủy đăng ký kênh cũ nếu đã có
         unsubscribeClient();
         let currentUser = user;
         // Đăng ký để nhận tin nhắn từ server
-        subscription = stompClient.subscribe(`/user/${chatId}/chat/private`, function(message) {
+        notifySubscription = notifyStompClient.subscribe(`/user/${chatId}/chat/private`, function(message) {
             const chatMessagesDiv = document.getElementById('chat-messages');
             let msg = JSON.parse(message.body)
             const chatContainer = document.getElementById('chat-container');
@@ -57,7 +57,7 @@ function subscribeToUserTopic(chatId) {
             // Append message to chat container
             chatMessagesDiv.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
-        }, { "Authorization": `Bearer ${jwtToken}` });
+        }, { "Authorization": `Bearer ${notifyJwtToken}` });
         // Lấy phần tử cha chứa input và nút gửi
         const chatInputContainer = document.querySelector('.chat-input');
 
@@ -73,8 +73,8 @@ function subscribeToUserTopic(chatId) {
             `;
         function sendMessage() {
             const messageContent = document.getElementById('chatInput').value.trim(); // Lấy giá trị từ textarea theo id
-            if (messageContent && stompClient.connected) { // Kiểm tra nội dung tin nhắn và kết nối
-                stompClient.send(`/app/chat/${chatId}`, {}, JSON.stringify({ 'content': messageContent }));
+            if (messageContent && notifyStompClient.connected) { // Kiểm tra nội dung tin nhắn và kết nối
+                notifyStompClient.send(`/app/chat/${chatId}`, {}, JSON.stringify({ 'content': messageContent }));
                 console.log(chatId);
                 console.log('Đã gửi tin nhắn: ' + messageContent);
                 document.getElementById('chatInput').value = ''; // Xóa nội dung textarea sau khi gửi
@@ -90,8 +90,8 @@ function subscribeToUserTopic(chatId) {
 
 // Hàm unsubscribe
 function unsubscribeClient() {
-    if (subscription) {
-        console.log(subscription)
-        subscription.unsubscribe();
+    if (notifySubscription) {
+        console.log(notifySubscription)
+        notifySubscription.unsubscribe();
     }
 }

@@ -4,7 +4,7 @@ const userEvent = new Event('userUpdated');
 // Lắng nghe sự kiện userUpdated
 document.addEventListener('userUpdated', () => {
     if (user) {
-        subscribeNotification(user);
+        connectWebSockeNotify(user.userId);
         let contentContainer = document.getElementById('content-container')
         if (contentContainer) {
             contentContainer.style.display = 'block';
@@ -16,7 +16,8 @@ document.addEventListener('userUpdated', () => {
             // setupLoadMoreButton(url, token);
         }
         let userAvatar = document.getElementById('post-current-user');
-        userAvatar.src = user.avatarUrl;
+        if (userAvatar)
+            userAvatar.src = user.avatarUrl;
     }
 });
 

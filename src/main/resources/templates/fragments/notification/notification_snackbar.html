@@ -90,23 +90,19 @@
 
 </script>
 <script>
-    let socket = new WebSocket('/ws');
-    let stompClient = null;
-    let subscription;
-    let jwtToken = localStorage.getItem('jwt');
-    function connectWebSocket() {
-        stompClient = Stomp.over(socket); // Sử dụng WebSocket để tạo client Stomp
-
-        stompClient.connect({}, function(frame) {
+    function connectWebSockeNotify(userId) {
+        let notifySocket = new WebSocket('/ws'); // Tạo WebSocket mới mỗi lần gọi
+        let notifyStompClient = Stomp.over(notifySocket);
+        let jwtToken = localStorage.getItem('jwt');
+        notifyStompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
+            let notifySubscription = notifyStompClient.subscribe(`/user/${userId}/notification/private`, function (notification) {
+                let notf = JSON.parse(notification.body);
+                showNotification(notf);
+            }, { "Authorization": `Bearer ${jwtToken}` });
+        }, function (error) {
+            console.error("Connection failed:", error);
         });
-    }
-    connectWebSocket();
-    function subscribeNotification(user) {
-        subscription = stompClient.subscribe(`/user/${user.userId}/notification/private`, function(notification) {
-            let notf = JSON.parse(notification.body)
-            showNotification(notf);
-        }, { "Authorization": `Bearer ${jwtToken}` });
     }
 </script>
 </html>
