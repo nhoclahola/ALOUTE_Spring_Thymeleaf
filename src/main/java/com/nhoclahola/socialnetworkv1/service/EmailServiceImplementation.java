@@ -22,7 +22,7 @@ public class EmailServiceImplementation implements EmailService
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject("Xác nhận đăng ký tài khoản");
-        message.setText("Cảm ơn bạn đã đăng ký. Vui lòng xác nhận email của bạn bằng cách nhấn vào đường link sau: " + confirmationUrl);
+        message.setText("Cảm ơn bạn đã đăng ký. Trong 15 phút, vui lòng xác nhận email của bạn bằng cách nhấn vào đường link sau: " + confirmationUrl);
 
         // Gửi email
         mailSender.send(message);
@@ -38,7 +38,7 @@ public class EmailServiceImplementation implements EmailService
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(toEmail);
         message.setSubject("Xác nhận reset mật khẩu");
-        message.setText("Vui lòng xác nhận đây là yêu cầu của bạn bằng cách nhấn vào đường link sau: " + confirmationUrl);
+        message.setText("Vui lòng xác nhận đây là yêu cầu của bạn trong 15 phút bằng cách nhấn vào đường link sau: " + confirmationUrl);
 
         // Gửi email
         mailSender.send(message);

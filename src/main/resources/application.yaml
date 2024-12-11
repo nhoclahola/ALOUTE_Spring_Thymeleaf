@@ -2,16 +2,14 @@ spring:
   application:
     name: social-network-v1
   datasource:
-    url: ${DBMS_CONNECTION:jdbc:mariadb://localhost:3306/social_network_v1}
+    url: ${DBMS_CONNECTION}
     username: root
     password: ${MYSQL_ROOT_PASSWORD:}
-#    driver-class-name: com.mysql.cj.jdbc.Driver
     driver-class-name: org.mariadb.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
-    database: mysql
   mvc:
     servlet:
       load-on-startup: 1
@@ -19,6 +17,17 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_ACCOUNT}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 jwt:
   privateKey: 8acnkodIBNY6iRCuppO1AUCkOKJFBzjCIZuEqgWPCFq/ags2ANcd9PAO8RoGd9fp
@@ -41,4 +50,4 @@ server:
 
 cors:
   allowed:
-    origins: https://social-network-react-js-mosxy6ru7-nhoclaholas-projects.vercel.app, http://localhost:3000, https://social-network-react-js-ui.vercel.app, http://social-network-v1.kesug.com
+    origins: ${COR_URL}
