@@ -128,13 +128,18 @@ function createPostHtml(post) {
                     <img src="${post.user.avatarUrl ? post.user.avatarUrl : '/images/unknown_user.jpg'}" alt="avatar" alt="avatar" class="rounded-circle border-secondary" style="width: 2.5rem; height: 2.5rem; margin: 0.5rem;">
                 </div>
                 <div class="d-flex flex-column w-100">
-                    <div class="d-flex align-items-center gap-2">
-                        <a href="/profile/${post.user.userId}" class="font-weight-bold">
-                            ${post.user.firstName} ${post.user.lastName}
+                    <div class="d-flex justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <a href="/profile/${post.user.userId}" class="font-weight-bold">
+                                ${post.user.firstName} ${post.user.lastName}
+                            </a>
+                            <span class="text-secondary">@${post.user.username}</span>
+                            <span>·</span>
+                            <span class="text-secondary">${formatDateFromString(post.createdAt)}</span>
+                        </div>
+                        <a href="/posts/${post.postId}" class="fs-5">
+                            <i class="bi bi-arrow-bar-right"></i>
                         </a>
-                        <span class="text-secondary">@${post.user.username}</span>
-                        <span>·</span>
-                        <span class="text-secondary">${formatDateFromString(post.createdAt)}</span>
                     </div>
                     <div class="min-h-12">
                         <p class="text-break">${post.caption}</p>
@@ -274,7 +279,7 @@ function savePost(event) {
                     saveButton.style.color = 'blue';
                     saveButton.title = 'Unsave this post'
                 }
-                else if (data.result === 'unliked') {
+                else if (data.result === 'unsaved') {
                     saveButton.style.color = 'black';
                     saveButton.title = 'Save this post'
                 }

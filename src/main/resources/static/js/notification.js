@@ -75,7 +75,7 @@ function showEndMessage() {
 
 function createNotificationHtml(notification) {
     return `
-            <div class="list-group-item notification-card d-flex justify-content-between align-items-center">
+            <a href="/posts/${notification.post.postId}" class="list-group-item notification-card d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <div class="status-indicator bg-cyan-500 rounded-circle me-3"
                          style="width: 10px; height: 10px;"></div>
@@ -90,7 +90,7 @@ function createNotificationHtml(notification) {
                 <button class="btn mark-read-btn" data-bs-toggle="tooltip" data-bs-placement="top" title="Mark as read">
                     <i class="bi bi-envelope-check"></i>
                 </button>
-            </div>`;
+            </a>`;
 }
 
 // Tải posts khi trang được load
