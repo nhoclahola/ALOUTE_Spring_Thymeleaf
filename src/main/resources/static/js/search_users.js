@@ -16,7 +16,7 @@ function loadUsers(url, token) {
                     userContainer.insertAdjacentHTML('beforeend', userElement);
                 });
             }
-            if (data.result.length < 10) {
+            if (data.result.length < 5) {
                 showEndMessageUsers();
                 removeLoadMoreButtonUsers();
             }
@@ -37,7 +37,7 @@ function setupLoadMoreButtonUsers(url, token, query) {
     if (loadMoreButton) {
         loadMoreButton.style.display = 'block'
         loadMoreButton.addEventListener('click', () => {
-            currentIndex += 10;
+            currentIndex += 5;
             const newUrl = `${url}?query=${query}&index=${currentIndex}`;
             loadUsers(newUrl, token);
         });
